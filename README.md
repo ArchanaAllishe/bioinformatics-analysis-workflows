@@ -4,7 +4,7 @@ An end-to-end RNA-seq analysis project designed to process raw sequencing reads 
 
 ## Project Objective
 
-The objective is to implement a reproducible RNA-seq workflow that supports both **single-end and paired-end sequencing data** and can be executed consistently across local Linux and high-performance computing environments.
+The objective is to implement a reproducible RNA-seq workflow that supports both **single-end and paired-end sequencing data** and can be executed consistently across local Linux and high-performance computing (HPC) environments.
 
 The workflow is being developed with reproducibility, portability, automation, and clear scientific reporting as core design requirements.
 
