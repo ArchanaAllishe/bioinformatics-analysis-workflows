@@ -6,12 +6,11 @@ An end-to-end RNA-seq analysis project designed to process raw sequencing reads 
 
 The objective is to implement a reproducible RNA-seq workflow that supports both **single-end and paired-end sequencing data** and can be executed consistently across local Linux and high-performance computing (HPC) environments.
 
-The workflow is being developed with reproducibility, portability, automation, and clear scientific reporting as core design requirements.
 
 ## Planned Workflow
 
 ```text
-Raw FASTQ (.fastq.gz)
+Raw FASTQ (.fastq.gz): Single or paired-end
         │
         ▼
       FastQC
@@ -44,22 +43,6 @@ Figures + Result Tables
    HTML Report
 ```
 
-## Input Support
-
-The workflow is designed to support both major RNA-seq library layouts.
-
-### Paired-end
-
-```text
-sample1_R1.fastq.gz
-sample1_R2.fastq.gz
-```
-
-### Single-end
-
-```text
-sample1.fastq.gz
-```
 
 ## Development System
 
