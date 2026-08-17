@@ -4,17 +4,6 @@
 
 ![Project Architecture](docs/images/project-architecture.png)
 
-## Skills Demonstrated
-
-**Bioinformatics:** RNA-seq, NGS, FASTQ, FastQC, MultiQC, HISAT2, STAR, Samtools, featureCounts, DESeq2, GRCh38, GTF annotations, differential expression
-
-**Linux & HPC:** Ubuntu, SSH, Linux users/groups, permissions, shared storage, Environment Modules, SLURM, batch computing, resource management
-
-**Programming & Data:** Python, R, Bash, SQL, PostgreSQL
-
-**Workflow Engineering:** Git, GitHub, Nextflow, Docker, workflow automation, containerization, reproducible computing
-
-**Research Software & AI:** HTML reporting, APIs, LLMs, RAG, Text-to-SQL, natural-language data exploration
 
 ---
 
@@ -1047,26 +1036,7 @@ Detailed commands, implementation decisions, troubleshooting, and validation are
 
 ---
 
-# Current Status
 
-```text
-Research Computing Infrastructure      COMPLETE
-                ↓
-RNA-Seq Workflow Design                COMPLETE
-                ↓
-RNA-Seq Dataset Validation             NEXT
-                ↓
-RNA-Seq Implementation
-                ↓
-HTML Reporting
-                ↓
-Nextflow + Docker
-                ↓
-Additional Genomic Workflows
-                ↓
-PostgreSQL Results Layer
-                ↓
-AI-Assisted Data Exploration
 ```
 
 ## Current Focus
