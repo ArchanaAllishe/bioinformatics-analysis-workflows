@@ -1,48 +1,102 @@
 # Reproducible Genomic & Biomedical Data Analysis Platform
 
-**A reproducible computational platform for genomic and biomedical data analysis, demonstrated through an end-to-end RNA-seq workflow and designed for extension to ChIP-seq, ATAC-seq, Exome-seq, WES/WGS, multi-omics, and other sequencing applications.**
+A reproducible computational platform for genomic and biomedical data analysis, demonstrated through an end-to-end **RNA-seq workflow** and designed for extension to **ChIP-seq, ATAC-seq, Exome-seq/WES, WGS, multi-omics, and other sequencing applications**.
 
 ![Project Architecture](docs/images/project-architecture.png)
 
+## Skills Demonstrated
+
+**Bioinformatics:** RNA-seq, NGS, FASTQ, FastQC, MultiQC, HISAT2, STAR, Samtools, featureCounts, DESeq2, GRCh38, GTF annotations, differential expression
+
+**Linux & HPC:** Ubuntu, SSH, Linux users/groups, permissions, shared storage, Environment Modules, SLURM, batch computing, resource management
+
+**Programming & Data:** Python, R, Bash, SQL, PostgreSQL
+
+**Workflow Engineering:** Git, GitHub, Nextflow, Docker, workflow automation, containerization, reproducible computing
+
+**Research Software & AI:** HTML reporting, APIs, LLMs, RAG, Text-to-SQL, natural-language data exploration
 
 ---
 
-## Project Overview
-
-Modern genomic analysis involves more than running individual bioinformatics tools.
-
-A reproducible analysis environment must integrate:
+## Project at a Glance
 
 ```text
-Scientific Data
-      │
-      ▼
-Linux / HPC Infrastructure
-      │
-      ▼
-Bioinformatics Analysis
-      │
-      ▼
-Statistical Analysis
-      │
-      ▼
-Results & Reporting
-      │
-      ▼
-Workflow Automation
-      │
-      ▼
-Structured Data Management
-      │
-      ▼
-AI-Assisted Exploration
+Development Environment
+        │
+        ▼
+Ubuntu Workstation
+        │
+        │ SSH
+        ▼
+HPC Environment
+        │
+        │ SLURM
+        ▼
+Genomic Data Analysis
+        │
+        ├── RNA-Seq       ← current demonstration
+        ├── ChIP-Seq      ← planned
+        ├── ATAC-Seq      ← planned
+        ├── Exome / WES   ← planned
+        └── WGS           ← planned
+        │
+        ▼
+Reproducible Results
+        │
+        ▼
+Nextflow + Docker
+        │
+        ▼
+PostgreSQL
+        │
+        ▼
+AI-Assisted Data Exploration
 ```
 
-This project builds that environment incrementally.
+## Current Status
 
-**RNA-seq is used as the first end-to-end demonstration workflow.**
+| Component | Status |
+|---|---|
+| Ubuntu workstation | Complete |
+| HPC environment | Complete |
+| SSH and account provisioning | Complete |
+| Shared research storage | Complete |
+| SLURM workload management | Complete |
+| Environment Modules | Complete |
+| RNA-seq workflow design | Complete |
+| RNA-seq dataset validation | Next |
+| RNA-seq analysis | Planned |
+| HTML results reporting | Planned |
+| Nextflow automation | Planned |
+| Docker containerization | Planned |
+| Additional genomic workflows | Planned |
+| PostgreSQL results layer | Planned |
+| AI-assisted interface | Planned |
 
-The same infrastructure and software-engineering principles are designed to support additional genomic workflows such as:
+---
+
+# Project Overview
+
+Modern genomic analysis requires more than running individual bioinformatics tools.
+
+A reproducible research-computing workflow must integrate:
+
+- scientific data;
+- Linux computing;
+- software environments;
+- computational resources;
+- workflow execution;
+- statistical analysis;
+- quality control;
+- reporting;
+- version control;
+- reproducibility.
+
+This project builds those components as a unified analysis platform.
+
+**RNA-seq serves as the first end-to-end demonstration workflow.**
+
+The same infrastructure and software-engineering principles are designed to support additional genomic assays, with analysis tools selected according to the biological and computational requirements of each data type.
 
 ```text
 RNA-Seq
@@ -51,121 +105,71 @@ ATAC-Seq
 Exome-Seq / WES
 WGS
 Multi-Omics
-Other NGS workflows
+Other NGS Workflows
 ```
-
-Each data type requires its own scientifically appropriate tools and analysis methods; the goal is to reuse the underlying infrastructure, automation, reproducibility, and reporting framework.
 
 ---
 
 # Platform Architecture
 
-```text
-                       macOS Host
-                           │
-                           ▼
-                   Ubuntu Workstation
-                           │
-                           │ SSH
-                           ▼
-                     Simulated HPC
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-          SLURM        Shared Data    Modules
-              │
-              └────────────┬────────────┘
-                           ▼
-                  Genomic Data Analysis
-                           │
-                           ▼
-                  Results & Reporting
-                           │
-                           ▼
-                  Nextflow + Docker
-                           │
-                           ▼
-                     PostgreSQL
-                           │
-                           ▼
-                 AI-Assisted Exploration
-```
+The platform separates development, remote computing, analysis, reporting, and future data-access layers.
 
-The architecture separates development, scheduled computation, workflow execution, data management, and researcher-facing results.
+```text
+                    macOS Host
+                        │
+                        ▼
+                Ubuntu Workstation
+                        │
+                        │ SSH
+                        ▼
+                  HPC Environment
+                        │
+             ┌──────────┼──────────┐
+             ▼          ▼          ▼
+           SLURM     Modules    Shared Data
+             │          │          │
+             └──────────┼──────────┘
+                        ▼
+                Genomic Analysis
+                        │
+                        ▼
+               Results & Reporting
+                        │
+                        ▼
+               Nextflow + Docker
+                        │
+                        ▼
+                  PostgreSQL
+                        │
+                        ▼
+              AI-Assisted Exploration
+```
 
 ---
 
 # Development Environment
 
-The platform is hosted on an **Apple M5 Pro MacBook Pro with 24 GB memory and macOS Tahoe 26.6** using UTM virtualization.
+The platform is hosted on an **Apple M5 Pro MacBook Pro with 24 GB memory and macOS Tahoe 26.6**, using UTM virtualization for the Linux environments.
 
-Two Linux environments reproduce a typical research-computing workflow:
+Two Linux systems represent the development-to-compute workflow commonly used in research computing:
 
 ```text
 Ubuntu Workstation
         │
         │ SSH
         ▼
-Simulated HPC
+HPC Environment
         │
         │ SLURM
         ▼
 Scheduled Analysis
 ```
 
-## Ubuntu Workstation
+The **Ubuntu workstation** provides the development and access environment.
 
-The Ubuntu workstation provides the **development and access environment**.
+The **HPC environment** provides shared storage, centrally managed software, resource allocation, and scheduled computation.
 
-It is used for:
-
-- script and workflow development;
-- Python, R, and Bash programming;
-- Git/GitHub;
-- documentation;
-- SSH access;
-- job submission;
-- result inspection.
-
-Configuration:
-
-```text
-Ubuntu 26.04 LTS
-Architecture: aarch64
-CPUs: 6
-Memory: ~11 GiB
-Swap: 4 GiB
-Root filesystem: 146 GB
-```
-
-## Simulated HPC
-
-The second Linux VM represents a **shared institutional computing environment**.
-
-It provides:
-
-- remote SSH access;
-- administrator and researcher accounts;
-- shared research storage;
-- Linux permissions and groups;
-- Environment Modules;
-- SLURM scheduling;
-- CPU and memory allocation;
-- batch-job execution.
-
-Configuration:
-
-```text
-Hostname: hpc-login
-Ubuntu Server 26.04 LTS
-Architecture: aarch64
-CPUs: 4
-Memory: 6 GB
-Virtual disk: 64 GB
-```
-
-This reproduces the workflow:
+This separation reproduces the workflow:
 
 ```text
 Develop
@@ -183,29 +187,100 @@ Review Results
 
 ---
 
-# HPC Environment
+## Ubuntu Workstation
 
-## User Roles
+The workstation is used for:
 
-Two account roles separate system administration from research computing:
+- script development;
+- Python, R, and Bash programming;
+- Git/GitHub;
+- documentation;
+- SSH access;
+- job submission;
+- result inspection.
+
+### Configuration
 
 ```text
-hpcadmin
-    └── system administration
-
-dev
-    └── research computing
+Ubuntu 26.04 LTS
+Architecture: aarch64
+CPUs: 6
+Memory: ~11 GiB
+Swap: 4 GiB
+Root filesystem: 146 GB
 ```
-
-The `hpcadmin` account manages infrastructure and software.
-
-The `dev` account performs analyses and submits computational jobs.
 
 ---
 
-## SSH
+## HPC Environment
 
-SSH key authentication provides workstation-to-HPC access:
+A separate Ubuntu Server VM provides an HPC-style research-computing environment.
+
+It is used to demonstrate:
+
+- remote Linux access;
+- administrator and researcher accounts;
+- SSH authentication;
+- shared research storage;
+- Linux groups and permissions;
+- Environment Modules;
+- SLURM scheduling;
+- CPU and memory allocation;
+- batch-job execution.
+
+### Configuration
+
+```text
+Hostname: hpc-login
+Ubuntu Server 26.04 LTS
+Architecture: aarch64
+CPUs: 4
+Memory: 6 GB
+Virtual disk: 64 GB
+```
+
+This environment is locally deployed for development and portfolio demonstration while reproducing the core workflow of an institutional HPC system.
+
+---
+
+# HPC User Roles
+
+Two account roles separate system administration from research computing.
+
+```text
+hpcadmin
+    │
+    └── system administration
+
+dev
+    │
+    └── research computing
+```
+
+The `hpcadmin` account manages:
+
+- system configuration;
+- user/group administration;
+- software installation;
+- shared storage;
+- Environment Modules;
+- SLURM configuration.
+
+The `dev` account performs:
+
+- project analysis;
+- software-module loading;
+- SLURM job submission;
+- data processing;
+- result inspection.
+
+This keeps routine research work separate from administrative privileges.
+
+---
+
+# SSH Access
+
+SSH key authentication provides workstation-to-HPC access.
 
 ```text
 Ubuntu Workstation
@@ -215,17 +290,19 @@ Ubuntu Workstation
 dev@hpc-login
 ```
 
-Connection:
+The configured SSH alias allows connection with:
 
 ```bash
 ssh hpc-login
 ```
 
+This reproduces a typical researcher workflow in which analysis is prepared locally and computational jobs are submitted remotely.
+
 ---
 
-## Shared Research Storage
+# Shared Research Storage
 
-The HPC environment uses:
+The HPC environment uses dedicated shared directories:
 
 ```text
 /shared/
@@ -234,7 +311,7 @@ The HPC environment uses:
 └── reference/
 ```
 
-Purpose:
+Their roles are:
 
 ```text
 /shared/data
@@ -247,21 +324,29 @@ Purpose:
     → genomes, annotations, and indexes
 ```
 
-The current demonstration workspace is:
+The current RNA-seq demonstration workspace is:
 
 ```text
 /shared/projects/reproducible-rnaseq-pipeline/
 ```
 
-A `bioinformatics` Linux group provides controlled collaborative access.
+A Linux group named:
+
+```text
+bioinformatics
+```
+
+provides controlled collaborative access to shared project directories.
+
+Large FASTQ, BAM, reference, and index files are kept outside the Git repository.
 
 ---
 
 # SLURM Workload Management
 
-SLURM manages computational workloads.
+SLURM manages computational workloads in the HPC environment.
 
-Current simulated configuration:
+Current configuration:
 
 ```text
 Cluster: local-hpc
@@ -271,13 +356,14 @@ CPUs: 4
 RealMemory: 5386 MB
 ```
 
-A test batch job successfully demonstrated:
+A test SLURM job successfully validated:
 
 - job submission;
+- scheduler execution;
 - CPU allocation;
 - memory requests;
-- scheduler execution;
 - SLURM environment variables;
+- job IDs;
 - output-file generation.
 
 Example:
@@ -306,20 +392,26 @@ Researcher
   SLURM
     │
     ▼
-Allocated Resources
+Resource Allocation
     │
     ▼
-Analysis
+Scheduled Analysis
     │
     ▼
 Results
+```
+
+Detailed implementation:
+
+```text
+docs/05-slurm-workload-management.md
 ```
 
 ---
 
 # Environment Modules
 
-Bioinformatics software is centrally managed through Environment Modules.
+Bioinformatics software is centrally managed using Environment Modules.
 
 Module location:
 
@@ -327,7 +419,7 @@ Module location:
 /opt/modulefiles
 ```
 
-Currently configured:
+Currently configured modules include:
 
 ```text
 fastqc/0.12.1
@@ -343,23 +435,29 @@ module purge
 module load fastqc/0.12.1
 ```
 
-Modules provide:
+Environment Modules provide:
 
 - explicit software versions;
 - reproducible environments;
 - reduced dependency conflicts;
 - centralized software management;
-- integration with SLURM jobs.
+- straightforward SLURM integration.
 
-Additional tools are added as new analysis workflows are implemented.
+Additional tools will be added as workflow requirements expand.
+
+Detailed implementation:
+
+```text
+docs/06-environment-modules.md
+```
 
 ---
 
 # Demonstration Workflow: RNA-Seq
 
-RNA-seq is the first complete genomic workflow implemented on the platform.
+RNA-seq is the first complete genomic workflow being implemented on the platform.
 
-It demonstrates the progression from raw sequencing data to biological interpretation.
+It demonstrates the progression from raw sequencing data to statistical analysis and biological interpretation.
 
 ```text
 Public RNA-Seq Dataset
@@ -389,12 +487,13 @@ Sorted / Indexed BAM
 featureCounts
         │
         ▼
-Gene Count Matrix
+Raw Gene Counts
         │
         ▼
 DESeq2
         │
         ├── Normalization
+        ├── Sample QC
         ├── PCA
         ├── Differential Expression
         └── Visualization
@@ -410,12 +509,12 @@ HTML Report
 
 # RNA-Seq Alignment Strategy
 
-RNA-seq requires splice-aware alignment because reads may span exon-exon junctions.
+RNA-seq requires splice-aware alignment because sequencing reads may span exon-exon junctions.
 
-Several alignment and quantification approaches were considered:
+Several commonly used approaches were evaluated:
 
-| Tool | Approach | Typical Application | Memory |
-|---|---|---|---:|
+| Tool | Approach | Typical Application | Relative Memory |
+|---|---|---|---|
 | STAR | Splice-aware genome alignment | RNA-seq | High |
 | HISAT2 | Splice-aware genome alignment | RNA-seq | Lower |
 | Salmon | Transcript quantification | RNA-seq | Lower |
@@ -425,7 +524,7 @@ Several alignment and quantification approaches were considered:
 
 ## Selected RNA-Seq Aligner: HISAT2
 
-HISAT2 provides:
+HISAT2 was selected for the initial RNA-seq implementation because it provides:
 
 ```text
 Splice-aware alignment       ✓
@@ -446,12 +545,12 @@ HISAT2
   ↓
 Samtools
   ↓
-BAM
+Sorted BAM
   ↓
 featureCounts
 ```
 
-STAR remains available for higher-memory computing environments.
+STAR remains available in the HPC software environment as an alternative for higher-memory systems or workflows where its performance characteristics are preferred.
 
 Detailed evaluation:
 
@@ -463,7 +562,7 @@ docs/07-rnaseq-alignment-tools-and-workflow-selection.md
 
 # RNA-Seq Reference Genome
 
-Planned reference configuration:
+The planned reference configuration is:
 
 ```text
 Genome:      GRCh38
@@ -472,52 +571,54 @@ Index:       Prebuilt GRCh38 HISAT2 index
 Annotation:  Compatible GTF annotation
 ```
 
-The exact genome and annotation releases will be recorded for reproducibility.
+The exact reference genome and annotation releases will be recorded before analysis.
+
+Genome and annotation compatibility will be verified before gene quantification.
 
 ---
 
 # RNA-Seq Demonstration Dataset
 
-The project is currently evaluating:
+The project is currently evaluating the RNA-seq component associated with:
 
 ```text
 GSE199679
 ```
 
-Before downloading the sequencing data, the study will be verified for:
+Before downloading raw sequencing files, the study will be validated for:
 
 - sample identities;
 - experimental groups;
 - biological replicates;
 - SRA run accessions;
-- sequencing layout;
+- paired-end sequencing layout;
 - read lengths;
 - FASTQ sizes;
-- storage requirements.
+- total storage requirements.
 
-The dataset will be finalized after both the experimental design and computational requirements are confirmed.
+The dataset will be finalized after the experimental design and computational requirements are confirmed.
 
 ---
 
-# Quality Control
+# Raw Read Quality Control
 
-FastQC evaluates raw sequencing quality, including:
+FastQC will evaluate raw sequencing data for metrics including:
 
-- per-base quality;
-- sequence quality distributions;
+- per-base sequence quality;
+- sequence quality distribution;
 - GC content;
-- duplication;
-- adapters;
+- sequence duplication;
+- adapter content;
 - overrepresented sequences.
 
-MultiQC combines results across samples:
+MultiQC will aggregate individual QC reports.
 
 ```text
-FastQC Sample 1 ──┐
-FastQC Sample 2 ──┤
-FastQC Sample 3 ──┤
+Sample 1 FastQC ──┐
+Sample 2 FastQC ──┤
+Sample 3 FastQC ──┤
                   ├── MultiQC
-FastQC Sample N ──┘
+Sample N FastQC ──┘
                        │
                        ▼
                 Combined QC Report
@@ -527,12 +628,14 @@ FastQC Sample N ──┘
 
 # Alignment Processing
 
-Samtools processes alignment output:
+HISAT2 alignment output will be processed with Samtools.
 
 ```text
 HISAT2
    ↓
 SAM
+   ↓
+Samtools
    ↓
 BAM
    ↓
@@ -543,13 +646,13 @@ Index
 Alignment QC
 ```
 
-Intermediate files will be managed to reduce unnecessary storage usage.
+Intermediate files will be managed to minimize unnecessary disk usage.
 
 ---
 
 # Gene Quantification
 
-featureCounts assigns aligned fragments to annotated genes.
+featureCounts will assign aligned fragments to annotated genes.
 
 ```text
 Sorted BAM
@@ -563,19 +666,51 @@ featureCounts
       └── counts.txt.summary
 ```
 
-Raw integer counts are retained for downstream statistical analysis.
+For paired-end RNA-seq, paired reads will be counted as fragments where appropriate.
+
+Raw integer counts will be retained for DESeq2.
 
 ---
 
-# Differential Expression
+# Sample Metadata
 
-DESeq2 will perform:
+Sample metadata will describe the experimental design.
 
-- count import;
+Example:
+
+```text
+sample       condition
+sample_01    control
+sample_02    control
+sample_03    treatment
+sample_04    treatment
+```
+
+Additional study-specific variables may include:
+
+- biological replicate;
+- treatment;
+- cell type;
+- batch;
+- genotype;
+- other experimental factors.
+
+Sample identifiers must correspond to count-matrix sample columns.
+
+---
+
+# Differential Expression Analysis
+
+DESeq2 will be used for statistical analysis of gene-level counts.
+
+The workflow will include:
+
+- raw count import;
 - metadata integration;
 - normalization;
-- sample QC;
+- sample-level QC;
 - PCA;
+- clustering;
 - differential-expression testing;
 - multiple-testing correction;
 - visualization.
@@ -589,148 +724,81 @@ MA plots
 Volcano plots
 Heatmaps
 Differential-expression tables
-Pathway analysis
+Functional / pathway analysis
 ```
+
+Raw featureCounts values will be provided directly to DESeq2 rather than pre-normalized TPM or FPKM values.
 
 ---
 
 # Results & Reporting
 
-A major platform goal is to transform analysis outputs into **researcher-facing results**.
+A major platform goal is to transform computational outputs into **researcher-facing results**.
 
-The RNA-seq workflow will generate a browser-accessible HTML report containing:
+The RNA-seq analysis will generate a browser-accessible HTML report containing:
 
 - study description;
 - experimental design;
 - sample metadata;
 - sequencing information;
-- QC results;
+- FastQC/MultiQC results;
 - alignment statistics;
-- quantification statistics;
+- featureCounts statistics;
+- expression-level QC;
 - PCA;
-- differential expression;
-- visualizations;
+- differential-expression results;
+- volcano and MA plots;
+- heatmaps;
 - biological interpretation;
-- methods;
+- computational methods;
 - software versions.
 
-The goal is:
+The intended workflow is:
 
 ```text
-Pipeline Output Files
-        ↓
-Integrated Analysis
-        ↓
-Interactive HTML Report
-        ↓
-Collaborator / Researcher
-```
-
----
-
-# Extending the Platform to Other Genomic Data
-
-RNA-seq demonstrates the platform first, but the architecture is designed for additional genomic workflows.
-
-## ChIP-Seq
-
-Potential workflow:
-
-```text
-FASTQ
-  ↓
-FastQC / MultiQC
-  ↓
-Bowtie2
-  ↓
-Samtools
-  ↓
-Peak Calling
-  ↓
-Peak Annotation
-  ↓
-Motif / Functional Analysis
-  ↓
+Analysis Outputs
+       │
+       ▼
+Integrated Results
+       │
+       ▼
 HTML Report
+       │
+       ▼
+Researcher / Collaborator
 ```
 
-Demonstrates:
-
-- protein-DNA interaction analysis;
-- peak calling;
-- genomic annotation;
-- motif analysis.
+This avoids requiring collaborators to interpret a directory of disconnected analysis files.
 
 ---
 
-## ATAC-Seq
+# Reproducibility
 
-Potential workflow:
+Reproducibility is incorporated throughout the platform.
 
-```text
-FASTQ
-  ↓
-QC
-  ↓
-Alignment
-  ↓
-Filtering
-  ↓
-Peak Calling
-  ↓
-Chromatin Accessibility
-  ↓
-Motif / Footprinting Analysis
-  ↓
-HTML Report
-```
+The analysis will record:
 
-Demonstrates chromatin-accessibility analysis and regulatory-element identification.
+- public dataset accessions;
+- sample metadata;
+- reference genome release;
+- annotation release;
+- software versions;
+- command-line parameters;
+- Environment Module versions;
+- SLURM resource requests;
+- scripts;
+- quality-control results;
+- statistical-analysis code.
 
----
+Git and GitHub are used for source code, configuration, and documentation.
 
-## Exome-Seq / WES
-
-Potential workflow:
-
-```text
-FASTQ
-  ↓
-QC
-  ↓
-Alignment
-  ↓
-BAM Processing
-  ↓
-Variant Calling
-  ↓
-Variant Filtering
-  ↓
-Annotation
-  ↓
-Interpretation
-```
-
-Demonstrates coding-region variant analysis.
-
----
-
-## WGS
-
-The platform can also be extended to whole-genome sequencing workflows involving:
-
-- genome alignment;
-- variant calling;
-- filtering;
-- annotation;
-- structural-variant analysis;
-- reproducible genomic reporting.
+Large scientific data remain outside the Git repository.
 
 ---
 
 # Workflow Automation with Nextflow
 
-Once the individual RNA-seq stages are validated, the workflow will be converted into a Nextflow pipeline.
+After the individual RNA-seq stages are validated, the workflow will be converted into a Nextflow pipeline.
 
 ```text
                  Nextflow
@@ -744,46 +812,47 @@ Once the individual RNA-seq stages are validated, the workflow will be converted
                Quantification
                     │
                     ▼
-                 Analysis
+             Statistical Analysis
                     │
                     ▼
-                 Report
+                  Report
 ```
 
 Nextflow will provide:
 
 - workflow orchestration;
-- parallelization;
+- automated file passing;
 - dependency handling;
-- resumability;
+- parallel sample processing;
+- workflow resumption;
 - reproducible configuration;
 - local execution;
 - SLURM execution.
 
-Planned profiles:
+Planned execution profiles:
 
 ```bash
 nextflow run main.nf -profile local
 ```
 
+and:
+
 ```bash
 nextflow run main.nf -profile slurm
 ```
-
-As additional genomic workflows are implemented, the same workflow-engineering principles can be applied to each data type.
 
 ---
 
 # Containerization with Docker
 
-Docker will provide portable, version-controlled analysis environments.
+Docker will provide portable and version-controlled software environments.
 
-The project demonstrates two complementary software-management approaches:
+The platform will demonstrate two complementary approaches:
 
 ```text
-Institutional HPC
-      │
-      ▼
+Institutional-Style HPC
+        │
+        ▼
 Environment Modules
 ```
 
@@ -791,12 +860,12 @@ and:
 
 ```text
 Portable Workflow
-      │
-      ▼
+        │
+        ▼
 Docker Containers
 ```
 
-The longer-term architecture combines:
+The planned workflow-engineering architecture combines:
 
 ```text
 Nextflow
@@ -806,15 +875,136 @@ Docker
 SLURM
 ```
 
-to support reproducible execution across local and HPC environments.
+This separates workflow logic from the underlying software and compute environment.
+
+---
+
+# Extending the Platform
+
+The infrastructure is designed to support additional genomic workflows after the RNA-seq implementation is validated.
+
+## ChIP-Seq
+
+Planned workflow:
+
+```text
+FASTQ
+  ↓
+Quality Control
+  ↓
+Alignment
+  ↓
+BAM Processing
+  ↓
+Peak Calling
+  ↓
+Peak Annotation
+  ↓
+Motif / Functional Analysis
+  ↓
+HTML Report
+```
+
+Potential tools include Bowtie2, Samtools, peak-calling software, genomic annotation tools, and downstream enrichment analysis.
+
+---
+
+## ATAC-Seq
+
+Planned workflow:
+
+```text
+FASTQ
+  ↓
+Quality Control
+  ↓
+Alignment
+  ↓
+Filtering
+  ↓
+Peak Calling
+  ↓
+Chromatin Accessibility
+  ↓
+Regulatory Analysis
+  ↓
+HTML Report
+```
+
+This workflow will demonstrate chromatin-accessibility and regulatory-element analysis.
+
+---
+
+## Exome-Seq / WES
+
+Planned workflow:
+
+```text
+FASTQ
+  ↓
+Quality Control
+  ↓
+Genome Alignment
+  ↓
+BAM Processing
+  ↓
+Variant Calling
+  ↓
+Variant Filtering
+  ↓
+Annotation
+  ↓
+Interpretation
+```
+
+This workflow will demonstrate coding-region variant analysis.
+
+---
+
+## Whole-Genome Sequencing
+
+The platform can later support WGS analysis including:
+
+- genome alignment;
+- BAM processing;
+- variant calling;
+- variant filtering;
+- annotation;
+- genomic interpretation;
+- reproducible reporting.
+
+---
+
+## Multi-Omics Integration
+
+Once multiple workflows are implemented, the platform can be extended toward integrative analyses such as:
+
+```text
+RNA-Seq
+   │
+   ├──────────────┐
+   ▼              │
+Expression        │
+                  │
+ChIP-Seq ─────────┤
+                  │
+ATAC-Seq ─────────┤
+                  │
+WES / WGS ────────┤
+                  ▼
+           Integrated Analysis
+                  │
+                  ▼
+          Biological Insights
+```
 
 ---
 
 # Structured Results with PostgreSQL
 
-Processed analysis results will eventually be organized into PostgreSQL.
+Processed results will eventually be organized in PostgreSQL.
 
-For RNA-seq, potential tables include:
+RNA-seq tables may include:
 
 ```text
 samples
@@ -825,7 +1015,7 @@ pathway_results
 qc_metrics
 ```
 
-Future genomic workflows can introduce additional structured results such as:
+Additional genomic workflows can introduce tables such as:
 
 ```text
 variants
@@ -836,7 +1026,7 @@ motifs
 accessibility_results
 ```
 
-This creates a common structured data layer across different genomic analyses.
+This provides a common structured results layer across different analysis types.
 
 ---
 
@@ -896,10 +1086,10 @@ Planned technologies:
 Python
 PostgreSQL
 SQL
+APIs
 LLMs
 RAG
 Text-to-SQL
-APIs
 ```
 
 The AI layer will operate on validated computational results rather than replace the underlying bioinformatics analysis.
@@ -910,9 +1100,9 @@ The AI layer will operate on validated computational results rather than replace
 
 The same data-access architecture can later be adapted to appropriately governed clinical research datasets.
 
-**Concept: AI-Assisted Chat Interface for Clinical Research Data**
+## AI-Assisted Chat Interface for Clinical Research Data
 
-Researchers frequently depend on data analysts to retrieve information from complex structured datasets. A conversational interface using RAG and Text-to-SQL could allow authorized users to query appropriate research datasets using natural language.
+**Concept:** Researchers frequently depend on data analysts to retrieve information from complex structured datasets. A conversational interface using RAG and Text-to-SQL could allow authorized users to query appropriate research datasets using natural language.
 
 Potential benefits include:
 
@@ -929,32 +1119,63 @@ Any clinical implementation would require appropriate authorization, privacy pro
 # Platform Evolution
 
 ```text
-Linux / HPC Infrastructure
-          │
-          ▼
-RNA-Seq Demonstration
-          │
-          ▼
-Reproducible Reporting
-          │
-          ▼
-Nextflow Automation
-          │
-          ▼
-Docker Containerization
-          │
-          ▼
-Additional Genomic Workflows
-   ┌──────┼──────┬────────┐
-   ▼      ▼      ▼        ▼
-ChIP-Seq ATAC-Seq WES    WGS
-   └──────┼──────┴────────┘
-          ▼
-Structured Results Database
-          │
-          ▼
-AI-Assisted Data Exploration
+Research Computing Infrastructure
+              │
+              ▼
+      RNA-Seq Demonstration
+              │
+              ▼
+      Reproducible Reporting
+              │
+              ▼
+       Nextflow Automation
+              │
+              ▼
+     Docker Containerization
+              │
+              ▼
+   Additional Genomic Workflows
+      ┌───────┼───────┬────────┐
+      ▼       ▼       ▼        ▼
+   ChIP-Seq ATAC-Seq WES      WGS
+      └───────┼───────┴────────┘
+              ▼
+      Multi-Omics Integration
+              │
+              ▼
+    Structured Results Database
+              │
+              ▼
+    AI-Assisted Data Exploration
 ```
+
+---
+
+# Repository Organization
+
+The planned repository structure separates documentation, scripts, configuration, workflows, containers, metadata, and lightweight results.
+
+```text
+reproducible-rnaseq-pipeline/
+│
+├── README.md
+├── LICENSE
+├── .gitignore
+│
+├── docs/
+│   └── images/
+│       └── project-architecture.png
+│
+├── scripts/
+├── config/
+├── workflow/
+├── containers/
+├── metadata/
+├── results/
+└── report/
+```
+
+Large FASTQ, BAM, reference genome, index, and workflow working files are excluded from Git.
 
 ---
 
@@ -963,16 +1184,19 @@ AI-Assisted Data Exploration
 ## Phase 1 — Research Computing Infrastructure
 
 - [x] Ubuntu workstation
-- [x] Simulated HPC environment
+- [x] HPC environment
 - [x] SSH authentication
+- [x] Linux users and groups
 - [x] Shared research storage
-- [x] Linux users/groups and permissions
 - [x] SLURM workload management
 - [x] Environment Modules
+- [x] Bioinformatics software environment
 
 ## Phase 2 — RNA-Seq Demonstration
 
-- [x] Alignment strategy and tool evaluation
+- [x] RNA-seq workflow design
+- [x] Aligner evaluation
+- [x] HISAT2 workflow selection
 - [ ] Dataset validation and acquisition
 - [ ] Raw-read quality control
 - [ ] HISAT2 alignment
@@ -1024,28 +1248,26 @@ Current documentation includes:
 01 — Ubuntu Environment
 02 — Shared Project Workspace
 03 — Git and Version Control
-04 — Simulated HPC Server Deployment
+04 — HPC Environment Deployment
 05 — SLURM Workload Management
-06 — Environment Modules
+06 — Environment Modules and Bioinformatics Software Management
 07 — RNA-Seq Alignment Tools and Workflow Selection
 ```
 
 The README provides the high-level platform overview.
 
-Detailed commands, implementation decisions, troubleshooting, and validation are maintained in the corresponding documentation.
+Detailed commands, implementation decisions, validation, and troubleshooting are maintained in the corresponding documentation.
 
 ---
-
-
 ```
 
 ## Current Focus
 
-**RNA-seq serves as the first end-to-end demonstration of the platform.**
+**RNA-seq is the first end-to-end demonstration of the platform.**
 
-The next step is to validate and acquire the selected public RNA-seq dataset, then execute the complete workflow from raw FASTQ files through differential-expression analysis and reproducible reporting.
+The next stage is to validate and acquire the selected public RNA-seq dataset and execute the workflow from raw FASTQ files through quality control, alignment, quantification, differential-expression analysis, biological interpretation, and reproducible reporting.
 
-The same infrastructure will subsequently be extended to additional genomic data types.
+The same computing, workflow-engineering, and reporting framework will subsequently be extended to additional genomic data types.
 
 ---
 
