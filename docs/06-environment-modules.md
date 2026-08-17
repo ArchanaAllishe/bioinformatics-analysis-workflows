@@ -1,677 +1,343 @@
-# Environment Modules and Bioinformatics Software Management
+# Task 06 — Environment Modules and Bioinformatics Software Management
 
 ## Overview
 
-A centralized software-management environment was configured on the simulated HPC server using **Environment Modules**.
+Bioinformatics analyses depend on many command-line tools, often with specific
+version requirements.
 
-Bioinformatics applications were installed and exposed to researchers through versioned modulefiles rather than requiring individual users to manage separate software installations.
+On shared high-performance computing (HPC) systems, users generally should not
+install separate copies of commonly used software into their home directories.
+Instead, administrators can provide centrally managed software through an
+environment module system.
 
-The configured software environment includes:
+This simulated HPC environment uses **Environment Modules** to manage
+bioinformatics software.
 
-| Software | Version | Purpose                   |
-| -------- | ------: | ------------------------- |
-| FastQC   |  0.12.1 | FASTQ quality control     |
-| MultiQC  |    1.21 | Aggregation of QC reports |
-| STAR     | 2.7.11b | RNA-seq read alignment    |
-| Samtools |  1.22.1 | SAM/BAM/CRAM processing   |
-
-The researcher can now select software explicitly using commands such as:
-
-```bash
-module load fastqc/0.12.1
-module load star/2.7.11b
-```
-
-This provides a reproducible software environment for subsequent SLURM-based RNA-seq analysis.
+The module system allows users to load, unload, and switch between software
+versions without permanently modifying their shell environment.
 
 ---
 
-## What Are Environment Modules?
+## Why Environment Modules Are Used
 
-Environment Modules provide a mechanism for dynamically modifying a user's shell environment.
-
-On an HPC system, multiple researchers may require different applications or different versions of the same application.
-
-Instead of permanently modifying system environment variables, researchers can load the required software when needed.
+Different research projects may require different versions of the same software.
 
 For example:
 
-```bash
-module load star/2.7.11b
-```
+- one workflow may require STAR 2.7.11b;
+- another may require a different STAR release;
+- another project may use HISAT2 instead of STAR.
 
-The module system modifies the environment for the current shell so that the selected software is available.
+Installing every program directly into the global system PATH can make software
+management difficult and may create version conflicts.
 
-Modules can subsequently be removed:
-
-```bash
-module unload star/2.7.11b
-```
-
-or the environment can be reset:
-
-```bash
-module purge
-```
-
----
-
-## Why Use Modules on an HPC?
-
-Research computing environments frequently support many applications and software versions simultaneously.
-
-A module-based approach provides:
-
-* centralized software management;
-* explicit software-version selection;
-* cleaner researcher environments;
-* reduced dependency conflicts;
-* reproducible computational workflows;
-* separation between administrator-managed software and researcher accounts.
-
-For example, a cluster could provide:
-
-```text
-star/2.7.10b
-star/2.7.11a
-star/2.7.11b
-```
-
-A pipeline can explicitly select:
-
-```bash
-module load star/2.7.11b
-```
-
-rather than depending on whichever STAR executable happens to be available in the default system environment.
-
-This is particularly important for reproducible bioinformatics analyses because software versions can affect computational results.
-
----
-
-# Software Management Architecture
-
-The implemented environment separates software administration from research use.
-
-```text
-HPC Administrator
-    hpcadmin
-        │
-        ├── installs software
-        ├── manages versions
-        └── creates modulefiles
-                    │
-                    ▼
-             /opt/modulefiles
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-      FastQC       STAR      Samtools
-        │           │           │
-        └───────────┼───────────┘
-                    ▼
-             Researcher: dev
-                    │
-                    ├── module avail
-                    ├── module load
-                    └── sbatch
-```
-
-The `dev` researcher account does not require `sudo` privileges to use the centrally managed applications.
-
----
-
-# Environment Modules Installation
-
-Environment Modules was installed by the HPC administrator:
-
-```bash
-sudo apt update
-sudo apt install environment-modules -y
-```
-
-The module system can be inspected using:
-
-```bash
-module --version
-```
-
-Available software can be displayed with:
-
-```bash
-module avail
-```
-
----
-
-# Central Module Repository
-
-A dedicated modulefile repository was created:
-
-```text
-/opt/modulefiles
-```
-
-The directory is reserved for locally managed HPC software definitions.
-
-The module search path was configured through:
-
-```text
-/etc/profile.d/bioinformatics-modules.sh
-```
-
-with:
-
-```bash
-#!/bin/bash
-
-if [ -f /etc/profile.d/modules.sh ]; then
-    source /etc/profile.d/modules.sh
-fi
-
-module use /opt/modulefiles
-```
-
-This makes the bioinformatics module repository available automatically when researchers establish a new login session.
-
----
-
-## Researcher Module Search Path
-
-The configuration was validated from the `dev` account using:
-
-```bash
-module use
-```
-
-The resulting module search path included:
-
-```text
-/opt/modulefiles
-/etc/environment-modules/modules
-/usr/share/modules/versions
-/usr/share/modules/modulefiles
-```
-
-This confirmed that the centrally managed bioinformatics repository was available to the researcher.
-
----
-
-# Modulefile Organization
-
-Version-specific modulefiles were organized as:
-
-```text
-/opt/modulefiles/
-├── fastqc/
-│   └── 0.12.1
-├── multiqc/
-│   └── 1.21
-├── samtools/
-│   └── 1.22.1
-└── star/
-    └── 2.7.11b
-```
-
-This structure allows additional versions to be added later without replacing existing versions.
-
-For example:
-
-```text
-/opt/modulefiles/star/
-├── 2.7.11b
-└── <future-version>
-```
-
----
-
-# FastQC
-
-## What Is FastQC?
-
-FastQC evaluates the quality characteristics of sequencing reads.
-
-It generates reports containing metrics such as:
-
-* per-base sequence quality;
-* sequence-quality distributions;
-* GC content;
-* sequence duplication;
-* adapter content;
-* overrepresented sequences.
-
-FastQC will provide the initial quality-control assessment of the RNA-seq FASTQ files.
-
-## Installed Version
-
-The installed executable was verified with:
-
-```bash
-which fastqc
-fastqc --version
-```
-
-Version:
-
-```text
-FastQC v0.12.1
-```
-
-A versioned modulefile was created at:
-
-```text
-/opt/modulefiles/fastqc/0.12.1
-```
-
-Researchers can load it using:
-
-```bash
-module load fastqc/0.12.1
-```
-
----
-
-# MultiQC
-
-## What Is MultiQC?
-
-MultiQC aggregates results from multiple bioinformatics tools and samples into a single report.
-
-For RNA-seq quality control, individual FastQC analyses can produce many separate HTML and ZIP files.
-
-Instead of reviewing every report individually:
-
-```text
-sample1_fastqc.html
-sample2_fastqc.html
-sample3_fastqc.html
-...
-```
-
-MultiQC summarizes the results into a consolidated report:
-
-```text
-multiqc_report.html
-```
-
-This makes it easier to compare sequencing quality across an entire experiment.
-
-## Installed Version
-
-The executable was verified with:
-
-```bash
-which multiqc
-multiqc --version
-```
-
-Actual installation:
-
-```text
-/usr/bin/multiqc
-multiqc, version 1.21
-```
-
-The corresponding modulefile was created at:
-
-```text
-/opt/modulefiles/multiqc/1.21
-```
-
-It can be loaded with:
-
-```bash
-module load multiqc/1.21
-```
-
----
-
-# STAR
-
-## What Is STAR?
-
-STAR (**Spliced Transcripts Alignment to a Reference**) is a read aligner designed for RNA-seq data.
-
-RNA-seq reads frequently span exon-exon junctions. STAR performs splice-aware alignment against a reference genome and can identify these junction-spanning reads.
+Environment Modules provide a cleaner approach.
 
 Conceptually:
 
-```text
-Paired-end FASTQ
-       │
-       ▼
-      STAR
-       │
-       ├── reference genome
-       ├── genome index
-       └── gene annotation
-       │
-       ▼
-Aligned reads
-```
+    Software installed on HPC
+              ↓
+        Module files
+              ↓
+         module load
+              ↓
+      User environment
+              ↓
+      Analysis software
 
-STAR will provide the alignment stage of the RNA-seq pipeline.
-
-## Installed Version
-
-STAR was verified using:
-
-```bash
-which STAR
-STAR --version
-```
-
-Actual installation:
-
-```text
-/usr/bin/STAR
-2.7.11b
-```
-
-The corresponding modulefile was created at:
-
-```text
-/opt/modulefiles/star/2.7.11b
-```
-
-It can be loaded with:
-
-```bash
-module load star/2.7.11b
-```
+This allows software to be managed centrally while users control which tools
+are active in their individual sessions.
 
 ---
 
-# Samtools
+## Module Search Path
 
-## What Is Samtools?
+The module search path can be inspected using:
 
-Samtools provides command-line utilities for manipulating sequencing alignment files.
+    module use
 
-It supports formats including:
+The configured environment includes:
 
-```text
-SAM
-BAM
-CRAM
-```
+    /opt/modulefiles
 
-Typical RNA-seq operations include:
+along with the standard system module locations.
 
-```text
-alignment
-    │
-    ▼
-SAM/BAM
-    │
-    ├── inspect
-    ├── sort
-    ├── index
-    └── calculate statistics
-```
-
-Samtools therefore provides essential downstream processing and validation of alignment files.
-
-## Installed Version
-
-Samtools was verified with:
-
-```bash
-which samtools
-samtools --version
-```
-
-Actual installation:
-
-```text
-/usr/bin/samtools
-samtools 1.22.1
-Using htslib 1.22.1
-```
-
-The corresponding modulefile was created at:
-
-```text
-/opt/modulefiles/samtools/1.22.1
-```
-
-It can be loaded using:
-
-```bash
-module load samtools/1.22.1
-```
+The `/opt/modulefiles` directory is used for locally managed bioinformatics
+software modules.
 
 ---
 
-# Researcher Validation
+## Available Bioinformatics Modules
 
-The complete module environment was tested from:
+The following modules were configured:
 
-```text
-dev@hpc-login
-```
+    fastqc/0.12.1
+    multiqc/1.21
+    samtools/1.22.1
+    star/2.7.11b
 
-The environment was first reset:
+The available modules can be displayed using:
 
-```bash
-module purge
-```
+    module avail
 
-Available modules were then inspected:
+Example:
 
-```bash
-module avail
-```
-
-The HPC returned:
-
-```text
-------------------------------- /opt/modulefiles -------------------------------
-
-fastqc/0.12.1
-multiqc/1.21
-samtools/1.22.1
-star/2.7.11b
-```
-
-This confirmed that all four bioinformatics applications were exposed through the central module repository.
+    module purge
+    module avail
 
 ---
 
-# Loading Software
+## Loading Software
 
-Researchers can explicitly load the software required for an analysis:
+A module is activated using:
 
-```bash
-module load fastqc/0.12.1
-module load multiqc/1.21
-module load star/2.7.11b
-module load samtools/1.22.1
-```
-
-Loaded modules can be inspected using:
-
-```bash
-module list
-```
-
-The environment can be reset using:
-
-```bash
-module purge
-```
-
----
-
-# Why Explicit Versions Matter
-
-A reproducible workflow should identify the exact computational environment used for an analysis.
-
-Instead of documenting:
-
-```text
-STAR was used for alignment.
-```
-
-the pipeline can record:
-
-```text
-STAR 2.7.11b was used for alignment.
-```
-
-The SLURM job itself can enforce that version:
-
-```bash
-#!/bin/bash
-
-#SBATCH --job-name=star
-#SBATCH --partition=compute
-
-module purge
-module load star/2.7.11b
-
-STAR ...
-```
-
-This makes the software requirement part of the executable workflow rather than relying only on documentation.
-
----
-
-# Integration with SLURM
-
-Environment Modules and SLURM serve different but complementary purposes.
-
-```text
-Environment Modules
-        │
-        └── Which software/version?
-                    │
-                    ▼
-                 SLURM
-                    │
-                    └── Which compute resources?
-                                │
-                                ▼
-                              Job
-```
+    module load <software>/<version>
 
 For example:
 
-```bash
-#!/bin/bash
+    module load fastqc/0.12.1
 
-#SBATCH --job-name=fastqc
-#SBATCH --partition=compute
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=2G
-#SBATCH --time=01:00:00
+The loaded software can then be verified:
 
-module purge
-module load fastqc/0.12.1
+    fastqc --version
 
-fastqc ...
-```
+Similarly:
 
-The module declaration defines the software environment.
+    module load star/2.7.11b
+    STAR --version
 
-The `#SBATCH` directives define the computational resources.
+or:
 
-Together they make the job more portable and reproducible.
+    module load samtools/1.22.1
+    samtools --version
 
 ---
 
-# RNA-Seq Software Environment
+## Removing Modules
 
-The current RNA-seq software stack is:
+A specific module can be unloaded using:
 
-```text
-Raw FASTQ
-    │
-    ▼
-FastQC 0.12.1
-    │
-    ▼
-MultiQC 1.21
-    │
-    ▼
-STAR 2.7.11b
-    │
-    ▼
-SAM/BAM
-    │
-    ▼
-Samtools 1.22.1
-```
+    module unload fastqc/0.12.1
 
-Additional tools will be added as required by subsequent pipeline stages rather than installing an unnecessarily large software stack in advance.
+All currently loaded modules can be removed using:
+
+    module purge
+
+This is useful at the beginning of batch jobs because it creates a predictable
+software environment.
+
+For example:
+
+    module purge
+    module load fastqc/0.12.1
 
 ---
 
-# Administrator vs Researcher Responsibilities
+## Why Module Versions Are Specified
 
-The environment maintains a clear separation of responsibilities.
+Using:
 
-```text
-hpcadmin
-│
-├── install system software
-├── configure module repositories
-├── create modulefiles
-└── maintain HPC infrastructure
+    module load fastqc/0.12.1
 
-dev
-│
-├── inspect available modules
-├── load required versions
-├── prepare analysis scripts
-├── submit SLURM jobs
-└── inspect results
-```
+instead of simply:
 
-This preserves the non-administrative researcher model established during the HPC deployment.
+    module load fastqc
+
+makes the software version explicit.
+
+Recording exact software versions improves reproducibility because future users
+can determine which program version was used to generate the results.
+
+This is particularly important in bioinformatics because software updates may
+change:
+
+- algorithms;
+- default parameters;
+- file formats;
+- output;
+- performance.
 
 ---
 
-# Outcome
+## Software Available in the HPC Environment
 
-A centralized, versioned bioinformatics software environment was successfully deployed and validated.
+The currently configured bioinformatics software supports several stages of
+sequencing analysis.
 
-The HPC now provides:
+### FastQC
 
-* Environment Modules;
-* a dedicated `/opt/modulefiles` repository;
-* automatic module-path configuration;
-* administrator-managed bioinformatics software;
-* version-specific modulefiles;
-* researcher-level software selection;
-* FastQC 0.12.1;
-* MultiQC 1.21;
-* STAR 2.7.11b;
-* Samtools 1.22.1;
-* integration with the SLURM job-submission workflow.
+FastQC evaluates the quality of raw sequencing reads.
 
-The infrastructure now supports the execution model:
+Typical input:
 
-```text
-Ubuntu Workstation
+    FASTQ / FASTQ.GZ
+
+Typical output:
+
+    HTML quality report
+    ZIP results
+
+---
+
+### MultiQC
+
+MultiQC collects results from multiple bioinformatics tools and generates a
+single combined report.
+
+For example:
+
+    FastQC reports from many samples
+                ↓
+             MultiQC
+                ↓
+        Combined HTML report
+
+This is especially useful for projects containing multiple sequencing samples.
+
+---
+
+### STAR
+
+STAR is a splice-aware RNA-seq aligner.
+
+It is available in the HPC software environment as:
+
+    star/2.7.11b
+
+STAR is well suited to RNA-seq alignment on systems with sufficient memory.
+
+The presence of STAR as an HPC module does not require every RNA-seq project to
+use STAR. Alignment software should be selected according to the biological
+requirements and computational resources of each analysis.
+
+The alignment strategy for this project is evaluated separately in:
+
+    Task 07 — RNA-Seq Alignment Tools and Workflow Selection
+
+---
+
+### Samtools
+
+Samtools is used to manipulate SAM and BAM alignment files.
+
+Common operations include:
+
+    SAM → BAM conversion
+    BAM sorting
+    BAM indexing
+    alignment statistics
+
+Example workflow:
+
+    Aligner
+       ↓
+    SAM/BAM
+       ↓
+    Samtools
+       ↓
+    Sorted/indexed BAM
+
+---
+
+## Infrastructure vs Workflow Selection
+
+An important distinction is made between **software availability** and
+**workflow selection**.
+
+Task 06 answers:
+
+    What software is available in the HPC environment?
+
+Task 07 answers:
+
+    Which alignment software is appropriate for this RNA-seq analysis?
+
+For example, STAR can remain installed and available as an HPC module even when
+another aligner is selected for a particular project.
+
+This separation reflects how real shared computational environments operate.
+
+An HPC system may provide many bioinformatics tools, while individual projects
+select only the tools appropriate for their analysis.
+
+---
+
+## Workflow-Specific Software
+
+Additional software can be added as project requirements are defined.
+
+For the RNA-seq workflow, HISAT2 will be added because it was selected as the
+primary aligner after evaluating the computational requirements of the
+available alignment approaches.
+
+The module environment will therefore evolve as the analysis workflow is
+implemented.
+
+---
+
+## Using Modules in SLURM Jobs
+
+Environment modules can be loaded directly inside SLURM batch scripts.
+
+For example:
+
+    #!/bin/bash
+
+    #SBATCH --job-name=fastqc
+    #SBATCH --partition=compute
+    #SBATCH --cpus-per-task=2
+    #SBATCH --mem=2G
+
+    module purge
+    module load fastqc/0.12.1
+
+    fastqc sample.fastq.gz
+
+This ensures that the batch job runs with the intended software version.
+
+---
+
+## Benefits of This Design
+
+The module-based software environment provides:
+
+- centralized software management;
+- explicit software versions;
+- reduced PATH conflicts;
+- reproducible computational environments;
+- easier SLURM integration;
+- support for multiple analysis workflows.
+
+The resulting architecture is:
+
+    HPC system
         │
-        │ SSH
         ▼
-dev@hpc-login
+    /opt/modulefiles
         │
-        ├── module load
-        │       │
-        │       └── select software/version
-        │
-        └── sbatch
-                │
-                └── request compute resources
-                        │
-                        ▼
-                      SLURM
-                        │
-                        ▼
-                 RNA-seq analysis
-```
+        ├── FastQC
+        ├── MultiQC
+        ├── STAR
+        ├── Samtools
+        └── additional workflow tools
+                 │
+                 ▼
+             module load
+                 │
+                 ▼
+             SLURM jobs
 
-This establishes the software-management layer required for reproducible, scheduler-controlled RNA-seq processing on the simulated HPC environment.
+---
+
+## Outcome
+
+A version-controlled bioinformatics software environment was established using
+Environment Modules.
+
+FastQC, MultiQC, STAR, and Samtools are available through the module system,
+providing the software-management foundation required for reproducible
+sequencing workflows.
+
+Project-specific tool selection is documented independently from infrastructure
+configuration so that the HPC environment can support multiple analysis
+strategies.
