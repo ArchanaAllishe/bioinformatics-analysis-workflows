@@ -758,7 +758,8 @@ as a substitute for analysis validation or scientific interpretation.
 
 </div>
 ---
-# References
+
+**# References**
 
 ## Dataset and Study
 
