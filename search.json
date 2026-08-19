@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "RNA-Seq Analysis Report",
+    "section": "",
+    "text": "This report summarizes a reproducible bulk RNA-seq analysis comparing MP46 and NM samples.\nThe analysis included three biological samples per group:\n\n\n\nGroup\nSamples\n\n\n\n\nNM\nNM_4, NM_5, NM_6\n\n\nMP46\nMP46_1, MP46_2, MP46_3\n\n\n\nThe workflow included sequencing quality control, alignment, gene-level quantification, expression-level quality control, differential expression analysis, and functional enrichment.\nFASTQ\n  ↓\nFastQC / MultiQC\n  ↓\nSTAR alignment\n  ↓\nfeatureCounts\n  ↓\nCount QC and filtering\n  ↓\nExpression QC\n  ↓\nDESeq2\n  ↓\nFunctional enrichment\n\n\n\n\n\nAnalysis\nKey Result\n\n\n\n\nSamples\n3 NM + 3 MP46\n\n\nSTAR alignment\n88.3–95.2% uniquely mapped\n\n\nGenes retained after filtering\n12,728\n\n\nPCA\nPC1 = 88.79%; clear NM/MP46 separation\n\n\nSample correlation\nWithin-group ≈ 0.96–0.98\n\n\nDifferential expression\n6,816 significant genes\n\n\nHigher in MP46\n3,495 genes\n\n\nHigher in NM\n3,321 genes\n\n\nGO BP enrichment\n31 MP46 / 236 NM terms\n\n\nReactome enrichment\n0 MP46 / 46 NM pathways\n\n\n\nPrimary finding: NM and MP46 show strongly distinct transcriptomic profiles. Genes higher in MP46 are enriched primarily for cell-division and microtubule-associated processes, whereas genes higher in NM show broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing processes."
+  },
+  {
+    "objectID": "index.html#results-at-a-glance",
+    "href": "index.html#results-at-a-glance",
+    "title": "RNA-Seq Analysis Report",
+    "section": "",
+    "text": "Analysis\nKey Result\n\n\n\n\nSamples\n3 NM + 3 MP46\n\n\nSTAR alignment\n88.3–95.2% uniquely mapped\n\n\nGenes retained after filtering\n12,728\n\n\nPCA\nPC1 = 88.79%; clear NM/MP46 separation\n\n\nSample correlation\nWithin-group ≈ 0.96–0.98\n\n\nDifferential expression\n6,816 significant genes\n\n\nHigher in MP46\n3,495 genes\n\n\nHigher in NM\n3,321 genes\n\n\nGO BP enrichment\n31 MP46 / 236 NM terms\n\n\nReactome enrichment\n0 MP46 / 46 NM pathways\n\n\n\nPrimary finding: NM and MP46 show strongly distinct transcriptomic profiles. Genes higher in MP46 are enriched primarily for cell-division and microtubule-associated processes, whereas genes higher in NM show broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing processes."
+  },
+  {
+    "objectID": "index.html#reference-genome",
+    "href": "index.html#reference-genome",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Reference Genome",
+    "text": "Reference Genome\nRNA-seq reads were aligned to the human GRCh38 primary assembly using STAR.\nGene annotation was based on GENCODE v48.\nThe same annotation release was used for:\n\nSTAR genome indexing\nfeatureCounts gene quantification\ndifferential-expression gene annotation"
+  },
+  {
+    "objectID": "index.html#read-alignment",
+    "href": "index.html#read-alignment",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Read Alignment",
+    "text": "Read Alignment\nSTAR alignment was performed in a Linux ARM64 Docker environment to provide a reproducible execution environment on Apple Silicon.\nAlignment rates were high overall.\n\n\n\nSample\nUnique Mapping\n\n\n\n\nNM_4\n95.20%\n\n\nNM_5\n95.16%\n\n\nNM_6\n95.11%\n\n\nMP46_1\n88.29%\n\n\nMP46_2\n94.31%\n\n\nMP46_3\n89.23%"
+  },
+  {
+    "objectID": "index.html#gene-quantification",
+    "href": "index.html#gene-quantification",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Gene Quantification",
+    "text": "Gene Quantification\nGene-level counts were generated using featureCounts.\nThe libraries were empirically determined to be reverse-stranded using RSeQC and were therefore quantified using:\n-s 2\nAssignment rates ranged from approximately 77% to 85%."
+  },
+  {
+    "objectID": "index.html#normalization",
+    "href": "index.html#normalization",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Normalization",
+    "text": "Normalization\nMedian-of-ratios normalization was used for exploratory expression QC.\n\n\n\nSample\nSize Factor\n\n\n\n\nNM_4\n1.026\n\n\nNM_5\n0.982\n\n\nNM_6\n0.837\n\n\nMP46_1\n1.023\n\n\nMP46_2\n1.089\n\n\nMP46_3\n1.134\n\n\n\nNormalized counts were log2 transformed for PCA and sample-correlation analysis.\nRaw integer counts were retained separately for DESeq2."
+  },
+  {
+    "objectID": "index.html#principal-component-analysis",
+    "href": "index.html#principal-component-analysis",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Principal Component Analysis",
+    "text": "Principal Component Analysis\n\nPC1 explained 88.79% of total expression variance and clearly separated NM from MP46.\nPC2 explained an additional 3.73%.\nTogether, the first two principal components represented 92.52% of expression variation."
+  },
+  {
+    "objectID": "index.html#sample-correlation",
+    "href": "index.html#sample-correlation",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Sample Correlation",
+    "text": "Sample Correlation\n\nWithin-group expression correlations were high:\nNM:    approximately 0.96\nMP46:  approximately 0.96–0.98\nBetween-group correlations were substantially lower:\napproximately 0.56–0.64\nNo obvious expression-level outlier was identified, and all six samples were retained."
+  },
+  {
+    "objectID": "index.html#differential-expression-summary",
+    "href": "index.html#differential-expression-summary",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Differential Expression Summary",
+    "text": "Differential Expression Summary\n\n\n\nResult\nGenes\n\n\n\n\nGenes tested\n12,728\n\n\npadj &lt; 0.05\n8,501\n\n\nSignificant DE genes\n6,816\n\n\nHigher in MP46\n3,495\n\n\nHigher in NM\n3,321\n\n\npadj &lt; 0.05 and |log2FC| ≥ 2\n3,200"
+  },
+  {
+    "objectID": "index.html#volcano-plot",
+    "href": "index.html#volcano-plot",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Volcano Plot",
+    "text": "Volcano Plot\n\nThe volcano plot demonstrates extensive differential expression in both directions."
+  },
+  {
+    "objectID": "index.html#ma-plot",
+    "href": "index.html#ma-plot",
+    "title": "RNA-Seq Analysis Report",
+    "section": "MA Plot",
+    "text": "MA Plot\n\nThe MA plot shows differential-expression effect sizes across the range of mean gene-expression abundance."
+  },
+  {
+    "objectID": "index.html#top-differentially-expressed-genes",
+    "href": "index.html#top-differentially-expressed-genes",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Top Differentially Expressed Genes",
+    "text": "Top Differentially Expressed Genes\n\nThe top 30 genes ranked by adjusted p-value showed strong group-specific expression patterns.\nThe three NM samples generally showed similar expression profiles, as did the three MP46 samples."
+  },
+  {
+    "objectID": "index.html#enrichment-summary",
+    "href": "index.html#enrichment-summary",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Enrichment Summary",
+    "text": "Enrichment Summary\n\n\n\nGene Set\nGO Biological Process\nReactome\n\n\n\n\nHigher in MP46\n31\n0\n\n\nHigher in NM\n236\n46"
+  },
+  {
+    "objectID": "index.html#genes-higher-in-mp46",
+    "href": "index.html#genes-higher-in-mp46",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Genes Higher in MP46",
+    "text": "Genes Higher in MP46\n\nProminent enriched themes included:\n\nnuclear and cell division\nmicrotubule organization\ncentrosome-associated processes\norganelle fission\ndevelopmental and patterning processes\n\nNo Reactome pathways passed the specified significance threshold for the MP46-higher gene set."
+  },
+  {
+    "objectID": "index.html#genes-higher-in-nm",
+    "href": "index.html#genes-higher-in-nm",
+    "title": "RNA-Seq Analysis Report",
+    "section": "Genes Higher in NM",
+    "text": "Genes Higher in NM\n\nGO enrichment included:\n\ncell-cell adhesion\nantigen processing and presentation\nextracellular matrix organization\ncellular signaling and interaction processes\n\n\nReactome\n\nProminent Reactome themes included:\n\nextracellular matrix organization\nIGF transport and IGF-binding proteins\ninterferon-gamma signaling\nplatelet activation and degranulation\nhemostasis\nextracellular matrix degradation\nER-phagosome pathway\nECM proteoglycans"
+  }
+]
