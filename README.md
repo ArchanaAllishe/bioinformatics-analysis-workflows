@@ -740,6 +740,24 @@ automation, and clear reporting.
 
 </div>
 
+---
+# AI Usage
+
+AI-assisted tools were used during development to support tasks such as
+documentation refinement, code review, troubleshooting, and exploration of
+implementation approaches.
+
+The analysis itself was executed and validated using the tools and workflows
+documented in this repository. Quality-control decisions, parameter selection,
+statistical thresholds, result verification, and biological interpretation
+were reviewed against the underlying data and established bioinformatics
+methods.
+
+AI-generated suggestions were treated as development assistance rather than
+as a substitute for analysis validation or scientific interpretation.
+
+</div>
+---
 # References
 
 ## Dataset and Study
