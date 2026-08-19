@@ -1,12 +1,10 @@
 <div align="center">
 
-# 🧬 Reproducible RNA-Seq Analysis Pipeline
+# 🧬 From Sequencing Data to Biological Insight
 
-### Large-Scale Sequencing Data → Reproducible Analysis → Biological Insight
+### A Reproducible Bioinformatics Framework Demonstrated with End-to-End RNA-Seq Analysis
 
-An end-to-end bulk RNA-seq portfolio project demonstrating **Python, R,
-Shell/Bash, Linux, Docker, HPC/SLURM, statistical genomics, reproducible
-computing, and scientific reporting**.
+**Large-Scale Data → Quality Control → Reproducible Analysis → Statistical Genomics → Biological Interpretation → Shareable Results**
 
 <br>
 
@@ -17,173 +15,133 @@ computing, and scientific reporting**.
 [![Docker](https://img.shields.io/badge/Docker-Reproducibility-2496ED?logo=docker&logoColor=white)](#reproducibility)
 [![HPC](https://img.shields.io/badge/HPC-SLURM-6A5ACD)](#hpc--slurm-experience)
 [![Quarto](https://img.shields.io/badge/Quarto-Interactive_Report-75AADB)](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
-[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Live-success)](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
 
 <br>
 
-### 🔬 [View the Interactive RNA-Seq Analysis Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
+### 🔬 [Explore the Interactive RNA-Seq Analysis Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
 
-`Python` · `R/Bioconductor` · `Bash` · `Linux` · `Docker` · `HPC/SLURM` ·
-`STAR` · `featureCounts` · `DESeq2` · `Git` · `Quarto`
+`Python` · `R/Bioconductor` · `Bash` · `Linux` · `Docker` · `HPC/SLURM`  
+`FastQC` · `MultiQC` · `STAR` · `SAMtools` · `RSeQC` · `featureCounts` · `DESeq2` · `Quarto`
 
 </div>
 
 ---
 
-## Technical Skills Demonstrated
+## Overview
 
-This project combines **bioinformatics analysis, scientific programming,
-Linux-based data processing, reproducible computing, HPC workflow concepts,
-and scientific communication**.
+Modern bioinformatics requires more than running individual analysis tools.
 
-| Area | Technologies and Application |
-|---|---|
-| **Python** | `pandas`, `scikit-learn`, `matplotlib`, `pathlib`, `re` — count-matrix processing, QC, filtering, normalization, PCA, sample correlation, gene annotation, and visualization |
-| **R / Bioconductor** | `DESeq2`, `clusterProfiler`, `ReactomePA` — differential expression, statistical modeling, GO enrichment, and Reactome pathway analysis |
-| **Shell / Bash** | FASTQ/BAM handling, STAR execution, SAMtools, featureCounts, RSeQC, Docker, Git, batch processing, and troubleshooting |
-| **Linux** | filesystem management, permissions, command-line bioinformatics, software environments, and large sequencing-file handling |
-| **HPC / SLURM** | SSH-based cluster access, shared storage, environment modules, SLURM job scripts, resource requests, job submission, monitoring, and output review |
-| **RNA-Seq / NGS** | QC, alignment, strandedness assessment, gene quantification, filtering, normalization, expression QC, differential expression, and functional interpretation |
-| **Containers** | Docker — reproducible Linux/ARM64 bioinformatics environment |
-| **Version Control** | Git, GitHub |
-| **Scientific Reporting** | Quarto, Markdown, GitHub Pages |
+Large-scale sequencing data must be **quality controlled, processed,
+statistically analyzed, biologically interpreted, reproduced across computing
+environments, and communicated clearly to researchers and collaborators**.
+
+This project demonstrates that complete process using **bulk RNA-seq as an
+end-to-end case study**.
+
+Starting with raw paired-end FASTQ files, the project progresses through
+sequencing QC, alignment, gene quantification, expression-level QC,
+differential expression, functional enrichment, and biological interpretation,
+ending with a publicly accessible interactive scientific report.
+
+The project also incorporates software and infrastructure practices relevant
+to modern bioinformatics, including **Python, R, Bash, Linux, Docker, Git,
+HPC concepts, SLURM, environment modules, and reproducible reporting**.
 
 ---
 
-## Workflow Overview
+## Technical Skills Demonstrated
+
+| Area | Technologies & Application |
+|---|---|
+| **Python** | `pandas`, `scikit-learn`, `matplotlib`, `pathlib`, `re` — count processing, QC, filtering, normalization, PCA, sample correlation, gene annotation, and visualization |
+| **R / Bioconductor** | `DESeq2`, `clusterProfiler`, `ReactomePA` — statistical modeling, differential expression, GO enrichment, and Reactome pathway analysis |
+| **Shell / Bash** | FASTQ/BAM handling, command-line bioinformatics, batch processing, tool execution, Git/Docker operations, and troubleshooting |
+| **Linux** | filesystem management, permissions, command-line processing, software environments, large sequencing-file handling, and remote computing |
+| **HPC / SLURM** | SSH access, shared storage, Linux users/groups, environment modules, SLURM job scripts, resource requests, `sbatch`, `squeue`, and job-output review |
+| **RNA-Seq / NGS** | raw-read QC, alignment, strandedness assessment, gene quantification, filtering, normalization, expression QC, differential expression, and enrichment |
+| **Bioinformatics Tools** | FastQC, MultiQC, STAR, SAMtools, RSeQC, featureCounts |
+| **Reproducibility** | Docker, Git, GitHub, documented analytical decisions |
+| **Scientific Reporting** | Quarto, Markdown, visualization, GitHub Pages |
+
+---
+
+## RNA-Seq Demonstration
+
+Bulk RNA-seq was selected as the first end-to-end demonstration because it
+requires integration of **large-scale data processing, command-line
+bioinformatics, programming, statistical analysis, biological interpretation,
+and scientific communication**.
 
 <p align="center">
   <img src="assets/rnaseq-workflow-overview.png"
-       alt="Reproducible RNA-seq analysis workflow"
+       alt="End-to-end reproducible RNA-seq analysis workflow"
        width="100%">
 </p>
 
-The workflow connects raw sequencing data to biological interpretation and
-shareable results while keeping the computational environment, scripts,
-technical decisions, and reporting reproducible.
+The workflow demonstrates how raw sequencing data can be transformed into
+reproducible and biologically interpretable results while maintaining clear
+quality-control checkpoints and documented analytical decisions.
 
 ---
 
 ## Why This Project?
 
-Modern biological research increasingly depends on the ability to transform
-large-scale sequencing data into reliable and biologically meaningful
-information.
+The project was developed with two connected objectives.
 
-RNA-seq analysis is not simply a sequence of software commands. A complete
-analysis requires understanding how raw sequencing data move through:
+### Scientific objective
 
-```text
-quality assessment
-        ↓
-alignment
-        ↓
-gene quantification
-        ↓
-sample-level QC
-        ↓
-statistical analysis
-        ↓
-functional interpretation
-        ↓
-scientific communication
-```
+To perform an end-to-end bulk RNA-seq analysis and determine whether the
+experimental groups show reproducible transcriptomic differences and distinct
+biological signatures.
 
-This project was developed using a public RNA-seq dataset to demonstrate an
-**end-to-end computational biology workflow** and to showcase the ability to
-turn large-scale sequencing data into **quality-controlled, statistically
-supported, biologically interpretable, and shareable results**.
+### Computational objective
 
-The project demonstrates the ability to:
+To demonstrate the ability to build and execute a reproducible bioinformatics
+analysis that connects:
 
-- work with large sequencing datasets
-- evaluate data quality before drawing biological conclusions
-- connect multiple bioinformatics tools into a coherent workflow
-- make and document analytical decisions rather than relying blindly on defaults
-- validate gene-count matrices before statistical testing
-- assess replicate consistency and potential sample outliers
-- use Python, R, Bash, and Linux for reproducible analysis
-- perform statistically controlled differential-expression analysis
-- translate gene-level differences into pathway-level biological patterns
-- use Docker and Git to improve reproducibility
-- work with HPC/SLURM-style execution environments
-- organize code, documentation, data, and results appropriately
-- communicate results through clear figures and an interactive report
+- large-scale sequencing data processing
+- Linux and command-line bioinformatics
+- Python-based data analysis
+- R/Bioconductor statistical genomics
+- quality-control checkpoints
+- containerized computational environments
+- HPC/SLURM concepts
+- version-controlled code and documentation
+- biological interpretation
+- collaborator-facing scientific reporting
 
-The objective is not simply to generate computational output, but to
-demonstrate how **large-scale biological data can be transformed into
-meaningful scientific insight**.
+The goal is therefore not simply to produce a collection of bioinformatics
+outputs.
 
----
-
-## HPC / SLURM Experience
-
-This project also includes hands-on experience with a **simulated HPC
-environment** designed to reflect how institutional bioinformatics workflows
-are commonly executed.
-
-Work completed includes:
-
-```text
-SSH-based login to an HPC node
-shared project storage
-Linux users and groups
-project permissions
-environment modules
-bioinformatics software modules
-SLURM job scripts
-CPU / memory / time requests
-job submission with sbatch
-job monitoring with squeue
-job-output review
-```
-
-Example execution model:
-
-```text
-Login node
-    ↓
-Load software modules
-    ↓
-Prepare SLURM job script
-    ↓
-Request CPU / memory / runtime
-    ↓
-Submit with sbatch
-    ↓
-Monitor with squeue
-    ↓
-Review job output
-```
-
-The HPC environment was used to practice how reproducible bioinformatics
-workflows move beyond a local workstation into shared compute infrastructure.
-
-The next project phase will integrate this with **Nextflow + SLURM** for
-automated workflow execution.
+It is to demonstrate the ability to move from **raw biological data to
+quality-controlled, statistically supported, biologically meaningful, and
+shareable scientific results**.
 
 ---
 
 ## Interactive Analysis Report
 
-The complete results are available as a collaborator-facing **Quarto HTML
-report**:
+The scientific results are presented through a collaborator-facing **Quarto
+HTML report published with GitHub Pages**.
 
 ### 🔬 [Open the Interactive RNA-Seq Analysis Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
 
-The report includes:
+The report integrates:
 
 - sequencing and alignment QC
 - count-matrix processing
 - PCA
 - sample-correlation analysis
 - differential expression
-- volcano plot
-- MA plot
+- volcano and MA plots
 - top-DE-gene heatmap
 - GO Biological Process enrichment
 - Reactome pathway enrichment
 - biological interpretation
+
+This provides a results-first interface so that collaborators can review the
+analysis without navigating scripts, command-line output, or intermediate
+files.
 
 ---
 
@@ -208,13 +166,15 @@ The report includes:
 
 ---
 
+# RNA-Seq Case Study
+
 ## Dataset
 
-Publicly available bulk RNA-seq data from:
+The demonstration uses publicly available bulk RNA-seq data from:
 
 **GEO accession: GSE199679**
 
-Six paired-end samples were analyzed:
+Six paired-end RNA-seq samples were analyzed.
 
 | Group | Samples |
 |---|---|
@@ -227,7 +187,7 @@ Primary comparison:
 MP46 vs NM
 ```
 
-### Reference
+### Reference Configuration
 
 | Component | Reference |
 |---|---|
@@ -235,18 +195,39 @@ MP46 vs NM
 | Annotation | GENCODE v48 |
 
 The same annotation release was maintained across genome indexing,
-gene-level quantification, and downstream gene annotation.
+gene-level quantification, and downstream gene annotation to reduce
+inconsistencies between analysis stages.
 
 ---
 
-# Key Results
+# Analysis and Results
 
-## Sequencing QC and Alignment
+## 1. Sequencing Quality Control
 
-Raw reads were evaluated using **FastQC**, and individual reports were
-aggregated with **MultiQC**.
+Raw paired-end FASTQ files were evaluated using **FastQC**.
 
-Reads were aligned to GRCh38 using **STAR**.
+Individual QC reports were aggregated with **MultiQC** to provide a
+dataset-level overview.
+
+QC evaluation included metrics such as:
+
+- per-base sequence quality
+- GC content
+- adapter content
+- sequence duplication
+- overall read-quality patterns
+
+This provides the first checkpoint before computationally expensive downstream
+analysis.
+
+---
+
+## 2. Read Alignment
+
+Reads were aligned against the GRCh38 reference genome using **STAR**.
+
+Alignment files were processed and inspected using **SAMtools** and STAR
+alignment statistics.
 
 | Sample | Uniquely Mapped Reads |
 |---|---:|
@@ -257,15 +238,15 @@ Reads were aligned to GRCh38 using **STAR**.
 | MP46_2 | 94.31% |
 | MP46_3 | 89.23% |
 
-Unique mapping ranged from approximately **88.3% to 95.2%**.
+Unique mapping rates ranged from approximately **88.3% to 95.2%**.
 
 ---
 
-## Library Strandedness
+## 3. Library Strandedness
 
-Library orientation was not assumed.
+Library orientation was not assumed from metadata.
 
-It was empirically assessed using:
+It was empirically evaluated using:
 
 ```text
 RSeQC infer_experiment.py
@@ -273,29 +254,43 @@ RSeQC infer_experiment.py
 
 The results supported a **reverse-stranded paired-end library**.
 
-featureCounts was therefore configured with:
+featureCounts was therefore configured using:
 
 ```text
 -s 2
 ```
 
+This ensured that gene-level quantification reflected the observed library
+orientation.
+
 ---
 
-## Gene Quantification and Count QC
+## 4. Gene Quantification and Count-Matrix QC
 
 Gene-level counts were generated using **featureCounts**.
 
-Initial matrix:
+The initial matrix contained:
 
 ```text
 78,894 genes
 ```
 
-Low-expression filtering criterion:
+Before statistical analysis, the matrix was evaluated for:
+
+- duplicate gene identifiers
+- missing values
+- negative counts
+- library sizes
+- detected genes
+- low-expression features
+
+### Filtering Criterion
 
 ```text
-Retain genes with ≥10 counts in at least 3 samples
+Retain genes with ≥10 raw counts in at least 3 samples
 ```
+
+### Count-Matrix Summary
 
 | Metric | Result |
 |---|---:|
@@ -306,20 +301,23 @@ Retain genes with ≥10 counts in at least 3 samples
 | Missing values | **0** |
 | Negative counts | **0** |
 
-The validated 12,728-gene matrix was carried forward.
+The validated **12,728-gene matrix** was carried forward for downstream
+analysis.
 
 ---
 
-## Expression-Level QC
+## 5. Expression-Level Quality Control
 
-Expression-level QC was performed before differential-expression analysis.
+Sample-level expression patterns were evaluated before differential-expression
+interpretation.
 
-Median-of-ratios normalization was used for exploratory analysis, followed by
-log2 transformation for PCA and sample correlation.
+Normalized and transformed expression values were used for exploratory
+sample-level analysis, while raw integer counts were retained separately for
+DESeq2 modeling.
 
-Raw integer counts were retained separately for DESeq2.
+### Principal Component Analysis
 
-### PCA
+PCA was implemented in Python using **scikit-learn**.
 
 ```text
 PC1 = 88.79%
@@ -328,7 +326,7 @@ PC2 =  3.73%
 PC1 + PC2 = 92.52%
 ```
 
-PC1 clearly separated NM and MP46.
+PC1 provided strong separation between NM and MP46.
 
 ### Sample Correlation
 
@@ -345,36 +343,38 @@ Between-group correlations were substantially lower:
 ≈ 0.56–0.64
 ```
 
-PCA and correlation analysis supported strong replicate consistency, and no
-obvious expression-level outlier was identified.
+Together, PCA and correlation analysis supported strong replicate consistency,
+and no obvious expression-level outlier was identified.
 
-📊 **[View expression QC figures](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#expression-level-qc)**
+📊 **[Explore Expression QC](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#expression-level-qc)**
 
 ---
 
-## Differential Expression
+## 6. Differential Expression
 
-Differential expression was performed using **DESeq2**.
+Differential-expression analysis was performed using **DESeq2**.
 
 ```text
 Design   : ~ Group
 Contrast : MP46 vs NM
 ```
 
-Contrast interpretation:
+Direction was explicitly defined as:
 
 ```text
 log2FoldChange > 0  → higher in MP46
 log2FoldChange < 0  → higher in NM
 ```
 
-Primary significance threshold:
+### Primary Significance Criterion
 
 ```text
 adjusted p-value < 0.05
 AND
 |log2FoldChange| ≥ 1
 ```
+
+### Differential-Expression Summary
 
 | Result | Genes |
 |---|---:|
@@ -383,35 +383,38 @@ AND
 | **Significant DE genes** | **6,816** |
 | Higher in MP46 | **3,495** |
 | Higher in NM | **3,321** |
+| padj < 0.01 and \|log2FC\| ≥ 1 | 6,425 |
 | padj < 0.05 and \|log2FC\| ≥ 2 | 3,200 |
 
 Results were evaluated using:
 
 - volcano plot
 - MA plot
-- top-30 DE-gene heatmap
-- annotated DESeq2 tables
+- top-30 differentially expressed gene heatmap
+- annotated DESeq2 result tables
 
-📈 **[View differential-expression results](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#differential-expression)**
+📈 **[Explore Differential Expression](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#differential-expression)**
 
 ---
 
-## Functional Enrichment
+## 7. Functional Enrichment
 
-Significant DE genes were separated by expression direction:
+Significant genes were separated according to expression direction:
 
 ```text
 Higher in MP46 → 3,495 genes
 Higher in NM   → 3,321 genes
 ```
 
-Each set was independently analyzed using:
+The two gene sets were independently analyzed using:
 
-- **GO Biological Process**
+- **Gene Ontology Biological Process**
 - **Reactome**
 
-The enrichment background consisted of genes **tested in DESeq2** rather than
-all annotated human genes.
+The enrichment background consisted of genes **tested in DESeq2**, rather
+than all annotated human genes.
+
+### Enrichment Summary
 
 | Gene Set | GO BP | Reactome |
 |---|---:|---:|
@@ -420,7 +423,7 @@ all annotated human genes.
 
 ### Higher in MP46
 
-Prominent themes included:
+Prominent functional themes included:
 
 - cell and nuclear division
 - microtubule organization
@@ -429,7 +432,7 @@ Prominent themes included:
 
 ### Higher in NM
 
-Prominent themes included:
+Prominent functional themes included:
 
 - extracellular matrix organization
 - cell adhesion
@@ -437,45 +440,30 @@ Prominent themes included:
 - interferon-associated signaling
 - extracellular matrix remodeling
 
-No Reactome pathway passed the predefined threshold for the MP46-higher gene
-set. This result was retained rather than changing the statistical threshold
-after viewing the results.
+No Reactome pathway passed the predefined significance threshold for the
+MP46-higher gene set.
 
-🧬 **[View functional-enrichment results](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#functional-enrichment)**
+The statistical threshold was not relaxed after observing this result.
+
+🧬 **[Explore Functional Enrichment](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/#functional-enrichment)**
 
 ---
 
 ## Biological Summary
 
-Multiple independent analyses consistently distinguished the two transcriptomic
-groups:
+Independent analysis stages consistently distinguished the NM and MP46
+transcriptomic profiles.
 
-```text
-PCA
- │
- └── Strong NM / MP46 separation
-             │
-             ▼
-Sample Correlation
- │
- └── High within-group consistency
-             │
-             ▼
-DESeq2
- │
- └── 6,816 significant DE genes
-             │
-             ▼
-Functional Enrichment
- │
- └── Distinct direction-specific signatures
-```
+**Expression-level QC** showed strong group separation and high replicate
+consistency.
 
-Genes higher in **MP46** were associated mainly with cell-division and
-microtubule-related processes.
+**Differential-expression analysis** identified 6,816 genes meeting the
+predefined significance and effect-size criteria.
 
-Genes higher in **NM** showed broader extracellular-matrix, adhesion,
-immune-associated, and antigen-processing signatures.
+**Functional enrichment** showed that genes higher in MP46 were associated
+primarily with cell-division and microtubule-related processes, whereas genes
+higher in NM showed broader extracellular-matrix, adhesion, immune-associated,
+and antigen-processing signatures.
 
 > **Interpretation note:** These findings represent expression-associated
 > biological signatures. They are not interpreted as direct evidence of
@@ -483,32 +471,38 @@ immune-associated, and antigen-processing signatures.
 
 ---
 
-## Analytical Decisions
+# Analytical Decisions
+
+An important objective of this project was to make analytical decisions
+explicit and reproducible rather than treating the workflow as a black box.
 
 <details>
-<summary><b>Why use the same genome annotation throughout the analysis?</b></summary>
+<summary><b>Why maintain the same genome annotation?</b></summary>
 
-GRCh38 and GENCODE v48 were maintained consistently across STAR indexing,
-featureCounts quantification, and downstream gene annotation.
+GRCh38 and GENCODE v48 were maintained consistently across STAR genome
+indexing, featureCounts quantification, and downstream gene annotation.
 
-This reduces coordinate and identifier inconsistencies between analysis stages.
+This reduces gene-coordinate and identifier inconsistencies between analysis
+stages.
 
 </details>
 
 <details>
 <summary><b>Why determine strandedness empirically?</b></summary>
 
-Incorrect strandedness can substantially alter gene-level quantification.
+Incorrect strandedness settings can substantially affect gene-level
+quantification.
 
-RSeQC was therefore used before configuring featureCounts.
+RSeQC was therefore used to assess library orientation before configuring
+featureCounts.
 
 </details>
 
 <details>
 <summary><b>Why filter low-expression genes?</b></summary>
 
-Very low-count genes contribute limited statistical information while
-increasing the multiple-testing burden.
+Very low-count genes provide limited statistical information while increasing
+the multiple-testing burden.
 
 The predefined criterion was:
 
@@ -519,10 +513,11 @@ The predefined criterion was:
 </details>
 
 <details>
-<summary><b>Why perform PCA and correlation before DESeq2?</b></summary>
+<summary><b>Why perform PCA and correlation before differential expression?</b></summary>
 
-Sample-level QC was performed first to evaluate replicate consistency, group
-structure, and potential outliers before interpreting statistical results.
+Sample-level QC was performed before interpreting DESeq2 results to evaluate
+replicate consistency, group structure, and potential expression-level
+outliers.
 
 </details>
 
@@ -532,37 +527,186 @@ structure, and potential outliers before interpreting statistical results.
 Genes higher in MP46 and genes higher in NM represent opposite expression
 patterns.
 
-Analyzing them separately preserves direction-specific biological
-interpretation.
+Analyzing the two sets separately preserves direction-specific biological
+information.
 
 </details>
 
 <details>
 <summary><b>Why use DESeq2-tested genes as the enrichment background?</b></summary>
 
-Only genes tested in the statistical analysis could enter the significant
-gene lists.
+Only genes included in the statistical analysis could become members of the
+significant gene sets.
 
-The tested-gene universe therefore provides a more appropriate background than
-all annotated genes.
+The tested-gene universe therefore provides a more appropriate enrichment
+background than all annotated genes.
 
 </details>
 
 <details>
-<summary><b>Why retain zero significant Reactome pathways for MP46?</b></summary>
+<summary><b>Why retain zero significant MP46 Reactome pathways?</b></summary>
 
-No Reactome pathways passed the predefined significance threshold.
+No Reactome pathway passed the predefined significance threshold for this
+gene set.
 
-The threshold was not relaxed after observing the result, preserving the
-original analytical criteria.
+The threshold was not relaxed after observing the results. This preserves the
+predefined analytical criteria rather than selecting a threshold simply to
+produce significant pathways.
 
 </details>
 
 ---
 
-## Reproducibility
+# Programming and Computational Implementation
 
-The project separates the major components of computational analysis:
+## Python
+
+Python was used for reusable downstream-analysis scripts rather than relying
+only on manual or interactive analysis.
+
+```text
+pandas
+    └── count tables, filtering, transformations, result processing
+
+scikit-learn
+    └── principal component analysis
+
+matplotlib
+    └── scientific visualization
+
+pathlib
+    └── reproducible path and filesystem handling
+
+re
+    └── annotation parsing and text processing
+```
+
+This demonstrates the use of Python as a **scientific data-processing and
+workflow-support language**, not simply as a plotting tool.
+
+---
+
+## R / Bioconductor
+
+R was used where established statistical-genomics methods were most
+appropriate.
+
+```text
+DESeq2
+    └── differential-expression modeling
+
+clusterProfiler
+    └── Gene Ontology enrichment
+
+ReactomePA
+    └── Reactome pathway enrichment
+```
+
+This allows the workflow to combine Python-based data processing with
+specialized Bioconductor statistical methods.
+
+---
+
+## Shell / Bash
+
+Shell commands and scripts were used throughout the project for:
+
+```text
+FASTQ and BAM management
+bioinformatics program execution
+STAR alignment
+SAMtools processing
+RSeQC execution
+featureCounts quantification
+batch processing
+Docker execution
+Git operations
+filesystem inspection
+workflow troubleshooting
+```
+
+Shell therefore acts as an important integration layer between the individual
+bioinformatics tools.
+
+---
+
+## Linux
+
+Linux-based computing was used for:
+
+```text
+filesystem navigation and organization
+permissions and access control
+command-line data processing
+bioinformatics software execution
+software/environment management
+large sequencing-file handling
+SSH-based remote computing
+environment modules
+HPC workflow practice
+```
+
+---
+
+# HPC / SLURM Experience
+
+In addition to local analysis, the project includes a **simulated Linux HPC
+environment** designed to reproduce key concepts used in institutional
+research-computing environments.
+
+Implemented components include:
+
+```text
+HPC login node
+        ↓
+SSH key-based access
+        ↓
+Linux users and groups
+        ↓
+Shared project storage
+        ↓
+Environment Modules
+        ↓
+Bioinformatics software modules
+        ↓
+SLURM resource requests
+        ↓
+sbatch job submission
+        ↓
+squeue monitoring
+        ↓
+Job-output inspection
+```
+
+Practical tasks included:
+
+- configuring SSH access
+- managing Linux users and groups
+- configuring shared project directories
+- working with filesystem permissions
+- creating bioinformatics environment modules
+- loading STAR, SAMtools, FastQC, and MultiQC through modules
+- writing SLURM job scripts
+- requesting CPU, memory, and runtime resources
+- submitting jobs using `sbatch`
+- monitoring jobs using `squeue`
+- reviewing generated job output
+
+This environment provides practical exposure to the execution model used by
+many institutional bioinformatics and research-computing systems.
+
+> The current RNA-seq analysis itself was validated separately. Full
+> end-to-end execution of the RNA-seq workflow through SLURM is a planned
+> development step rather than being presented as already completed.
+
+---
+
+# Reproducibility
+
+Reproducibility was treated as part of the analysis design rather than an
+afterthought.
+
+The project separates:
 
 ```text
 Analysis code
@@ -572,9 +716,9 @@ Computational environment
      └── Docker
 
 Large sequencing data
-     └── Outside Git
+     └── maintained outside Git
 
-Technical methods
+Technical methodology
      └── docs/
 
 Selected results
@@ -584,10 +728,10 @@ Scientific communication
      └── Quarto + GitHub Pages
 ```
 
-### Why Docker?
+## Containerized Environment
 
-STAR and associated command-line bioinformatics tools were executed in a
-**Linux ARM64 Docker environment**.
+Command-line bioinformatics tools were executed in a **Linux ARM64 Docker
+environment**.
 
 Docker was used to:
 
@@ -595,11 +739,17 @@ Docker was used to:
 - provide a consistent Linux environment
 - reduce host-specific software conflicts
 - support execution on Apple Silicon
-- make the environment easier to reproduce
+- improve computational portability
+
+Container definitions are maintained under:
+
+```text
+containers/
+```
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```text
 reproducible-rnaseq-pipeline/
@@ -634,25 +784,55 @@ reproducible-rnaseq-pipeline/
 └── README.md
 ```
 
-Large files are intentionally excluded from version control, including FASTQ,
-BAM, reference genomes, STAR indexes, and large intermediate result tables.
+Large files are intentionally excluded from version control, including:
+
+```text
+FASTQ files
+BAM files
+reference genomes
+STAR genome indexes
+large intermediate files
+```
+
+This keeps the repository focused on **code, reproducibility, analytical
+decisions, documentation, and selected results**.
 
 ---
 
-## Project Status
+# Documentation Strategy
 
-### ✅ Completed
+The repository separates technical and scientific communication according to
+audience:
 
-- [x] Raw paired-end FASTQ processing
+| Component | Purpose |
+|---|---|
+| `README.md` | Project overview, capabilities, workflow, and major findings |
+| `docs/` | Detailed methodology and analytical decisions |
+| `scripts/` | Reusable analysis code |
+| `containers/` | Reproducible software environments |
+| `results/` | Selected final analysis outputs |
+| Quarto report | Collaborator-facing scientific results |
+
+This allows the same project to serve both **technical reviewers** interested
+in implementation and **scientific collaborators** interested primarily in
+results.
+
+---
+
+# Project Status
+
+### ✅ RNA-Seq Demonstration
+
+- [x] paired-end FASTQ processing
 - [x] FastQC and MultiQC
 - [x] STAR alignment
 - [x] empirical strandedness assessment
-- [x] featureCounts quantification
-- [x] count-matrix cleaning and QC
+- [x] featureCounts gene quantification
+- [x] count-matrix cleaning and validation
 - [x] low-expression filtering
 - [x] normalization
 - [x] PCA
-- [x] sample correlation
+- [x] sample-correlation analysis
 - [x] DESeq2 differential expression
 - [x] gene annotation
 - [x] volcano plot
@@ -660,68 +840,125 @@ BAM, reference genomes, STAR indexes, and large intermediate result tables.
 - [x] top-DE-gene heatmap
 - [x] GO Biological Process enrichment
 - [x] Reactome enrichment
-- [x] Dockerized STAR environment
-- [x] Git-based version control
-- [x] technical workflow documentation
-- [x] Quarto HTML report
-- [x] GitHub Pages deployment
+- [x] Quarto scientific report
+- [x] GitHub Pages publication
+
+### ✅ Reproducibility & Computing
+
+- [x] Linux-based analysis
+- [x] Python analysis scripts
+- [x] R/Bioconductor statistical analysis
+- [x] Shell/Bash workflow execution
+- [x] Dockerized bioinformatics environment
+- [x] Git/GitHub version control
 - [x] simulated HPC environment
+- [x] SSH-based HPC access
+- [x] shared project storage
 - [x] environment modules
-- [x] SLURM job submission and monitoring
+- [x] SLURM job submission
+- [x] SLURM job monitoring
 
 ---
 
-## Next Development
+# Next Development
 
-The next phase will convert the validated analysis steps into an automated
-workflow using **Nextflow**.
+The current project establishes the individual analysis components and
+validates the RNA-seq demonstration.
 
-Planned development includes:
+The next phase will focus on **workflow engineering and automation**.
 
-- [ ] Nextflow workflow automation
+### Planned
+
+- [ ] **Nextflow workflow implementation**
+- [ ] automated dependency between analysis stages
 - [ ] end-to-end containerized execution
-- [ ] configurable paired-end and single-end inputs
-- [ ] automated QC and HTML report generation
-- [ ] full RNA-seq execution through HPC / SLURM
+- [ ] configurable paired-end and single-end input
+- [ ] automated QC reporting
+- [ ] automated downstream analysis
+- [ ] automated Quarto report generation
+- [ ] full workflow execution through **HPC / SLURM**
 - [ ] workflow testing
 - [ ] continuous integration
 
-The goal is to evolve the validated analysis into a **portable, automated,
-containerized, and reproducible RNA-seq workflow** that can move between local
-and HPC computing environments.
+The target architecture is:
+
+```text
+                     Sequencing Data
+                           │
+                           ▼
+                       Nextflow
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+             QC        Alignment    Quantification
+             │             │             │
+             └─────────────┼─────────────┘
+                           ▼
+                     Expression QC
+                           │
+                           ▼
+                 Statistical Analysis
+                           │
+                           ▼
+                Functional Interpretation
+                           │
+                           ▼
+                  Automated Reporting
+                           │
+                  ┌────────┴────────┐
+                  ▼                 ▼
+                Local          HPC / SLURM
+```
+
+The longer-term objective is to evolve the RNA-seq demonstration into a
+**portable and reusable bioinformatics framework** capable of supporting
+additional sequencing-analysis workflows.
 
 ---
 
-## What This Project Demonstrates
+# What This Project Demonstrates
+
+This project intentionally brings together three areas that are often treated
+separately.
 
 ### 🧬 Computational Biology
 
-Working from raw sequencing data through QC, expression analysis, statistical
-testing, functional enrichment, and biological interpretation.
+The ability to progress from raw sequencing data through quality control,
+quantification, statistical analysis, functional enrichment, and biological
+interpretation.
 
 ### 💻 Bioinformatics Engineering
 
-Using Linux, Python, R, Bash, Docker, Git, HPC/SLURM concepts, reproducible
-environments, and workflow-oriented project organization.
+The ability to use Python, R, Bash, Linux, Docker, Git, HPC/SLURM concepts,
+structured scripts, and reproducible environments to build maintainable
+computational analyses.
 
 ### 📊 Scientific Communication
 
-Transforming complex analysis outputs into understandable figures, summaries,
-biological interpretations, and an interactive report.
+The ability to transform complex computational outputs into understandable
+figures, summaries, biological interpretations, documentation, and a
+collaborator-facing interactive report.
 
-Together, these demonstrate the ability to **work with large-scale biological
-data, evaluate it critically, build reproducible computational analyses,
-identify biologically meaningful patterns, and communicate the resulting
-insights clearly**.
+---
+
+## Core Takeaway
+
+> **The value of a bioinformatics workflow is not simply that it runs. It
+> should produce results that are quality-controlled, statistically defensible,
+> biologically interpretable, computationally reproducible, and accessible to
+> the people who need to use them.**
+
+This project demonstrates that progression using **RNA-seq as the first
+end-to-end implementation**.
 
 ---
 
 <div align="center">
 
-## Explore the Complete Analysis
+## 🔬 Explore the RNA-Seq Demonstration
 
-### 🔬 [View the Interactive RNA-Seq Analysis Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
+### [View the Interactive Analysis Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
 
-**Large-Scale Sequencing Data → Reproducible Analysis → Biological Insight → Shareable Results**
+**Raw Sequencing Data → Reproducible Computing → Biological Insight → Shareable Results**
 
 </div>
