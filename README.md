@@ -48,11 +48,15 @@ analysis decisions along the way.
 
 ## Study Background
 
-The analysis uses publicly available RNA-seq data associated with
-**GSE199679**, a study investigating molecular differences between normal
-uveal melanocytes and uveal melanoma.
+## Study Background
 
-The RNA-seq component is available under **GSE198801**.
+The analysis uses publicly available RNA-seq data from a multi-omics study of
+uveal melanoma by **Gentien et al. (2023)**. The study compared aggressive
+uveal melanoma patient-derived xenograft models with normal choroidal
+melanocytes to investigate molecular features associated with uveal melanoma.
+
+The complete dataset is available as GEO SuperSeries **GSE199679**, with the
+RNA-seq data available under SubSeries **GSE198801**.
 
 Two groups were selected for this analysis:
 
@@ -735,3 +739,54 @@ automation, and clear reporting.
 **Raw Sequencing Data → Reproducible Analysis → Biological Insight → Shareable Results**
 
 </div>
+
+# References
+
+## Dataset and Study
+
+1. **Gentien D, et al.** Multi-omics comparison of malignant and normal uveal
+   melanocytes reveals molecular features of uveal melanoma.
+   *Cell Reports*. 2023;42(9):113132.
+   doi: 10.1016/j.celrep.2023.113132
+
+   - GEO SuperSeries: **GSE199679**
+   - RNA-seq SubSeries: **GSE198801**
+   - PMID: **37708024**
+
+## Bioinformatics Methods and Resources
+
+2. **Dobin A, et al.** STAR: ultrafast universal RNA-seq aligner.
+   *Bioinformatics*. 2013;29(1):15–21.
+   doi: 10.1093/bioinformatics/bts635
+
+3. **Liao Y, Smyth GK, Shi W.** featureCounts: an efficient general purpose
+   program for assigning sequence reads to genomic features.
+   *Bioinformatics*. 2014;30(7):923–930.
+   doi: 10.1093/bioinformatics/btt656
+
+4. **Wang L, Wang S, Li W.** RSeQC: quality control of RNA-seq experiments.
+   *Bioinformatics*. 2012;28(16):2184–2185.
+   doi: 10.1093/bioinformatics/bts356
+
+5. **Ewels P, Magnusson M, Lundin S, Käller M.** MultiQC: summarize analysis
+   results for multiple tools and samples in a single report.
+   *Bioinformatics*. 2016;32(19):3047–3048.
+   doi: 10.1093/bioinformatics/btw354
+
+6. **Love MI, Huber W, Anders S.** Moderated estimation of fold change and
+   dispersion for RNA-seq data with DESeq2.
+   *Genome Biology*. 2014;15:550.
+   doi: 10.1186/s13059-014-0550-8
+
+7. **Yu G, Wang LG, Han Y, He QY.** clusterProfiler: an R package for
+   comparing biological themes among gene clusters.
+   *OMICS*. 2012;16(5):284–287.
+   doi: 10.1089/omi.2011.0118
+
+8. **Milacic M, et al.** The Reactome Pathway Knowledgebase 2024.
+   *Nucleic Acids Research*. 2024;52(D1):D672–D678.
+   doi: 10.1093/nar/gkad1025
+
+9. **Frankish A, et al.** GENCODE 2021.
+   *Nucleic Acids Research*. 2021;49(D1):D916–D923.
+   doi: 10.1093/nar/gkaa1087
