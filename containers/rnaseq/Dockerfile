@@ -8,6 +8,7 @@ RUN micromamba install -y -n base \
     rseqc \
     ucsc-gtftogenepred \
     ucsc-genepredtobed \
+    subread \
     && micromamba clean --all --yes
 
 CMD ["STAR", "--version"]
