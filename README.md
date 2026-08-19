@@ -33,7 +33,7 @@ scientific reporting**.
 ## RNA-Seq Workflow
 
 <p align="center">
-  <img src="assets/rnaseq-workflow-overview.png"
+  <img src="assets/rnaseq-workflow-overview-v2.png"
        alt="End-to-end reproducible RNA-seq workflow"
        width="100%">
 </p>
