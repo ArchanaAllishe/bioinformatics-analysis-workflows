@@ -57,7 +57,7 @@ process FASTQC {
 
 process MULTIQC {
 
-    container 'quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0'
+    container 'quay.io/biocontainers/multiqc:1.35--pyhdfd78af_0'
 
     input:
     path fastqc_files

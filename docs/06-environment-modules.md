@@ -72,7 +72,7 @@ software modules.
 The following modules were configured:
 
     fastqc/0.12.1
-    multiqc/1.21
+    multiqc/1.35
     samtools/1.22.1
     star/2.7.11b
 
