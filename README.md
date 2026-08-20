@@ -34,7 +34,6 @@ interactive review and sharing.
 Together, the project demonstrates both the biological analysis and the
 computational infrastructure needed to make an RNA-seq workflow reproducible.
 
-### 🔬 [View the Interactive RNA-Seq Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)
 
 ---
 
@@ -454,7 +453,7 @@ biological interpretation.
 This allows collaborators or reviewers to examine the analysis without
 navigating workflow directories or individual scripts.
 
-### 🔬 **[View the Interactive RNA-Seq Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)**
+### 🔬 ***[View the Interactive RNA-Seq Report](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)***
 
 ---
 
