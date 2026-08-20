@@ -48,8 +48,6 @@ analysis decisions along the way.
 
 ## Study Background
 
-## Study Background
-
 The analysis uses publicly available RNA-seq data from a multi-omics study of
 uveal melanoma by **Gentien et al. (2023)**. The study compared aggressive
 uveal melanoma patient-derived xenograft models with normal choroidal
