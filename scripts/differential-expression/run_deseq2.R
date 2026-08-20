@@ -2,33 +2,26 @@
 
 library(DESeq2)
 
-# -----------------------------
-# File paths
-# -----------------------------
 
-base_dir <- file.path(
-  Sys.getenv("HOME"),
-  "rnaseq-analysis",
-  "GSE199679"
-)
+# --------------------------------------------------
+# Command-line arguments
+# --------------------------------------------------
 
-counts_file <- file.path(
-  base_dir,
-  "counts",
-  "gene_counts_filtered.tsv"
-)
+args <- commandArgs(trailingOnly = TRUE)
 
-metadata_file <- file.path(
-  base_dir,
-  "metadata",
-  "samples.tsv"
-)
+if (length(args) != 3) {
+  stop(
+    "Usage: Rscript run_deseq2.R ",
+    "<gene_counts_filtered.tsv> ",
+    "<samples.tsv> ",
+    "<output_dir>"
+  )
+}
 
-output_dir <- file.path(
-  base_dir,
-  "results",
-  "differential_expression"
-)
+counts_file <- args[1]
+metadata_file <- args[2]
+output_dir <- args[3]
+
 
 dir.create(
   output_dir,
@@ -36,9 +29,10 @@ dir.create(
   showWarnings = FALSE
 )
 
-# -----------------------------
-# Read count matrix
-# -----------------------------
+
+# --------------------------------------------------
+# Read filtered raw count matrix
+# --------------------------------------------------
 
 counts <- read.delim(
   counts_file,
@@ -46,27 +40,44 @@ counts <- read.delim(
   check.names = FALSE
 )
 
-# -----------------------------
-# Read metadata
-# -----------------------------
+
+# --------------------------------------------------
+# Read sample metadata
+# --------------------------------------------------
 
 metadata <- read.delim(
   metadata_file,
   row.names = 1
 )
 
-# Match metadata order to count columns
-metadata <- metadata[colnames(counts), , drop = FALSE]
 
+# --------------------------------------------------
+# Match metadata to count columns
+# --------------------------------------------------
+
+metadata <- metadata[
+  colnames(counts),
+  ,
+  drop = FALSE
+]
+
+
+# --------------------------------------------------
 # Set NM as reference group
+# --------------------------------------------------
+
 metadata$Group <- factor(
   metadata$Group,
-  levels = c("NM", "MP46")
+  levels = c(
+    "NM",
+    "MP46"
+  )
 )
 
-# -----------------------------
+
+# --------------------------------------------------
 # Create DESeq2 dataset
-# -----------------------------
+# --------------------------------------------------
 
 dds <- DESeqDataSetFromMatrix(
   countData = round(counts),
@@ -74,23 +85,46 @@ dds <- DESeqDataSetFromMatrix(
   design = ~ Group
 )
 
-# -----------------------------
-# Differential expression
-# -----------------------------
+
+# --------------------------------------------------
+# Run DESeq2
+#
+# Includes:
+# size-factor estimation
+# normalization
+# dispersion estimation
+# negative-binomial model fitting
+# statistical testing
+# --------------------------------------------------
 
 dds <- DESeq(dds)
 
+
+# --------------------------------------------------
+# Differential-expression results
+# --------------------------------------------------
+
 results_table <- results(
   dds,
-  contrast = c("Group", "MP46", "NM"),
+  contrast = c(
+    "Group",
+    "MP46",
+    "NM"
+  ),
   alpha = 0.05
 )
 
-results_df <- as.data.frame(results_table)
 
-results_df$Geneid <- rownames(results_df)
+results_df <- as.data.frame(
+  results_table
+)
 
-# Put Geneid first
+
+results_df$Geneid <- rownames(
+  results_df
+)
+
+
 results_df <- results_df[
   ,
   c(
@@ -104,14 +138,16 @@ results_df <- results_df[
   )
 ]
 
+
 # Sort by adjusted p-value
 results_df <- results_df[
   order(results_df$padj),
 ]
 
-# -----------------------------
-# Save full results
-# -----------------------------
+
+# --------------------------------------------------
+# Save complete DESeq2 results
+# --------------------------------------------------
 
 write.table(
   results_df,
@@ -124,9 +160,10 @@ write.table(
   row.names = FALSE
 )
 
-# -----------------------------
+
+# --------------------------------------------------
 # Significant genes
-# -----------------------------
+# --------------------------------------------------
 
 significant <- subset(
   results_df,
@@ -134,6 +171,7 @@ significant <- subset(
   padj < 0.05 &
   abs(log2FoldChange) >= 1
 )
+
 
 write.table(
   significant,
@@ -146,19 +184,64 @@ write.table(
   row.names = FALSE
 )
 
-# -----------------------------
+
+# --------------------------------------------------
+# Variance-stabilizing transformation
+#
+# Used for:
+# PCA
+# sample correlation
+# heatmaps
+#
+# NOT used for DESeq2 statistical testing
+# --------------------------------------------------
+
+vsd <- vst(
+  dds,
+  blind = FALSE
+)
+
+
+vst_matrix <- assay(vsd)
+
+
+vst_df <- data.frame(
+  Geneid = rownames(vst_matrix),
+  vst_matrix,
+  check.names = FALSE
+)
+
+
+write.table(
+  vst_df,
+  file = file.path(
+    output_dir,
+    "vst_expression.tsv"
+  ),
+  sep = "\t",
+  quote = FALSE,
+  row.names = FALSE
+)
+
+
+# --------------------------------------------------
 # Summary
-# -----------------------------
+# --------------------------------------------------
 
 upregulated <- sum(
   significant$log2FoldChange >= 1
 )
 
+
 downregulated <- sum(
   significant$log2FoldChange <= -1
 )
 
-cat("\nDifferential expression completed.\n\n")
+
+cat(
+  "\nDifferential expression completed.\n\n"
+)
+
 
 cat(
   "Total genes tested:",
@@ -166,11 +249,13 @@ cat(
   "\n"
 )
 
+
 cat(
   "Significant genes:",
   nrow(significant),
   "\n"
 )
+
 
 cat(
   "Upregulated in MP46:",
@@ -178,11 +263,27 @@ cat(
   "\n"
 )
 
+
 cat(
   "Downregulated in MP46:",
   downregulated,
   "\n"
 )
+
+
+cat(
+  "VST genes:",
+  nrow(vst_df),
+  "\n"
+)
+
+
+cat(
+  "VST samples:",
+  ncol(vst_df) - 1,
+  "\n"
+)
+
 
 cat(
   "\nResults directory:\n",

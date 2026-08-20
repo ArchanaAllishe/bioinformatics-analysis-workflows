@@ -1,5 +1,3 @@
-.DS_Store
-
 # macOS
 .DS_Store
 
@@ -22,5 +20,10 @@ reference/genome/
 work/
 .nextflow/
 .nextflow.log*
+
+# Nextflow-generated analysis results
+results/nextflow/
+
+# Quarto generated site
 report/_site/
 private-notes/

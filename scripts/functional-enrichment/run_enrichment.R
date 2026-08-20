@@ -7,24 +7,23 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-base_dir <- file.path(
-  Sys.getenv("HOME"),
-  "rnaseq-analysis",
-  "GSE199679"
-)
 
-de_file <- file.path(
-  base_dir,
-  "results",
-  "differential_expression",
-  "deseq2_MP46_vs_NM_annotated.tsv"
-)
+# --------------------------------------------------
+# Command-line arguments
+# --------------------------------------------------
 
-output_dir <- file.path(
-  base_dir,
-  "results",
-  "functional_enrichment"
-)
+args <- commandArgs(trailingOnly = TRUE)
+
+if (length(args) != 2) {
+  stop(
+    "Usage: Rscript run_enrichment.R ",
+    "<annotated_deseq2.tsv> ",
+    "<output_dir>"
+  )
+}
+
+de_file <- args[1]
+output_dir <- args[2]
 
 dir.create(
   output_dir,
@@ -32,8 +31,9 @@ dir.create(
   showWarnings = FALSE
 )
 
+
 # --------------------------------------------------
-# Read DESeq2 results
+# Read annotated DESeq2 results
 # --------------------------------------------------
 
 de <- read.delim(
@@ -41,28 +41,46 @@ de <- read.delim(
   check.names = FALSE
 )
 
-# Background universe:
-# all genes tested in DESeq2
+
+# --------------------------------------------------
+# Define gene sets
+# --------------------------------------------------
+
+# Background = all genes tested by DESeq2 that have symbols
+
 universe_symbols <- unique(
-  de$GeneSymbol[!is.na(de$GeneSymbol)]
+  de$GeneSymbol[
+    !is.na(de$GeneSymbol) &
+    de$GeneSymbol != ""
+  ]
 )
 
-# Significant directional gene sets
+
+# Higher in MP46
+
 mp46_symbols <- unique(
   de$GeneSymbol[
     !is.na(de$padj) &
     de$padj < 0.05 &
-    de$log2FoldChange >= 1
+    de$log2FoldChange >= 1 &
+    !is.na(de$GeneSymbol) &
+    de$GeneSymbol != ""
   ]
 )
+
+
+# Higher in NM
 
 nm_symbols <- unique(
   de$GeneSymbol[
     !is.na(de$padj) &
     de$padj < 0.05 &
-    de$log2FoldChange <= -1
+    de$log2FoldChange <= -1 &
+    !is.na(de$GeneSymbol) &
+    de$GeneSymbol != ""
   ]
 )
+
 
 # --------------------------------------------------
 # Convert SYMBOL -> ENTREZID
@@ -89,12 +107,22 @@ nm_map <- bitr(
   OrgDb = org.Hs.eg.db
 )
 
-universe_entrez <- unique(universe_map$ENTREZID)
-mp46_entrez <- unique(mp46_map$ENTREZID)
-nm_entrez <- unique(nm_map$ENTREZID)
+
+universe_entrez <- unique(
+  universe_map$ENTREZID
+)
+
+mp46_entrez <- unique(
+  mp46_map$ENTREZID
+)
+
+nm_entrez <- unique(
+  nm_map$ENTREZID
+)
+
 
 # --------------------------------------------------
-# Function: GO Biological Process
+# GO Biological Process
 # --------------------------------------------------
 
 run_go <- function(genes, label) {
@@ -111,24 +139,44 @@ run_go <- function(genes, label) {
     readable = TRUE
   )
 
+  result_df <- as.data.frame(result)
+
   table_file <- file.path(
     output_dir,
-    paste0("GO_BP_", label, ".tsv")
+    paste0(
+      "GO_BP_",
+      label,
+      ".tsv"
+    )
   )
 
   write.table(
-    as.data.frame(result),
+    result_df,
     table_file,
     sep = "\t",
     quote = FALSE,
     row.names = FALSE
   )
 
-  if (nrow(as.data.frame(result)) > 0) {
+
+  if (nrow(result_df) > 0) {
 
     png_file <- file.path(
       output_dir,
-      paste0("GO_BP_", label, "_top15.png")
+      paste0(
+        "GO_BP_",
+        label,
+        "_top15.png"
+      )
+    )
+
+    pdf_file <- file.path(
+      output_dir,
+      paste0(
+        "GO_BP_",
+        label,
+        "_top15.pdf"
+      )
     )
 
     p <- barplot(
@@ -147,13 +195,21 @@ run_go <- function(genes, label) {
       height = 7,
       dpi = 300
     )
+
+    ggsave(
+      pdf_file,
+      p,
+      width = 9,
+      height = 7
+    )
   }
 
-  result
+  return(result)
 }
 
+
 # --------------------------------------------------
-# Function: Reactome
+# Reactome
 # --------------------------------------------------
 
 run_reactome <- function(genes, label) {
@@ -168,24 +224,44 @@ run_reactome <- function(genes, label) {
     readable = TRUE
   )
 
+  result_df <- as.data.frame(result)
+
   table_file <- file.path(
     output_dir,
-    paste0("Reactome_", label, ".tsv")
+    paste0(
+      "Reactome_",
+      label,
+      ".tsv"
+    )
   )
 
   write.table(
-    as.data.frame(result),
+    result_df,
     table_file,
     sep = "\t",
     quote = FALSE,
     row.names = FALSE
   )
 
-  if (nrow(as.data.frame(result)) > 0) {
+
+  if (nrow(result_df) > 0) {
 
     png_file <- file.path(
       output_dir,
-      paste0("Reactome_", label, "_top15.png")
+      paste0(
+        "Reactome_",
+        label,
+        "_top15.png"
+      )
+    )
+
+    pdf_file <- file.path(
+      output_dir,
+      paste0(
+        "Reactome_",
+        label,
+        "_top15.pdf"
+      )
     )
 
     p <- barplot(
@@ -204,16 +280,24 @@ run_reactome <- function(genes, label) {
       height = 7,
       dpi = 300
     )
+
+    ggsave(
+      pdf_file,
+      p,
+      width = 9,
+      height = 7
+    )
   }
 
-  result
+  return(result)
 }
+
 
 # --------------------------------------------------
 # Run enrichment
 # --------------------------------------------------
 
-cat("\nRunning GO enrichment...\n")
+cat("\nRunning GO Biological Process enrichment...\n")
 
 go_mp46 <- run_go(
   mp46_entrez,
@@ -225,7 +309,8 @@ go_nm <- run_go(
   "Higher_in_NM"
 )
 
-cat("Running Reactome enrichment...\n")
+
+cat("\nRunning Reactome enrichment...\n")
 
 reactome_mp46 <- run_reactome(
   mp46_entrez,
@@ -237,11 +322,14 @@ reactome_nm <- run_reactome(
   "Higher_in_NM"
 )
 
+
 # --------------------------------------------------
 # Summary
 # --------------------------------------------------
 
-cat("\nFunctional enrichment completed.\n\n")
+cat(
+  "\nFunctional enrichment completed.\n\n"
+)
 
 cat(
   "DESeq2 background genes:",
@@ -250,13 +338,13 @@ cat(
 )
 
 cat(
-  "MP46 genes:",
+  "Higher in MP46:",
   length(mp46_symbols),
   "\n"
 )
 
 cat(
-  "NM genes:",
+  "Higher in NM:",
   length(nm_symbols),
   "\n\n"
 )
@@ -286,7 +374,7 @@ cat(
 )
 
 cat(
-  "\nResults directory:\n",
+  "\nOutput directory:\n",
   output_dir,
   "\n"
 )

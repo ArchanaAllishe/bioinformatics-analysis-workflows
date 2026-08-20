@@ -1,33 +1,34 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-base = Path.home() / "rnaseq-analysis/GSE199679"
+if len(sys.argv) != 3:
+    sys.exit(
+        "Usage: python3 plot_ma.py "
+        "<annotated_deseq2.tsv> <output_dir>"
+    )
 
-input_file = (
-    base /
-    "results/differential_expression/"
-    "deseq2_MP46_vs_NM_annotated.tsv"
-)
+input_file = Path(sys.argv[1])
+output_dir = Path(sys.argv[2])
 
-output_dir = (
-    base /
-    "results/differential_expression"
-)
+output_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(input_file, sep="\t")
 
 df = df.dropna(
-    subset=["baseMean", "log2FoldChange"]
+    subset=[
+        "baseMean",
+        "log2FoldChange",
+        "padj"
+    ]
 ).copy()
 
-# Avoid log10(0)
 df = df[df["baseMean"] > 0]
 
-# Significant DE genes
 df["Significant"] = (
     (df["padj"] < 0.05) &
     (df["log2FoldChange"].abs() >= 1)
@@ -35,7 +36,6 @@ df["Significant"] = (
 
 fig, ax = plt.subplots(figsize=(8, 6))
 
-# Non-significant genes
 ns = df[~df["Significant"]]
 
 ax.scatter(
@@ -46,7 +46,6 @@ ax.scatter(
     label="Not significant"
 )
 
-# Significant genes
 sig = df[df["Significant"]]
 
 ax.scatter(
@@ -87,9 +86,7 @@ ax.set_title(
     "MA Plot: MP46 vs NM"
 )
 
-ax.legend(
-    frameon=False
-)
+ax.legend(frameon=False)
 
 plt.tight_layout()
 

@@ -1,38 +1,78 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 from pathlib import Path
 
-# Input and output files
-input_file = Path.home() / "rnaseq-analysis/GSE199679/counts/gene_counts.txt"
-output_file = Path.home() / "rnaseq-analysis/GSE199679/counts/gene_counts_matrix.tsv"
 
-# Read featureCounts output.
-# The first line starts with "#" and contains the featureCounts command.
+# --------------------------------------------------
+# Command-line arguments
+# --------------------------------------------------
+
+if len(sys.argv) != 3:
+    sys.exit(
+        "Usage: python3 clean_featurecounts.py "
+        "<gene_counts.txt> <gene_counts_matrix.tsv>"
+    )
+
+input_file = Path(sys.argv[1])
+output_file = Path(sys.argv[2])
+
+
+# --------------------------------------------------
+# Read featureCounts output
+# --------------------------------------------------
+
 df = pd.read_csv(
     input_file,
     sep="\t",
     comment="#"
 )
 
-# Remove featureCounts annotation columns that are not needed
-# in the expression count matrix.
+
+# --------------------------------------------------
+# Remove featureCounts annotation columns
+# --------------------------------------------------
+
 df = df.drop(
-    columns=["Chr", "Start", "End", "Strand", "Length"]
+    columns=[
+        "Chr",
+        "Start",
+        "End",
+        "Strand",
+        "Length"
+    ]
 )
 
-# Rename BAM-path columns to simple sample names.
+
+# --------------------------------------------------
+# Rename BAM columns to sample names
+# --------------------------------------------------
+
 new_names = {}
 
 for column in df.columns:
+
     if column != "Geneid":
+
         sample = Path(column).name
-        sample = sample.replace("_Aligned.sortedByCoord.out.bam", "")
+
+        sample = sample.replace(
+            "_Aligned.sortedByCoord.out.bam",
+            ""
+        )
+
         new_names[column] = sample
 
-df = df.rename(columns=new_names)
+df = df.rename(
+    columns=new_names
+)
 
-# Put samples in the intended order.
+
+# --------------------------------------------------
+# Put samples in intended order
+# --------------------------------------------------
+
 sample_order = [
     "NM_4",
     "NM_5",
@@ -42,16 +82,23 @@ sample_order = [
     "MP46_3"
 ]
 
-df = df[["Geneid"] + sample_order]
+df = df[
+    ["Geneid"] + sample_order
+]
 
-# Save as tab-separated file.
+
+# --------------------------------------------------
+# Save cleaned matrix
+# --------------------------------------------------
+
 df.to_csv(
     output_file,
     sep="\t",
     index=False
 )
 
+
 print("Count matrix created successfully.")
-print(f"Genes: {df.shape[0]}")
-print(f"Samples: {df.shape[1] - 1}")
-print(f"Output: {output_file}")
+print("Genes:", df.shape[0])
+print("Samples:", df.shape[1] - 1)
+print("Output:", output_file)

@@ -1,57 +1,103 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-base = Path.home() / "rnaseq-analysis/GSE199679"
 
-de_file = (
-    base /
-    "results/differential_expression/"
-    "deseq2_MP46_vs_NM_annotated.tsv"
+# --------------------------------------------------
+# Command-line arguments
+# --------------------------------------------------
+
+if len(sys.argv) != 4:
+    sys.exit(
+        "Usage: python3 plot_de_heatmap.py "
+        "<annotated_deseq2.tsv> "
+        "<vst_expression.tsv> "
+        "<output_dir>"
+    )
+
+de_file = Path(sys.argv[1])
+expression_file = Path(sys.argv[2])
+output_dir = Path(sys.argv[3])
+
+output_dir.mkdir(
+    parents=True,
+    exist_ok=True
 )
 
-expression_file = (
-    base /
-    "counts/gene_counts_log2.tsv"
-)
 
-output_dir = (
-    base /
-    "results/differential_expression"
-)
-
+# --------------------------------------------------
 # Read data
-de = pd.read_csv(de_file, sep="\t")
-expression = pd.read_csv(expression_file, sep="\t")
+# --------------------------------------------------
 
-# Keep significant DE genes
+de = pd.read_csv(
+    de_file,
+    sep="\t"
+)
+
+expression = pd.read_csv(
+    expression_file,
+    sep="\t"
+)
+
+
+# --------------------------------------------------
+# Keep significant genes
+# --------------------------------------------------
+
 significant = de[
     (de["padj"] < 0.05) &
     (de["log2FoldChange"].abs() >= 1)
 ].copy()
 
-# Select top 30 by adjusted p-value
-top = significant.nsmallest(30, "padj")
 
-# Get expression for those genes
+# --------------------------------------------------
+# Select top 30 genes by adjusted p-value
+# --------------------------------------------------
+
+top = significant.nsmallest(
+    30,
+    "padj"
+)
+
+
+# --------------------------------------------------
+# Extract VST expression for top genes
+# --------------------------------------------------
+
 heatmap = expression[
-    expression["Geneid"].isin(top["Geneid"])
+    expression["Geneid"].isin(
+        top["Geneid"]
+    )
 ].copy()
 
+
+# --------------------------------------------------
 # Add gene symbols and preserve DE ranking
-heatmap = top[["Geneid", "GeneSymbol"]].merge(
+# --------------------------------------------------
+
+heatmap = top[
+    ["Geneid", "GeneSymbol"]
+].merge(
     heatmap,
     on="Geneid"
 )
 
-heatmap = heatmap.set_index("GeneSymbol")
+heatmap = heatmap.set_index(
+    "GeneSymbol"
+)
 
-# Remove Geneid before plotting
-heatmap = heatmap.drop(columns="Geneid")
+heatmap = heatmap.drop(
+    columns="Geneid"
+)
 
+
+# --------------------------------------------------
 # Row-wise Z-score
+# --------------------------------------------------
+
 heatmap_z = heatmap.sub(
     heatmap.mean(axis=1),
     axis=0
@@ -62,22 +108,34 @@ heatmap_z = heatmap_z.div(
     axis=0
 )
 
+
+# --------------------------------------------------
 # Plot
-fig, ax = plt.subplots(figsize=(8, 11))
+# --------------------------------------------------
+
+fig, ax = plt.subplots(
+    figsize=(8, 11)
+)
 
 image = ax.imshow(
     heatmap_z,
     aspect="auto"
 )
 
-ax.set_xticks(range(len(heatmap_z.columns)))
+ax.set_xticks(
+    range(len(heatmap_z.columns))
+)
+
 ax.set_xticklabels(
     heatmap_z.columns,
     rotation=45,
     ha="right"
 )
 
-ax.set_yticks(range(len(heatmap_z.index)))
+ax.set_yticks(
+    range(len(heatmap_z.index))
+)
+
 ax.set_yticklabels(
     heatmap_z.index,
     fontsize=8
@@ -98,8 +156,20 @@ ax.set_ylabel("Gene")
 
 plt.tight_layout()
 
-png_file = output_dir / "top30_DE_heatmap.png"
-pdf_file = output_dir / "top30_DE_heatmap.pdf"
+
+# --------------------------------------------------
+# Save
+# --------------------------------------------------
+
+png_file = (
+    output_dir /
+    "top30_DE_heatmap.png"
+)
+
+pdf_file = (
+    output_dir /
+    "top30_DE_heatmap.pdf"
+)
 
 plt.savefig(
     png_file,

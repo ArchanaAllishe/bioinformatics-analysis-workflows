@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 import re
 from pathlib import Path
 
-base = Path.home() / "rnaseq-analysis/GSE199679"
 
-gtf_file = (
-    base /
-    "reference/gencode.v48.primary_assembly.annotation.gtf"
-)
+# --------------------------------------------------
+# Command-line arguments
+# --------------------------------------------------
 
-results_file = (
-    base /
-    "results/differential_expression/deseq2_MP46_vs_NM.tsv"
-)
+if len(sys.argv) != 4:
+    sys.exit(
+        "Usage: python3 annotate_deseq2.py "
+        "<gencode.gtf> "
+        "<deseq2_results.tsv> "
+        "<output.tsv>"
+    )
 
-output_file = (
-    base /
-    "results/differential_expression/deseq2_MP46_vs_NM_annotated.tsv"
-)
+gtf_file = Path(sys.argv[1])
+results_file = Path(sys.argv[2])
+output_file = Path(sys.argv[3])
+
 
 # --------------------------------------------------
 # Extract gene annotations from GENCODE GTF
@@ -41,7 +43,7 @@ with open(gtf_file) as gtf:
 
         feature = fields[2]
 
-        # One entry per gene
+        # Keep one entry per gene
         if feature != "gene":
             continue
 
@@ -68,7 +70,11 @@ with open(gtf_file) as gtf:
             "GeneType": gene_type.group(1) if gene_type else None
         })
 
-annotation_df = pd.DataFrame(annotations)
+
+annotation_df = pd.DataFrame(
+    annotations
+)
+
 
 # --------------------------------------------------
 # Read DESeq2 results
@@ -79,8 +85,9 @@ results = pd.read_csv(
     sep="\t"
 )
 
+
 # --------------------------------------------------
-# Add annotations
+# Add gene annotations
 # --------------------------------------------------
 
 annotated = results.merge(
@@ -89,7 +96,11 @@ annotated = results.merge(
     how="left"
 )
 
-# Put annotation columns near Geneid
+
+# --------------------------------------------------
+# Reorder columns
+# --------------------------------------------------
+
 columns = [
     "Geneid",
     "GeneSymbol",
@@ -102,10 +113,13 @@ columns = [
     "padj"
 ]
 
-annotated = annotated[columns]
+annotated = annotated[
+    columns
+]
+
 
 # --------------------------------------------------
-# Save
+# Save output
 # --------------------------------------------------
 
 annotated.to_csv(
@@ -114,12 +128,19 @@ annotated.to_csv(
     index=False
 )
 
+
 print("\nGene annotation completed.")
-print("Genes:", len(annotated))
+
+print(
+    "Genes:",
+    len(annotated)
+)
+
 print(
     "Genes with symbols:",
     annotated["GeneSymbol"].notna().sum()
 )
+
 print(
     "Genes without symbols:",
     annotated["GeneSymbol"].isna().sum()
