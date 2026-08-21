@@ -66,60 +66,32 @@ coordinates the analysis steps and reuses the resulting BAM files for the
 automated downstream workflow.
 
 ---
-# RNA-Seq Case Study
 
-## From RNA to Sequencing Reads
+# Dataset Background
 
-RNA-seq is used to measure **gene expression**—which genes are active in a
-biological sample and how strongly they are expressed.
+RNA-seq measures **gene expression**, providing a genome-wide view of which genes are active and their relative expression levels. Comparing RNA-seq profiles between biological groups can identify **differentially expressed genes** and reveal biological processes and pathways associated with those differences.
 
-Comparing RNA-seq profiles between biological groups can identify genes with
-increased or decreased expression and reveal biological processes and pathways
-associated with those differences.
+RNA-seq begins with RNA isolated from biological samples. The RNA is converted to cDNA, prepared as a sequencing library, and sequenced to generate millions of reads stored in **FASTQ files**. Sequencing may be **single-end**, where each fragment is sequenced from one end, or **paired-end**, where both ends are sequenced to produce corresponding `R1` and `R2` reads.
 
-RNA-seq begins with RNA extracted from biological samples. The RNA is converted
-to cDNA, prepared as a sequencing library, and sequenced to generate millions
-of reads stored in **FASTQ files**.
+This case study uses publicly available **paired-end RNA-seq data from GSE199679 / GSE198801** to compare normal uveal melanocytes with uveal melanoma.
 
-Sequencing can be:
-
-- **Single-end** — one end of each fragment is sequenced, producing one FASTQ
-  file per sample.
-- **Paired-end** — both ends are sequenced, producing corresponding `R1` and
-  `R2` FASTQ files.
-
-Paired-end sequencing provides information from both ends of a fragment, which
-can improve alignment and genomic placement.
-
-This project uses **paired-end RNA-seq data**.
-
----
-
-# RNA-Seq Dataset and Data Background
-
-This analysis uses publicly available RNA-seq data from **GSE199679 / GSE198801** to investigate gene-expression differences between normal uveal melanocytes and uveal melanoma.
-
-**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye that includes the choroid, ciliary body, and iris.
-
-The study includes two biological groups:
+**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye. Two biological groups were analyzed:
 
 - **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant reference group.
 - **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma representing the malignant group.
 
-A total of **six biological samples** were analyzed, with **three biological replicates per group**:
+The dataset contains **six biological samples**, with **three biological replicates per group**:
 
 | Group | Biological context | Samples |
 |---|---|---|
 | **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
 | **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
 
-The primary comparison is therefore:
+The primary comparison is:
 
 > **MP46 uveal melanoma vs. normal melanocytes (NM)**
 
-The RNA-seq data were generated using **paired-end sequencing**. RNA-seq can be either **single-end**, where each fragment is sequenced from one end, or **paired-end**, where the same fragment is sequenced from both ends. Because this dataset is paired-end, each biological sample has two corresponding FASTQ files (`R1` and `R2`).
-
-Therefore, the **six biological samples produce 12 FASTQ files**, which serve as the starting point for the computational RNA-seq workflow.
+Because this is a **paired-end** dataset, each biological sample has two FASTQ files—`R1` and `R2`. The six biological samples therefore produce **12 FASTQ files**, which serve as the starting point for the computational RNA-seq workflow.
 
 ---
 # Analysis
