@@ -137,25 +137,37 @@ This project uses **paired-end RNA-seq data**.
 
 ---
 
-## Dataset
+## RNA-Seq Dataset and Data Background
 
-The workflow was developed using publicly available RNA-seq data from a study
-of **uveal melanoma**.
+The analysis uses publicly available RNA-seq data from **GSE199679 /
+GSE198801**, a study comparing normal uveal melanocytes with uveal melanoma.
 
-| | |
-|---|---|
-| GEO SuperSeries | **GSE199679** |
-| RNA-seq SubSeries | **GSE198801** |
-| Comparison | **MP46 uveal melanoma vs. normal melanocytes (NM)** |
-| Samples | 3 NM + 3 MP46 |
-| Reference genome | GRCh38 primary assembly |
-| Gene annotation | GENCODE v48 |
+**Uveal melanoma** is a malignant tumor that develops from melanocytes in the
+uvea, the pigmented layer of the eye that includes the choroid, ciliary body,
+and iris.
 
-Samples:
+Two groups were analyzed:
 
-```text
-NM:    NM_4, NM_5, NM_6
-MP46:  MP46_1, MP46_2, MP46_3
+- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes used as the
+  non-malignant reference group.
+- **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma,
+  representing the malignant group.
+
+The analysis included **six paired-end RNA-seq samples**, with **three
+biological replicates per group**:
+
+| Group | Biological context | Replicates |
+|---|---|---|
+| **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
+| **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
+
+The primary comparison was therefore:
+
+> **MP46 uveal melanoma vs. normal melanocytes (NM)**
+
+The biological replicates provide independent measurements within each group,
+allowing within-group consistency and between-group expression differences to
+be evaluated.
 ```
 
 ---
