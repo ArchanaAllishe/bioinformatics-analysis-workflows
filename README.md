@@ -217,11 +217,11 @@ multiqc .
 
 The QC results were reviewed before proceeding to alignment.
 
-<h3 align="center">
+<h5 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/multiqc_report.html">
     View Interactive MultiQC Report
   </a>
-</h3>
+</h5>
 
 ---
 
