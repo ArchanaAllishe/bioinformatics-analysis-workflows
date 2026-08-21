@@ -2,12 +2,12 @@
 
 # 🧬 Reproducible Bulk RNA-Seq Analysis Pipeline
 
-### From Raw Sequencing Reads to Biological Insight
-<p align="center">
+## From Raw Sequencing Reads to Biological Insight
+<h1 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
     <strong>View Final Analysis Report</strong>
   </a>
-</p>
+</h1>
 
 
 </div>
