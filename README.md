@@ -868,11 +868,11 @@ site.
 | `images/` | Analysis figures used by the report |
 | `site_libs/` | Supporting Quarto website resources |
 
-<h2 align="center">
+<h1 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
     <strong>View Complete Interactive Analysis Report</strong>
   </a>
-</h2>
+</h1>
 
 
 ---
@@ -918,13 +918,3 @@ implementation notes, and analysis decisions are maintained in `docs/`.
 7. Yu G, et al. clusterProfiler. *OMICS*. 2012.
 8. Milacic M, et al. Reactome. *Nucleic Acids Research*. 2024.
 9. Frankish A, et al. GENCODE. *Nucleic Acids Research*. 2021.
-
----
-
-<div align="center">
-
-### 🧬 Raw Sequencing Data → Reproducible Analysis → Biological Insight → Shareable Results
-
-**[View Interactive Results](https://ArchanaAllishe.github.io/reproducible-rnaseq-pipeline/)**
-
-</div>
