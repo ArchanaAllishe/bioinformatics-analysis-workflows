@@ -1,14 +1,12 @@
 <div align="center">
 
 # 🧬 End-to-End Bulk RNA-Seq Analysis & Workflow Automation
-
 ## From Raw Sequencing Reads to Biological Insight
 <p align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
     <strong>View Final Analysis Report</strong>
   </a>
 </p>
-
 
 </div>
 
