@@ -217,6 +217,8 @@ multiqc .
 
 The QC results were reviewed before proceeding to alignment.
 
+[**View Interactive MultiQC Report**](https://archanaallishe.github.io/bioinformatics-analysis-workflows/multiqc_report.html)
+
 ---
 
 ### 2. Read Alignment — STAR
