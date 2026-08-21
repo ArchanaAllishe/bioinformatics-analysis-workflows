@@ -45,9 +45,23 @@ computational infrastructure needed to make an RNA-seq workflow reproducible.
        width="100%">
 </p>
 
+---
+### Computing Environment
+
+The workflow can be run on a local Linux workstation or, when available, on
+an institutional HPC system. An HPC cluster is typically accessed remotely
+from a macOS, Windows, or Linux workstation using SSH. Analysis files and jobs
+are prepared on the login node, while computational work is submitted to
+compute nodes through a scheduler such as SLURM.
+
+For this project, an Ubuntu-based HPC environment was also configured to
+demonstrate shared storage, environment modules, SSH access, and SLURM job
+submission. Docker provides reproducible software environments, while Nextflow
+coordinates the analysis steps and reuses the resulting BAM files for the
+automated downstream workflow.
+
 
 ---
-
 # RNA-Seq Case Study
 
 ## From RNA to Sequencing Reads
