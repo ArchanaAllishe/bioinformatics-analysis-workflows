@@ -126,6 +126,11 @@ problems.
 allowing sequencing quality to be reviewed across all samples before
 downstream analysis.
 
+**Implementation:** [`workflow/main.nf`](workflow/main.nf) — `FASTQC` and
+`MULTIQC` processes.
+
+[**View MultiQC Report**](https://archanaallishe.github.io/reproducible-rnaseq-pipeline/multiqc_report.html)
+
 ---
 
 ## 2. Read Alignment
