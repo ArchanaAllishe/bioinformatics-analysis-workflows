@@ -54,48 +54,6 @@ Final QC results, statistical analyses, figures, and biological findings are bro
        width="100%">
 </p>
 
----
-## Computing Environment
-
-The workflow can be run on a local Linux workstation or, when available, on
-an institutional High Performance Computing (HPC) system. An HPC cluster is typically accessed remotely
-from a macOS, Windows, or Linux workstation using SSH. Analysis files and jobs
-are prepared on the login node, while computational work is submitted to
-compute nodes through a scheduler such as SLURM.
-
-For this project, an Ubuntu-based HPC environment was also configured to
-demonstrate shared storage, environment modules, SSH access, and SLURM job
-submission. Docker provides reproducible software environments, while Nextflow
-coordinates the analysis steps and reuses the resulting BAM files for the
-automated downstream workflow.
-
----
-
-# Dataset Background
-
-RNA-seq measures **gene expression**, providing a genome-wide view of which genes are active and their relative expression levels. Comparing RNA-seq profiles between biological groups can identify **differentially expressed genes** and reveal biological processes and pathways associated with those differences.
-
-RNA-seq begins with RNA isolated from biological samples. The RNA is converted to cDNA, prepared as a sequencing library, and sequenced to generate millions of reads stored in **FASTQ files**. Sequencing may be **single-end**, where each fragment is sequenced from one end, or **paired-end**, where both ends are sequenced to produce corresponding `R1` and `R2` reads.
-
-This case study uses publicly available **paired-end RNA-seq data from GSE199679 / GSE198801** to compare normal uveal melanocytes with uveal melanoma.
-
-**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye. Two biological groups were analyzed:
-
-- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant reference group.
-- **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma representing the malignant group.
-
-The dataset contains **six biological samples**, with **three biological replicates per group**:
-
-| Group | Biological context | Samples |
-|---|---|---|
-| **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
-| **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
-
-The primary comparison is:
-
-> **MP46 uveal melanoma vs. normal melanocytes (NM)**
-
-Because this is a **paired-end** dataset, each biological sample has two FASTQ files—`R1` and `R2`. The six biological samples therefore produce **12 FASTQ files**, which serve as the starting point for the computational RNA-seq workflow.
 
 ---
 # Analysis
