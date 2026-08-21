@@ -1,87 +1,193 @@
 ---
-title: "RNA-Seq Analysis Report"
-subtitle: "GSE199679 — MP46 vs NM"
-date: last-modified
+title: "Reproducible Bulk RNA-Seq Analysis"
+subtitle: "GSE199679 — MP46 versus Normal Melanocytes"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    smooth-scroll: true
+    theme: cosmo
 ---
 
-# Analysis Summary
+# Project Overview
 
-This report summarizes a reproducible bulk RNA-seq analysis comparing
-**MP46** and **NM** samples.
+RNA sequencing (RNA-seq) provides a genome-wide measurement of gene
+expression, allowing genes and biological pathways that differ between
+experimental conditions to be identified.
 
-The analysis included three biological samples per group:
+This report presents an end-to-end bulk RNA-seq analysis using public data
+from **GSE199679**. The analysis progresses from raw paired-end sequencing
+reads through sequencing quality control, alignment, gene quantification,
+expression-level quality control, differential expression, functional
+enrichment, and biological interpretation.
+
+The comparison includes six biological samples:
 
 | Group | Samples |
 |---|---|
-| NM | NM_4, NM_5, NM_6 |
+| Normal melanocytes (NM) | NM_4, NM_5, NM_6 |
 | MP46 | MP46_1, MP46_2, MP46_3 |
 
-The workflow included sequencing quality control, alignment,
-gene-level quantification, expression-level quality control,
-differential expression analysis, and functional enrichment.
+The analytical steps were developed and validated individually and then
+connected using **Nextflow** for reproducible workflow execution. Docker
+provides controlled software environments, and the final results are presented
+here using Quarto.
+
+## Analysis Workflow
 
 ```text
-FASTQ
-  ↓
-FastQC / MultiQC
-  ↓
+Paired-end FASTQ
+       ↓
+FastQC + MultiQC
+       ↓
 STAR alignment
-  ↓
+       ↓
+SAMtools + RSeQC
+       ↓
 featureCounts
-  ↓
-Count QC and filtering
-  ↓
-Expression QC
-  ↓
+       ↓
+Count QC + filtering
+       ↓
 DESeq2
-  ↓
-Functional enrichment
+       ↓
+PCA + sample correlation
+       ↓
+Differential expression
+       ↓
+Gene annotation
+       ↓
+GO + Reactome enrichment
+       ↓
+Biological interpretation
 ```
 
-## Results at a Glance
+# Sequencing Quality Control
 
-| Analysis | Key Result |
+Raw paired-end FASTQ files were evaluated with **FastQC**, and the individual
+reports were combined using **MultiQC 1.35**.
+
+FastQC examines individual sequencing files for potential problems such as
+base-quality deterioration, unusual sequence composition, duplication,
+adapter contamination, and overrepresented sequences. MultiQC combines these
+results across all samples, making systematic and sample-specific patterns
+easier to identify before alignment.
+
+## MultiQC Summary
+
+The six RNA-seq samples produced **12 FASTQ files**, corresponding to R1 and R2
+reads for each paired-end library. Each FASTQ file contained approximately
+**5 million 101-bp reads**.
+
+| QC metric | Observation |
 |---|---|
-| Samples | 3 NM + 3 MP46 |
-| STAR alignment | 88.3–95.2% uniquely mapped |
-| Genes retained after filtering | 12,728 |
-| PCA | PC1 = 88.79%; clear NM/MP46 separation |
-| Sample correlation | Within-group ≈ 0.96–0.98 |
-| Differential expression | 6,816 significant genes |
-| Higher in MP46 | 3,495 genes |
-| Higher in NM | 3,321 genes |
-| GO BP enrichment | 31 MP46 / 236 NM terms |
-| Reactome enrichment | 0 MP46 / 46 NM pathways |
+| FASTQ files | 12 |
+| Biological samples | 6 |
+| Reads per FASTQ | ~5 million |
+| Read length | 101 bp |
+| Reads flagged as poor quality | None |
+| Per-base sequence quality | Passed |
+| Per-tile sequence quality | Passed |
+| GC content | ~47–53% |
+| Duplicate reads | ~35–51% |
+| Per-base N content | Passed |
+| Adapter content | Passed |
+| Overrepresented sequences | Mostly passed; limited warnings observed |
+| Sequence-content / length modules | Some warnings or failures observed |
 
-**Primary finding:** NM and MP46 show strongly distinct transcriptomic
-profiles. Genes higher in MP46 are enriched primarily for cell-division
-and microtubule-associated processes, whereas genes higher in NM show
-broader enrichment involving extracellular-matrix, cell-adhesion,
-immune-associated, and antigen-processing processes.
+## QC Observation
 
-# Methods Overview
+Overall sequencing quality was suitable for downstream analysis. Per-base
+sequence quality passed across the FASTQ files, no reads were reported as poor
+quality, and read length and sequencing depth were consistent across the
+dataset.
 
-## Reference Genome
+GC content ranged from approximately **47% to 53%**. MP46 libraries tended
+toward the lower end of this range, whereas NM libraries tended toward the
+higher end. Because this pattern broadly followed the biological groups rather
+than appearing as an isolated sample-specific deviation, it was interpreted
+together with downstream expression-level QC rather than automatically
+considered evidence of contamination.
 
-RNA-seq reads were aligned to the human **GRCh38 primary assembly**
-using **STAR**.
+Sequence duplication ranged from approximately **35% to 51%**. Moderate or
+high duplication can occur in RNA-seq because highly expressed transcripts are
+sampled repeatedly. PCR amplification or reduced library complexity can also
+increase duplication. Duplication was therefore considered together with
+alignment performance, gene counts, PCA, and sample-to-sample correlation
+rather than being used alone to exclude samples.
 
-Gene annotation was based on **GENCODE v48**.
+Some sequence-content and sequence-length FastQC modules produced warnings or
+failures. These flags do not automatically indicate unusable RNA-seq data.
+Sequence-composition biases can arise from library preparation, transcript
+composition, or other protocol-specific effects and therefore require
+interpretation in the context of the complete dataset.
 
-The same annotation release was used for:
+Adapter content passed across the dataset. Low levels of Illumina adapter
+signal were detectable toward the ends of some reads, but these levels were
+not sufficient to trigger an adapter-content warning or failure. A small
+number of overrepresented sequences were also detected and were interpreted
+according to their abundance and possible origin rather than automatically
+removed.
 
-- STAR genome indexing
-- featureCounts gene quantification
-- differential-expression gene annotation
+## QC Conclusion
 
-## Read Alignment
+The combined FastQC and MultiQC assessment supported proceeding to alignment
+**without additional adapter or quality trimming**.
 
-STAR alignment was performed in a Linux ARM64 Docker environment to
-provide a reproducible execution environment on Apple Silicon.
+This decision was supported by consistently good per-base sequence quality,
+the absence of reads flagged as poor quality, passing adapter-content results,
+consistent sequencing depth, and the absence of a broad sample-specific
+sequencing-quality failure.
 
-Alignment rates were high overall.
+FastQC warnings were retained and documented rather than automatically
+corrected because warnings can reflect expected characteristics of RNA-seq
+libraries. Their significance was subsequently evaluated using independent
+downstream QC measures including alignment performance, gene assignment, PCA,
+and sample-to-sample expression correlation.
 
-| Sample | Unique Mapping |
+## If QC Is Not as Expected
+
+Unexpected FastQC or MultiQC findings should be investigated before deciding
+to modify reads or exclude samples.
+
+| Unexpected finding | Possible reasons | Suggested follow-up |
+|---|---|---|
+| **Low per-base quality** | Quality deterioration toward read ends, poor sequencing signal, sequencing-run or flow-cell problems | Determine whether poor quality is localized or widespread; consider quality trimming if substantial |
+| **Adapter contamination** | Library inserts shorter than the sequencing read length, causing sequencing into adapters | Trim adapters and rerun FastQC/MultiQC |
+| **Unexpected GC distribution** | Biological composition, library-preparation bias, contamination, or unusual transcript abundance | Compare biological replicates and groups; investigate isolated or unexplained deviations |
+| **High duplication** | Highly expressed transcripts, PCR amplification, low starting RNA, or low library complexity | Interpret with expression and library-complexity results; do not remove RNA-seq reads solely because duplication is high |
+| **Overrepresented sequences** | Highly expressed transcripts, rRNA, mitochondrial RNA, adapters, or contamination | Identify the sequences and determine whether they represent expected biology or unwanted sequence |
+| **High N content** | Poor sequencing signal or uncertain base calling | Determine whether ambiguous bases are localized or widespread; consider filtering if substantial |
+| **Strong R1/R2 difference** | Cycle-specific effects, poorer sequencing quality in one mate, or mate-specific contamination | Compare R1 and R2 modules and determine whether targeted preprocessing is justified |
+| **One sample differs strongly** | Library-preparation problem, sequencing failure, contamination, sample mix-up, batch effect, or genuine biological variation | Review raw-read QC together with mapping rate, gene counts, PCA, and sample correlation |
+| **Many samples share the same problem** | Library-preparation protocol, sequencing-run effect, systematic contamination, or protocol-specific bias | Determine whether the pattern is expected; investigate systematic technical causes when unexplained |
+| **High rRNA content** | Incomplete rRNA depletion or inefficient poly(A) selection | Assess rRNA-associated reads and determine whether usable sequencing depth is substantially affected |
+
+Individual FastQC PASS/WARN/FAIL flags were therefore not treated as automatic
+sample acceptance or rejection criteria. QC metrics were considered
+collectively, and any trimming, filtering, or sample exclusion would require a
+documented technical or biological justification.
+
+## Full MultiQC Report
+
+The complete interactive **MultiQC 1.35** report is retained for detailed
+inspection of individual samples and QC metrics.
+
+[Open the interactive MultiQC report](multiqc_report.html)
+
+# Read Alignment
+
+Following raw-read QC, paired-end reads were aligned to the **GRCh38 human
+reference genome** using **STAR**.
+
+Alignment determines where sequencing reads originated in the genome. RNA-seq
+requires a splice-aware aligner because many reads span exon-exon junctions
+created during RNA splicing.
+
+STAR produced coordinate-sorted BAM files representing the genomic alignments
+for each sample.
+
+| Sample | Uniquely mapped reads |
 |---|---:|
 | NM_4 | 95.20% |
 | NM_5 | 95.16% |
@@ -90,299 +196,358 @@ Alignment rates were high overall.
 | MP46_2 | 94.31% |
 | MP46_3 | 89.23% |
 
-## Gene Quantification
+Unique mapping rates ranged from approximately **88.3% to 95.2%**, supporting
+successful alignment across all six samples.
 
-Gene-level counts were generated using **featureCounts**.
+The automated Nextflow workflow **reuses the resulting BAM files** for
+downstream processing.
 
-The libraries were empirically determined to be reverse-stranded using
-RSeQC and were therefore quantified using:
+# BAM Processing and Library Strandedness
+
+The coordinate-sorted BAM files were indexed using **SAMtools**, allowing
+downstream tools to access genomic regions efficiently.
+
+Library orientation was then assessed using **RSeQC
+`infer_experiment.py`**.
+
+RNA-seq libraries may preserve information about the strand from which a
+transcript originated. Using the wrong strandedness setting during gene
+quantification can assign reads incorrectly and alter gene counts.
+
+The libraries were identified as **reverse-stranded paired-end RNA-seq**.
+featureCounts was therefore run using:
 
 ```text
 -s 2
 ```
 
-Assignment rates ranged from approximately **77% to 85%**.
+# Gene Quantification
 
-# Count Matrix Processing
+Aligned fragments were assigned to genes using **featureCounts** with the
+GENCODE v48 gene annotation.
 
-The initial featureCounts matrix contained:
+Alignment determines where reads map, whereas gene quantification determines
+how many aligned fragments correspond to each annotated gene. The resulting
+raw integer counts provide the input required by DESeq2.
 
-```text
-78,894 genes
-```
+The featureCounts output was processed with Python to remove unnecessary
+annotation columns, simplify sample names, maintain consistent sample order,
+and create an analysis-ready gene-by-sample count matrix.
 
-Low-expression genes were filtered using the rule:
-
-> Retain genes with at least 10 raw counts in at least 3 samples.
-
-After filtering:
-
-```text
-12,728 genes retained
-```
-
-The filtered matrix contained:
+The initial matrix contained:
 
 ```text
-Duplicate gene IDs: 0
-Missing values:     0
-Negative counts:    0
+78,894 genes × 6 samples
 ```
 
-# Expression-Level QC
+# Low-Expression Filtering
 
-## Normalization
+Genes with very little read support provide limited information for
+differential-expression testing and increase the number of statistical tests.
 
-Median-of-ratios normalization was used for exploratory expression QC.
+Genes were retained when they had:
 
-| Sample | Size Factor |
+```text
+≥10 counts in at least 3 samples
+```
+
+| Filtering stage | Genes |
 |---|---:|
-| NM_4 | 1.026 |
-| NM_5 | 0.982 |
-| NM_6 | 0.837 |
-| MP46_1 | 1.023 |
-| MP46_2 | 1.089 |
-| MP46_3 | 1.134 |
+| Before filtering | 78,894 |
+| Retained | **12,728** |
+| Removed | 66,166 |
 
-Normalized counts were log2 transformed for PCA and sample-correlation
-analysis.
+The remaining **12,728 genes** were used for differential-expression analysis.
 
-Raw integer counts were retained separately for DESeq2.
+# Expression-Level Quality Control
+
+Raw-read QC determines whether the sequencing reads are technically suitable
+for analysis. After gene quantification, expression-level QC provides another
+independent assessment of sample relationships and biological replicate
+consistency.
+
+DESeq2 **variance-stabilizing transformation (VST)** was used to generate
+expression values suitable for PCA and sample-correlation analysis.
 
 ## Principal Component Analysis
 
+Principal component analysis summarizes major sources of expression variation
+across thousands of genes.
+
 ![](images/pca_expression_qc.png){fig-alt="PCA showing separation between NM and MP46 samples" width=80%}
 
-PC1 explained **88.79%** of total expression variance and clearly
-separated NM from MP46.
+The first two principal components explained:
 
-PC2 explained an additional **3.73%**.
+```text
+PC1 = 88.79%
+PC2 =  3.73%
+```
 
-Together, the first two principal components represented **92.52%**
-of expression variation.
+PC1 clearly separated the NM and MP46 groups, while biological replicates
+clustered according to condition.
 
-## Sample Correlation
+This indicates that the largest source of expression variation in the dataset
+corresponds to the biological comparison.
+
+## Sample-to-Sample Correlation
+
+Pearson correlation was calculated between samples using transformed
+expression values.
 
 ![](images/sample_correlation_heatmap.png){fig-alt="Sample-to-sample Pearson correlation heatmap" width=80%}
 
-Within-group expression correlations were high:
+Within-group correlations were high:
 
 ```text
-NM:    approximately 0.96
-MP46:  approximately 0.96–0.98
+NM:       approximately 0.96
+MP46:     approximately 0.96–0.98
 ```
 
-Between-group correlations were substantially lower:
+Correlations between the two groups were lower:
 
 ```text
 approximately 0.56–0.64
 ```
 
-No obvious expression-level outlier was identified, and all six samples
-were retained.
+The agreement among biological replicates and the lower correlation between
+groups were consistent with the PCA results.
+
+Together, these independent expression-level QC analyses supported retaining
+all six samples for differential-expression testing.
 
 # Differential Expression
 
-Differential expression was performed with **DESeq2** using:
+Differential-expression analysis was performed with **DESeq2**.
+
+DESeq2 models RNA-seq counts using a negative-binomial statistical framework
+while accounting for sequencing-depth differences and biological variability
+among replicates.
+
+The model was:
 
 ```text
-Design:   ~ Group
-Contrast: MP46 vs NM
+Design:     ~ Group
+Contrast:   MP46 vs NM
+Reference:  NM
 ```
 
-Therefore:
-
-```text
-log2FoldChange > 0  → higher in MP46
-log2FoldChange < 0  → higher in NM
-```
+A positive log2 fold change therefore represents higher expression in MP46,
+whereas a negative value represents higher expression in NM.
 
 Significant differential expression was defined as:
 
 ```text
 adjusted p-value < 0.05
 AND
-|log2FoldChange| >= 1
+|log2FoldChange| ≥ log2(1.5)
 ```
 
-## Differential Expression Summary
+The fold-change threshold corresponds to an expression difference of at least
+**1.5-fold** in either direction.
+
+## Differential-Expression Summary
 
 | Result | Genes |
 |---|---:|
 | Genes tested | 12,728 |
 | padj < 0.05 | 8,501 |
-| Significant DE genes | **6,816** |
+| Significant after padj + fold-change threshold | **6,816** |
 | Higher in MP46 | **3,495** |
 | Higher in NM | **3,321** |
-| padj < 0.05 and \|log2FC\| ≥ 2 | 3,200 |
+
+GENCODE v48 annotations were added to the DESeq2 results to provide gene
+symbols and gene types for biological interpretation.
 
 ## Volcano Plot
 
 ![](images/volcano_MP46_vs_NM.png){fig-alt="Volcano plot of MP46 versus NM differential expression" width=85%}
 
-The volcano plot demonstrates extensive differential expression in both
-directions.
+The volcano plot displays expression fold change against statistical
+significance, highlighting genes with both substantial and statistically
+supported differences between MP46 and NM.
 
 ## MA Plot
 
 ![](images/MA_MP46_vs_NM.png){fig-alt="MA plot for MP46 versus NM" width=85%}
 
-The MA plot shows differential-expression effect sizes across the range
-of mean gene-expression abundance.
+The MA plot displays log2 fold change across the range of average gene
+expression, providing a complementary view of expression differences and their
+relationship to gene abundance.
 
-## Top Differentially Expressed Genes
+## Differential-Expression Heatmap
 
 ![](images/top30_DE_heatmap.png){fig-alt="Heatmap of the top 30 differentially expressed genes" width=80%}
 
-The top 30 genes ranked by adjusted p-value showed strong
-group-specific expression patterns.
+The heatmap shows the expression patterns of the top differentially expressed
+genes across the six samples.
 
-The three NM samples generally showed similar expression profiles, as
-did the three MP46 samples.
+The clustering pattern provides a sample-level view of the transcriptional
+differences identified by DESeq2.
 
 # Functional Enrichment
 
-Differentially expressed genes were divided by direction before
-functional enrichment:
+Differential-expression analysis identifies individual genes, but biological
+interpretation also requires understanding whether groups of genes participate
+in related biological functions or pathways.
+
+Significant genes were separated according to expression direction:
 
 ```text
-Higher in MP46: 3,495 genes
-Higher in NM:   3,321 genes
+Higher in MP46
+Higher in NM
 ```
 
-GO Biological Process and Reactome enrichment were performed separately
-for the two gene sets.
+Functional enrichment was evaluated using:
 
-The enrichment background consisted of genes tested in the DESeq2
-analysis.
+- **Gene Ontology Biological Process (GO BP)**
+- **Reactome pathways**
+
+All genes tested by DESeq2 were used as the enrichment background.
 
 ## Enrichment Summary
 
-| Gene Set | GO Biological Process | Reactome |
+| Gene set | GO BP | Reactome |
 |---|---:|---:|
-| Higher in MP46 | 31 | 0 |
-| Higher in NM | 236 | 46 |
+| Higher in MP46 | **31** | **0** |
+| Higher in NM | **236** | **46** |
 
-## Genes Higher in MP46
+## Biological Processes Higher in MP46
 
 ![](images/GO_BP_Higher_in_MP46_summary.png){fig-alt="GO Biological Process enrichment for genes higher in MP46" width=90%}
 
-Prominent enriched themes included:
+Genes with higher expression in MP46 were primarily associated with biological
+processes involving **cell division, microtubule organization,
+centrosome-associated processes, and organelle fission**.
 
-- nuclear and cell division
-- microtubule organization
-- centrosome-associated processes
-- organelle fission
-- developmental and patterning processes
-
-No Reactome pathways passed the specified significance threshold for
-the MP46-higher gene set.
-
-## Genes Higher in NM
+## Biological Processes Higher in NM
 
 ![](images/GO_BP_Higher_in_NM_summary.png){fig-alt="GO Biological Process enrichment for genes higher in NM" width=90%}
 
-GO enrichment included:
+Genes with higher expression in NM showed broader enrichment involving
+**extracellular matrix organization, cell adhesion, antigen processing, and
+immune-related signaling**.
 
-- cell-cell adhesion
-- antigen processing and presentation
-- extracellular matrix organization
-- cellular signaling and interaction processes
-
-### Reactome
+## Reactome Pathways Higher in NM
 
 ![](images/Reactome_Higher_in_NM_summary.png){fig-alt="Reactome pathway enrichment for genes higher in NM" width=90%}
 
-Prominent Reactome themes included:
+Reactome analysis identified **46 significantly enriched pathways** among genes
+with higher expression in NM.
 
-- extracellular matrix organization
-- IGF transport and IGF-binding proteins
-- interferon-gamma signaling
-- platelet activation and degranulation
-- hemostasis
-- extracellular matrix degradation
-- ER-phagosome pathway
-- ECM proteoglycans
+No Reactome pathway passed the predefined significance threshold for genes
+higher in MP46. The original threshold was retained rather than relaxed to
+force pathway discovery.
 
-# Overall Findings
+# Integrated Interpretation
 
-The independent analysis stages produced a consistent expression-level
-pattern.
+The individual analysis stages provide complementary evidence about the
+dataset.
 
-```text
-PCA
-  ↓
-Strong separation of NM and MP46
+Raw-read QC indicated that the sequencing data were suitable for alignment
+without additional trimming. STAR subsequently produced high unique mapping
+rates across all samples.
 
-Sample correlation
-  ↓
-High within-group reproducibility
+Expression-level QC provided an independent check after gene quantification.
+PCA showed clear separation between NM and MP46, while sample correlation
+showed strong agreement among biological replicates.
 
-DESeq2
-  ↓
-6,816 significant DE genes
+DESeq2 identified **6,816 genes** meeting the predefined statistical and
+fold-change thresholds, with 3,495 showing higher expression in MP46 and 3,321
+showing higher expression in NM.
 
-Functional enrichment
-  ↓
-Distinct direction-specific biological signatures
-```
+Functional enrichment then translated these gene-level differences into
+broader biological patterns. Genes higher in MP46 were associated primarily
+with cell-division-related processes, whereas genes higher in NM showed
+enrichment for extracellular matrix, adhesion, antigen-processing, and
+immune-related functions.
 
-Genes higher in MP46 were enriched primarily for cell-division and
-microtubule-associated processes.
+Together, the raw-read QC, alignment results, expression-level QC,
+differential-expression analysis, and functional enrichment provide a
+consistent view of substantial transcriptional differences between the two
+groups.
 
-Genes higher in NM showed broader enrichment involving
-extracellular-matrix, cell-adhesion, immune-associated, and
-antigen-processing pathways.
+These results describe associations within this dataset and do not by
+themselves establish causal biological mechanisms.
 
-These enrichment results describe expression-associated biological
-signatures and should be interpreted in the context of the original
-experimental design.
+# Reproducible Workflow
 
-# Reproducibility
+The analysis was first developed and validated as individual Python, R, and
+command-line steps and then connected using **Nextflow DSL2**.
 
-The analysis was implemented using:
+RNA-seq workflows contain many dependent processes and intermediate files.
+Nextflow manages these dependencies automatically, tracks process inputs and
+outputs, caches completed work, and allows interrupted or previously completed
+analyses to continue using `-resume`.
 
-- FastQC
-- MultiQC
-- STAR
-- SAMtools
-- RSeQC
-- featureCounts
-- Python
-- R / DESeq2
-- clusterProfiler
-- ReactomePA
-- Docker
-- Quarto
+The current Nextflow implementation **reuses the resulting STAR BAM files** and
+automates the downstream analysis.
 
-Validated scripts are maintained in the project repository under:
+**Docker** provides controlled software environments for workflow processes,
+reducing dependency on software installed directly on the host computer.
 
-```text
-scripts/
-```
+The project also demonstrates **Linux and SLURM** research-computing concepts,
+including shared project storage, Environment Modules, resource requests, job
+submission, and job monitoring.
 
-Detailed technical documentation is available under:
+These components serve complementary roles:
 
-```text
-docs/
-```
+| Component | Role |
+|---|---|
+| Git / GitHub | Version-controlled code and documentation |
+| Docker | Reproducible software environments |
+| Nextflow | Automated workflow execution |
+| Linux / SLURM | Research-computing environment |
+| Quarto | Reproducible and shareable reporting |
 
-Large FASTQ, BAM, reference, index, and intermediate count files are
-maintained outside the GitHub repository.
+Together, they connect the biological analysis with the computational
+practices needed to make the workflow reproducible and reviewable.
+
+# Software
+
+| Analysis component | Software |
+|---|---|
+| Raw-read QC | FastQC |
+| QC aggregation | MultiQC 1.35 |
+| Alignment | STAR |
+| BAM processing | SAMtools |
+| Strandedness assessment | RSeQC |
+| Gene quantification | featureCounts |
+| Count processing and visualization | Python |
+| Differential expression | DESeq2 |
+| Functional enrichment | clusterProfiler / ReactomePA |
+| Gene annotation | GENCODE v48 |
+| Workflow automation | Nextflow DSL2 |
+| Containerization | Docker |
+| Research computing | Linux / SLURM |
+| Reporting | Quarto |
+| Version control | Git / GitHub |
 
 # Conclusion
 
-The RNA-seq workflow successfully progressed from raw paired-end
-sequencing reads through alignment, quantification, expression QC,
-differential expression, and functional enrichment.
+This project demonstrates an end-to-end bulk RNA-seq analysis progressing from
+raw paired-end sequencing reads to biological interpretation.
 
-Expression-level QC showed strong replicate consistency and clear
-separation between NM and MP46.
+Raw-read QC was interpreted rather than treated as a simple PASS/FAIL
+decision. MultiQC supported proceeding without unnecessary trimming, and
+subsequent alignment, PCA, and sample-correlation analyses provided independent
+checks of data and sample quality.
 
-Differential-expression analysis identified extensive transcriptional
-differences between the groups, and direction-specific enrichment
-analysis revealed distinct functional signatures.
+Differential-expression analysis identified substantial transcriptional
+differences between MP46 and NM, while functional enrichment provided
+biological context for those changes.
 
-This report provides a concise collaborator-facing summary, while the
-repository contains the scripts and technical documentation required to
-reproduce the analysis.
+Nextflow automation, Docker environments, version-controlled analysis code,
+Linux/SLURM computing practices, and Quarto reporting bring these individual
+steps together into a reproducible and reviewable bioinformatics workflow.
+
+# References
+
+1. Gentien D, et al. *Cell Reports*. 2023. GSE199679 / GSE198801.
+2. Andrews S. FastQC: A Quality Control Tool for High Throughput Sequence Data.
+3. Ewels P, et al. MultiQC: summarize analysis results for multiple tools and samples in a single report. *Bioinformatics*. 2016.
+4. Dobin A, et al. STAR: ultrafast universal RNA-seq aligner. *Bioinformatics*. 2013.
+5. Wang L, et al. RSeQC: quality control of RNA-seq experiments. *Bioinformatics*. 2012.
+6. Liao Y, Smyth GK, Shi W. featureCounts: an efficient general-purpose program for assigning sequence reads to genomic features. *Bioinformatics*. 2014.
+7. Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. *Genome Biology*. 2014.
+8. Yu G, et al. clusterProfiler: an R package for comparing biological themes among gene clusters. *OMICS*. 2012.
+9. Milacic M, et al. Reactome Pathway Knowledgebase. *Nucleic Acids Research*. 2024.

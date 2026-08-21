@@ -64,6 +64,7 @@ process MULTIQC {
 
     output:
     path "multiqc_report.html", emit: report
+    path "multiqc_data", emit: data
 
     script:
     """
@@ -552,6 +553,9 @@ process QUARTO_REPORT {
     input:
     path report_source
 
+    path multiqc_report
+    path multiqc_data
+
     path pca_png
     path correlation_png
     path volcano_png
@@ -570,11 +574,32 @@ process QUARTO_REPORT {
 
     mkdir -p report_work/images
 
+
+    # --------------------------------------------------
+    # MultiQC
+    # --------------------------------------------------
+
+    cp ${multiqc_report} \
+        report_work/multiqc_report.html
+
+    cp -R ${multiqc_data} \
+        report_work/multiqc_data
+
+
+    # --------------------------------------------------
+    # Expression QC figures
+    # --------------------------------------------------
+
     cp ${pca_png} \
         report_work/images/pca_expression_qc.png
 
     cp ${correlation_png} \
         report_work/images/sample_correlation_heatmap.png
+
+
+    # --------------------------------------------------
+    # Differential-expression figures
+    # --------------------------------------------------
 
     cp ${volcano_png} \
         report_work/images/volcano_MP46_vs_NM.png
@@ -585,6 +610,11 @@ process QUARTO_REPORT {
     cp ${heatmap_png} \
         report_work/images/top30_DE_heatmap.png
 
+
+    # --------------------------------------------------
+    # Functional-enrichment figures
+    # --------------------------------------------------
+
     cp ${enrichment_plots}/GO_BP_Higher_in_MP46_summary.png \
         report_work/images/GO_BP_Higher_in_MP46_summary.png
 
@@ -594,9 +624,25 @@ process QUARTO_REPORT {
     cp ${enrichment_plots}/Reactome_Higher_in_NM_summary.png \
         report_work/images/Reactome_Higher_in_NM_summary.png
 
+
+    # --------------------------------------------------
+    # Render Quarto
+    # --------------------------------------------------
+
     cd report_work
 
     quarto render
+
+
+    # --------------------------------------------------
+    # Include interactive MultiQC report in final site
+    # --------------------------------------------------
+
+    cp multiqc_report.html \
+        _site/multiqc_report.html
+
+    cp -R multiqc_data \
+        _site/multiqc_data
     """
 }
 
@@ -929,15 +975,17 @@ workflow {
      * Render final report
      */
 
-    report_results = QUARTO_REPORT(
-        report_source_ch,
-        pca_results.png,
-        correlation_plot_results.png,
-        volcano_results.png,
-        ma_results.png,
-        heatmap_results.png,
-        enrichment_plot_results.directory
-    )
+report_results = QUARTO_REPORT(
+    report_source_ch,
+    multiqc_results.report,
+    multiqc_results.data,
+    pca_results.png,
+    correlation_plot_results.png,
+    volcano_results.png,
+    ma_results.png,
+    heatmap_results.png,
+    enrichment_plot_results.directory
+)
 
 
     /*

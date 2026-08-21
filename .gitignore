@@ -27,3 +27,6 @@ results/nextflow/
 # Quarto generated site
 report/_site/
 private-notes/
+report/multiqc_report.html
+report/multiqc_data/
+report/multiqc_data
