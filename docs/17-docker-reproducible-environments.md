@@ -2,76 +2,12 @@
 
 ## Overview
 
-Docker helps make bioinformatics analyses more reproducible by packaging
-software and its dependencies into a reusable **Docker image**.
+A reproducible bioinformatics analysis depends on more than the data and
+scripts. It also depends on the **software versions and dependencies** used to
+run the analysis.
 
-A Docker image can be used on another compatible system with Docker installed,
-so the same software environment can be recreated without manually
-reinstalling every tool and dependency.
-
-When an image is run, Docker creates a temporary **container** that executes
-the analysis.
-
-```text
-Docker image
-    ↓
-reusable software environment
-    ↓
-Docker container
-    ↓
-runs the analysis
-    ↓
-results
-```
-
-The sequencing data are usually **not stored inside the image**. FASTQ, BAM,
-reference, and result files remain outside the container and are made available
-to it when the analysis runs.
-
-Reproducibility therefore comes from combining:
-
-```text
-same input data
-+ same analysis scripts
-+ same parameters
-+ same reference files
-+ same Docker image
-```
-
-Docker mainly solves the **software environment** part of this problem.
-
----
-
-## Why Docker Was Used
-
-Bioinformatics tools often depend on specific software versions, Python or R
-packages, system libraries, and operating-system components.
-
-Installing the same tool manually on different computers can therefore lead to
-different environments or dependency conflicts.
-
-Docker provides a controlled Linux-based environment that can be reused across
-systems.
-
-In this project, Docker helps to:
-
-- preserve specific bioinformatics software versions
-- package tools together with their dependencies
-- reduce installation and dependency conflicts
-- provide consistent Linux-based execution
-- support analysis on an Apple Silicon host
-- integrate software environments with Nextflow
-- make the workflow easier to reproduce on another system
-
----
-
-## Docker Image vs. Container
-
-The two terms are related but different.
-
-### Docker image
-
-A **Docker image** is the reusable software package.
+Docker addresses this by packaging software and its dependencies into a
+reusable **Docker image**.
 
 For example:
 
@@ -84,73 +20,163 @@ Linux environment
 + required dependencies
 ```
 
-The same image can be pulled and used on another system.
-
-### Docker container
-
-A **container** is a running instance of the image.
+When an image is run, Docker creates a **container** that executes the analysis:
 
 ```text
 Docker image
-     ↓ docker run
+    ↓
 Docker container
-     ↓
-executes command
+    ↓
+analysis command
+    ↓
+results
 ```
 
-Containers are usually temporary. The analysis results are written back to the
-host filesystem rather than kept only inside the container.
+The **image** defines the reusable software environment. The **container** is
+the running instance of that environment.
+
+This allows the same software environment to be recreated on another
+compatible system without manually reinstalling each tool and its dependencies.
 
 ---
 
-## How Docker Fits into This Project
+## What Docker Stores
 
-The main project components have separate roles:
+Docker images contain the **software environment**, not the entire RNA-seq
+project.
+
+The main project components remain separate:
 
 ```text
-Git / GitHub
+GitHub repository
     ↓
-stores scripts and workflow code
+workflow + scripts + configuration + documentation
 
-Docker
+Data storage
     ↓
-provides reproducible software environments
+FASTQ + BAM + reference files
 
-Nextflow
+Container registry
     ↓
-controls process order and data flow
+versioned Docker images
 
-FASTQ / BAM / reference files
+Results
     ↓
-provide analysis inputs
-
-Quarto
-    ↓
-presents final results
+analysis outputs + Quarto report
 ```
 
-A useful way to think about this is:
+FASTQ files therefore do **not** need to be stored in the same directory as a
+Docker image. Docker manages images separately from the project data.
 
-> **Nextflow is the recipe, Docker is the software environment, and the
-> sequencing files are the input data.**
+When an analysis runs, the required files are made available to the container,
+and the resulting outputs are written back to the host filesystem.
+
+---
+
+## Reproducing the Analysis on Another System
+
+Docker provides the **software environment** needed for reproducibility, while
+the remaining analysis components are maintained separately.
+
+A reproducible computational analysis combines:
+
+```text
+input data
++ reference files
++ sample metadata
++ analysis scripts
++ parameters
++ Nextflow workflow
++ versioned Docker images
+```
+
+On another compatible system, the analysis can therefore be recreated by:
+
+```text
+Clone the GitHub repository
+        ↓
+Provide the sequencing and reference data
+        ↓
+Use the same container images
+        ↓
+Run the Nextflow workflow
+        ↓
+Generate the analysis results
+```
+
+The Docker images usually do not need to be copied manually. Their names and
+versions are recorded in the workflow and can be pulled from the container
+registry when needed.
+
+---
+
+## How Data Reach the Container
+
+Project data can remain anywhere accessible to the system running the
+workflow.
+
+For example:
+
+```text
+project/
+├── workflow/
+├── scripts/
+├── report/
+└── results/
+
+data/
+├── Sample1_R1.fastq.gz
+├── Sample1_R2.fastq.gz
+├── Sample2_R1.fastq.gz
+└── Sample2_R2.fastq.gz
+
+reference/
+├── genome.fa
+└── annotation.gtf
+```
+
+When Docker is run manually, a host directory can be mounted into the
+container:
+
+```bash
+docker run --rm \
+    -v /host/project:/data \
+    <image> \
+    <command>
+```
+
+This makes the files accessible inside the container:
+
+```text
+Host files
+    ↓
+Docker mount
+    ↓
+Container
+    ↓
+Bioinformatics tool
+    ↓
+Results written to host
+```
+
+When Docker is used through Nextflow, Nextflow handles much of the file staging
+and container execution automatically.
 
 ---
 
 ## Docker in the RNA-Seq Workflow
 
-The current Nextflow workflow uses version-pinned containers for several
-command-line bioinformatics tools:
+The workflow uses versioned containers for bioinformatics tools such as:
 
-| Process | Software | Version |
-|---|---|---:|
-| `FASTQC` | FastQC | 0.12.1 |
-| `MULTIQC` | MultiQC | 1.35 |
-| `SAMTOOLS_INDEX` | SAMtools | 1.22.1 |
-| `RSEQC_INFER_EXPERIMENT` | RSeQC | 5.0.3 |
-| `FEATURECOUNTS` | Subread / featureCounts | 2.0.6 |
+| Software | Version |
+|---|---:|
+| FastQC | 0.12.1 |
+| MultiQC | 1.35 |
+| SAMtools | 1.22.1 |
+| RSeQC | 5.0.3 |
+| Subread / featureCounts | 2.0.6 |
 
-The exact container images are specified in
-[`workflow/main.nf`](../workflow/main.nf).
+Container images are defined in the Nextflow workflow.
 
 For example:
 
@@ -163,28 +189,28 @@ process MULTIQC {
 }
 ```
 
-When this process runs, Nextflow starts the specified Docker image and executes
-MultiQC inside that environment.
+When this process runs:
 
-This means the workflow does not depend on whichever MultiQC version happens
-to be installed directly on the host computer.
+```text
+QC files
+    ↓
+Nextflow
+    ↓
+MultiQC 1.35 container
+    ↓
+MultiQC analysis
+    ↓
+multiqc_report.html
+```
+
+The analysis therefore uses the specified software environment rather than
+depending on whichever version happens to be installed on the host.
 
 ---
 
-## Why Version Pinning Matters
+## Why Container Versions Are Pinned
 
-A container should use a specific software version rather than an unspecified
-or changing image tag.
-
-For example:
-
-```text
-multiqc:1.35--pyhdfd78af_0
-```
-
-is more reproducible than relying on an unversioned image.
-
-The project currently uses explicit BioContainers images such as:
+The workflow uses explicit image versions such as:
 
 ```text
 fastqc:0.12.1--hdfd78af_0
@@ -194,23 +220,26 @@ rseqc:5.0.3--py39hf95cd2a_0
 subread:2.0.6--he4a0461_0
 ```
 
-This records the software environment used by each process.
+Version pinning records the software environment used for the analysis and
+prevents a later run from unintentionally using a different tool version.
+
+```text
+version-controlled workflow
+        +
+version-pinned software
+        +
+same analysis inputs
+        ↓
+reproducible execution
+```
 
 ---
 
 ## Testing a Docker Image
 
-Before using a container in the workflow, it can be tested independently.
+A container can be tested independently before running the complete workflow.
 
-General pattern:
-
-```bash
-docker run --rm \
-    <image> \
-    <tool> --version
-```
-
-For example, MultiQC 1.35 was verified with:
+For example:
 
 ```bash
 docker run --rm \
@@ -218,76 +247,57 @@ docker run --rm \
     multiqc --version
 ```
 
-The container returned:
+Expected output:
 
 ```text
 multiqc, version 1.35
 ```
 
-This confirms that:
-
-```text
-image starts successfully
-        ↓
-tool is available
-        ↓
-expected version is installed
-```
-
-Testing the image separately is useful when distinguishing Docker problems from
-Nextflow problems.
-
----
-
-## Running a Container with Project Files
-
-Bioinformatics containers usually need access to files stored on the host
-computer.
-
-A directory can be mounted into a container with:
+The same approach can be used for other tools:
 
 ```bash
 docker run --rm \
-    -v /host/project:/data \
     <image> \
-    <command>
+    <tool> --version
 ```
 
-Conceptually:
-
-```text
-Host
-/path/to/project
-        ↓
-Docker mount
-        ↓
-/data
-inside container
-```
-
-The container reads the input files from the mounted directory and writes
-results back to the host filesystem.
-
-With Nextflow, much of this file staging and container execution is handled
-automatically.
+This verifies that the image starts successfully and contains the expected
+software version.
 
 ---
 
 ## Docker and Nextflow
 
-Nextflow manages **when and how a process runs**, while Docker provides the
-software environment in which that process executes.
+Docker and Nextflow have different but complementary roles.
+
+**Nextflow** manages:
+
+- process execution
+- input and output files
+- dependencies between analysis stages
+- workflow automation
+
+**Docker** provides:
+
+- software
+- software versions
+- required dependencies
+- isolated execution environments
+
+Together:
 
 ```text
-Nextflow
+Input data
     ↓
-identifies process inputs
+Nextflow process
     ↓
-starts specified Docker image
+Docker container
     ↓
-runs analysis command
+analysis tool
     ↓
-captures process outputs
+output
+    ↓
+next Nextflow process
 ```
 
 For example:
@@ -304,31 +314,16 @@ process SAMTOOLS_INDEX {
 }
 ```
 
-Here:
-
-```text
-Nextflow
-    ↓
-orchestration
-
-Docker
-    ↓
-SAMtools environment
-
-samtools index
-    ↓
-analysis command
-```
-
-This separation makes the workflow easier to maintain and reproduce.
+Nextflow determines **what should run and when**, while Docker provides the
+environment in which `samtools` runs.
 
 ---
 
 ## Containerized STAR Alignment
 
-STAR alignment was also performed in a containerized Linux environment.
+STAR alignment is also executed in a containerized Linux environment.
 
-The STAR container setup is maintained under:
+The STAR container configuration is stored under:
 
 ```text
 containers/star/
@@ -338,75 +333,37 @@ and documented in:
 
 [`10-star-alignment.md`](10-star-alignment.md)
 
-The current downstream Nextflow workflow does **not** rerun STAR alignment.
-Instead, it reuses the validated STAR BAM files.
+The resulting coordinate-sorted BAM files can then be used by downstream
+analysis:
 
 ```text
-FASTQ
-  ↓
-containerized STAR alignment
-  ↓
-validated BAM files
-  ↓
-Nextflow downstream analysis
+Paired-end FASTQ
+       ↓
+containerized STAR
+       ↓
+coordinate-sorted BAM
+       ↓
+downstream RNA-seq workflow
 ```
 
-This avoids repeating the most computationally expensive upstream step.
+This keeps the STAR software environment reproducible while allowing its
+alignment outputs to be used by subsequent analysis stages.
 
 ---
 
-## Current Containerization Scope
+## Apple Silicon and Container Architecture
 
-The current Nextflow workflow explicitly defines Docker containers for:
+The project is designed to run in containerized environments even when the host
+and container use different processor architectures.
 
-```text
-FastQC
-MultiQC
-SAMtools
-RSeQC
-featureCounts
-```
-
-Other downstream stages currently rely on the host execution environment,
-including:
-
-```text
-Python processing
-DESeq2
-gene annotation
-PCA
-correlation
-DE plots
-functional enrichment
-Quarto rendering
-```
-
-The workflow should therefore be described as **partially containerized**, not
-yet fully containerized end to end.
-
-A future improvement is to package the remaining Python, R/Bioconductor, and
-Quarto environments as well.
-
----
-
-## Apple Silicon and CPU Architecture
-
-The project was developed on an **Apple Silicon ARM64** system.
-
-Docker images may target different architectures, commonly:
+Common Docker image architectures include:
 
 ```text
 linux/arm64
 linux/amd64
 ```
 
-When the MultiQC 1.35 image was tested, Docker reported an architecture warning
-because the image was built for `linux/amd64` while the host used
-`linux/arm64/v8`.
-
-The container still executed successfully.
-
-Conceptually:
+For example:
 
 ```text
 Apple Silicon host
@@ -416,100 +373,65 @@ Apple Silicon host
         ↓
 linux/amd64 image
         ↓
-emulated execution
+container execution
 ```
 
-This is useful for portability, but a native ARM64 image may provide better
-performance when available.
+Docker can use emulation when a compatible native image is unavailable,
+although native images may provide better performance.
 
----
-
-## Docker vs. Environment Modules
-
-Docker and HPC Environment Modules both help manage software versions, but they
-work differently.
-
-| Docker | Environment Modules |
-|---|---|
-| Provides an isolated software environment | Modifies the current shell environment |
-| Packages software and dependencies together | Uses software installed on the HPC system |
-| Common on workstations and container-enabled systems | Common on institutional HPC systems |
-| Uses versioned container images | Uses versioned module files |
-
-For example:
-
-```bash
-module load multiqc/1.35
-```
-
-provides MultiQC through the HPC module system, while Docker can use:
-
-```text
-quay.io/biocontainers/multiqc:1.35--pyhdfd78af_0
-```
-
-Both approaches make software versions explicit.
+The container should therefore be tested on the target system before running a
+large analysis.
 
 ---
 
 ## Docker and HPC
 
-Institutional HPC systems do not always allow Docker directly on compute nodes.
+Docker is commonly used on workstations and container-enabled systems, while
+institutional HPC clusters may manage software through **Environment Modules**
+or another supported container runtime.
 
-In those environments, workflows may use:
+For example, an HPC environment may provide:
 
-```text
-Environment Modules
-or
-an HPC-supported container runtime
+```bash
+module load multiqc/1.35
 ```
 
-instead.
-
-The important point is that the **analysis workflow and software environment
-remain separate concepts**.
+while a Docker environment can use:
 
 ```text
-Nextflow workflow
-       ↓
-execution environment
-   ┌───────┴─────────┐
-   ↓                 ↓
-Docker           HPC-supported
-workstation      environment
+quay.io/biocontainers/multiqc:1.35--pyhdfd78af_0
 ```
 
-This makes the workflow easier to move between different computing systems.
+Both approaches make the software version explicit.
+
+| Docker | Environment Modules |
+|---|---|
+| Packages software and dependencies | Uses software installed on the HPC system |
+| Provides an isolated environment | Configures the current shell environment |
+| Uses versioned images | Uses versioned module files |
+| Common on container-enabled systems | Common on institutional HPC systems |
+
+Keeping the workflow separate from the software environment makes it easier to
+run the same analysis across different computing infrastructures.
 
 ---
 
 ## Troubleshooting
 
-### Docker is not running
-
-Check:
+Check that Docker is available and running:
 
 ```bash
 docker --version
 docker info
 ```
 
-If `docker --version` succeeds but `docker info` fails, the Docker engine may
-not be running.
-
-### Image cannot be downloaded
-
-Test:
+Test whether an image can be obtained:
 
 ```bash
 docker pull <image>
 ```
 
-Confirm that the image name and version tag are correct.
-
-### Tool is missing inside the image
-
-Run:
+Verify the software inside an image:
 
 ```bash
 docker run --rm \
@@ -517,16 +439,7 @@ docker run --rm \
     <tool> --version
 ```
 
-### ARM64 / AMD64 warning
-
-A warning about `linux/amd64` and `linux/arm64` indicates a CPU architecture
-difference.
-
-If the container runs successfully, Docker is usually providing emulation.
-
-### Container works manually but fails in Nextflow
-
-Inspect the failed task:
+If a container works manually but fails in Nextflow, inspect the failed task:
 
 ```bash
 cat work/<task-id>/.command.sh
@@ -534,61 +447,50 @@ cat work/<task-id>/.command.err
 cat work/<task-id>/.command.out
 ```
 
-Also check:
-
-```text
-input paths
-file permissions
-container image
-software version
-Nextflow configuration
-```
+Common causes include incorrect input paths, file permissions, container
+versions, or workflow configuration.
 
 ---
 
-## Reproducibility Strategy
+## Reproducibility Model
 
-Docker is one part of the overall reproducibility design:
+Docker forms one layer of the project's overall reproducibility strategy:
 
 ```text
-Input data
-    ↓
-FASTQ / BAM / reference files
+Raw sequencing data
+        +
+Reference files
+        +
+Sample metadata
+        +
+Analysis scripts and parameters
+        +
+Nextflow workflow
+        +
+Version-pinned Docker images
+        ↓
+Reproducible computational analysis
+```
 
-Analysis logic
-    ↓
-Python / R / Bash
+Each component has a defined role:
 
-Workflow orchestration
-    ↓
+```text
+GitHub
+    → code, workflow, configuration, documentation
+
+Data storage
+    → sequencing and reference data
+
+Container registry
+    → reproducible software environments
+
 Nextflow
+    → workflow orchestration
 
-Software environment
-    ↓
-Docker / BioContainers
-
-Version control
-    ↓
-Git / GitHub
-
-Scientific reporting
-    ↓
 Quarto
+    → results and scientific reporting
 ```
 
-Reproducing the analysis therefore requires more than preserving the scripts.
-
-The goal is to retain:
-
-```text
-same data
-+ same scripts
-+ same parameters
-+ same references
-+ same software environment
-```
-
-Docker provides the **same software environment** component.
-
-
-
+This separation allows the workflow, data, and software environments to be
+managed independently while still being brought together to reproduce the
+analysis.
