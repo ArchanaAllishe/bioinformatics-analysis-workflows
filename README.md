@@ -49,7 +49,7 @@ computational infrastructure needed to make an RNA-seq workflow reproducible.
 ### Computing Environment
 
 The workflow can be run on a local Linux workstation or, when available, on
-an institutional HPC system. An HPC cluster is typically accessed remotely
+an institutional High Performance Computing (HPC) system. An HPC cluster is typically accessed remotely
 from a macOS, Windows, or Linux workstation using SSH. Analysis files and jobs
 are prepared on the login node, while computational work is submitted to
 compute nodes through a scheduler such as SLURM.
