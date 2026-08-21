@@ -12,6 +12,23 @@
 
 </div>
 
+
+
+<h1 align="center">End-to-End Bulk RNA-Seq Analysis & Workflow Automation</h1>
+
+<p align="center">
+  <strong>Nextflow · Docker · HPC/SLURM · Python · R/Bioconductor · Quarto</strong>
+</p>
+
+<p align="center">
+  <em>From raw FASTQ reads to differential expression, functional enrichment, and biological insight.</em>
+</p>
+
+<p align="center">
+  <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
+    <strong>View Final Analysis Report</strong>
+  </a>
+</p>
 ---
 
 # Project Overview
