@@ -117,7 +117,6 @@ The RNA-seq data were generated using **paired-end sequencing**. RNA-seq can be 
 Therefore, the **six biological samples produce 12 FASTQ files**, which serve as the starting point for the computational RNA-seq workflow.
 
 ---
-
 # Analysis
 ---
 
@@ -553,11 +552,11 @@ resulting files to visualization, expression-QC, and enrichment processes.
 | `deseq2_MP46_vs_NM_annotated.tsv` | DE results with gene annotation |
 | `vst_expression.tsv` | Variance-stabilized expression values for QC and visualization |
 
-<p align="center">
+<h2 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#differential-expression">
     <strong>View Differential-Expression Results</strong>
   </a>
-</p>
+</h2>
 
 ---
 
@@ -641,11 +640,11 @@ variance-stabilized expression matrix produced by DESeq2.
 | `sample_correlation.tsv` | Pairwise Pearson correlations |
 | `sample_correlation_heatmap.png/.pdf` | Visual sample-similarity assessment |
 
-<p align="center">
+<h2 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#expression-level-qc">
     <strong>View Expression-Level QC</strong>
   </a>
-</p>
+</h2>
 
 ---
 
@@ -780,11 +779,11 @@ No Reactome pathway passed the predefined enrichment threshold for the
 MP46-higher gene set. The statistical threshold was not relaxed after
 observing this result.
 
-<p align="center">
+<h2 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#functional-enrichment">
     <strong>View Functional-Enrichment Results</strong>
   </a>
-</p>
+</h2>
 
 ---
 
@@ -869,32 +868,12 @@ site.
 | `images/` | Analysis figures used by the report |
 | `site_libs/` | Supporting Quarto website resources |
 
-<p align="center">
+<h2 align="center">
   <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
     <strong>View Complete Interactive Analysis Report</strong>
   </a>
-</p>
+</h2>
 
----
-
-# Technologies
-
-| Area | Technology |
-|---|---|
-| Workflow orchestration | Nextflow DSL2 |
-| Containerization | Docker / BioContainers |
-| Programming | Python, R, Bash |
-| Sequencing QC | FastQC, MultiQC |
-| Alignment | STAR |
-| BAM processing | SAMtools |
-| RNA-seq QC | RSeQC |
-| Gene quantification | featureCounts |
-| Differential expression | DESeq2 |
-| Functional enrichment | clusterProfiler, ReactomePA |
-| Annotation | GENCODE |
-| Reporting | Quarto |
-| Research computing | Linux, SLURM |
-| Version control | Git, GitHub |
 
 ---
 
