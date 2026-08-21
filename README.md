@@ -16,19 +16,15 @@
 
 # Project Overview
 
-This repository demonstrates a **reproducible end-to-end bulk RNA-seq analysis**, connecting biological data analysis with workflow automation, reproducible software environments, HPC computing, and interactive reporting.
+This project demonstrates a **reproducible end-to-end bulk RNA-seq workflow**, from raw sequencing reads to differential expression, functional interpretation, and interactive reporting.
 
-## RNA-Seq Case Study
+RNA-seq measures **gene expression**, allowing biological groups to be compared to identify differentially expressed genes and the biological processes and pathways associated with those differences. RNA is isolated from biological samples, converted to cDNA, prepared as a sequencing library, and sequenced to generate reads stored in **FASTQ files**. Sequencing can be **single-end** (one read per fragment) or **paired-end** (two reads, `R1` and `R2`, per fragment).
 
-RNA-seq measures **gene expression** and enables comparisons between biological groups to identify differentially expressed genes and associated biological processes and pathways.
+This project uses publicly available **paired-end RNA-seq data from GSE199679 / GSE198801** to compare normal uveal melanocytes with uveal melanoma. **Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye.
 
-RNA is isolated from biological samples, converted to cDNA, prepared as a sequencing library, and sequenced to generate reads stored in **FASTQ files**. Sequencing may be **single-end** (one read per fragment) or **paired-end** (two reads, `R1` and `R2`, per fragment).
+Two biological groups were analyzed:
 
-This case study uses publicly available **paired-end RNA-seq data from GSE199679 / GSE198801** to compare normal uveal melanocytes with uveal melanoma.
-
-**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye. Two biological groups were analyzed:
-
-- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant reference group.
+- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant group.
 - **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma representing the malignant group.
 
 The dataset contains **six biological samples with three biological replicates per group**:
@@ -38,22 +34,15 @@ The dataset contains **six biological samples with three biological replicates p
 | **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
 | **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
 
-The primary comparison is:
+The primary comparison is **MP46 uveal melanoma vs. normal melanocytes (NM)**. Because the data are paired-end, each biological sample has an `R1` and `R2` FASTQ file, giving **12 FASTQ files from six biological samples** as the starting point for the computational analysis.
 
-> **MP46 uveal melanoma vs. normal melanocytes (NM)**
+The workflow progresses through **sequencing quality control → read alignment → library strandedness assessment → gene quantification → expression-level QC → differential expression → functional enrichment → biological interpretation**.
 
-Because the dataset is paired-end, each biological sample has an `R1` and `R2` FASTQ file, giving **12 FASTQ files from six biological samples**. These files are the starting point for the computational analysis.
+Individual analysis steps were first developed and validated using **command-line bioinformatics tools, Python, and R/Bioconductor**. **Nextflow** connects the validated steps into an automated downstream workflow, while **Docker** provides reproducible software environments. The automated workflow reuses the resulting validated STAR BAM files rather than repeating alignment.
 
-## Analysis and Computing Framework
+The workflow can run on a **local Linux workstation** or, when available, an institutional **High Performance Computing (HPC)** system. HPC resources can be accessed from a macOS, Windows, or Linux workstation using **SSH**, with computational jobs submitted through a scheduler such as **SLURM**. An Ubuntu-based HPC environment was also configured to demonstrate SSH access, shared storage, environment modules, and SLURM job submission.
 
-The workflow progresses from **sequencing quality control → read alignment → library strandedness assessment → gene quantification → expression QC → differential expression → functional enrichment → biological interpretation**.
-
-Individual analysis stages were first developed and validated using **command-line bioinformatics tools, Python, and R/Bioconductor**. **Nextflow** connects the validated stages into an automated downstream workflow, while **Docker** provides controlled and reproducible software environments. The workflow reuses the resulting validated STAR BAM files rather than repeating alignment.
-
-The analysis can run on a **local Linux workstation** or, when available, an institutional **High Performance Computing (HPC)** system. HPC resources are typically accessed from a macOS, Windows, or Linux workstation using **SSH**, with computational jobs submitted through a scheduler such as **SLURM**. This project also includes an Ubuntu-based HPC environment demonstrating SSH access, shared storage, environment modules, and SLURM job submission.
-
-Final results are organized into an interactive **Quarto HTML report**, providing a single location for reviewing and sharing the major QC results, statistical analyses, figures, and biological findings.
-
+Final QC results, statistical analyses, figures, and biological findings are brought together in an interactive **Quarto HTML report** for review and sharing.
 
 ---
 
