@@ -172,8 +172,8 @@ be evaluated.
 
 ---
 
-## Analysis
-
+**# Analysis
+**
 The workflow follows RNA-seq data from raw paired-end reads through alignment,
 gene quantification, differential expression, functional interpretation, and
 reporting. Sample identifiers are retained throughout the workflow so results
