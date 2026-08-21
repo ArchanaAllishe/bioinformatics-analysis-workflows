@@ -169,13 +169,10 @@ The biological replicates provide independent measurements within each group,
 allowing within-group consistency and between-group expression differences to
 be evaluated.
 ```
-
+---
 # Analysis
 
-The workflow follows RNA-seq data from raw paired-end reads through alignment,
-gene quantification, differential expression, functional interpretation, and
-reporting. Sample identifiers are retained throughout the workflow so results
-can be traced back to the original sequencing files.
+The workflow follows RNA-seq data from raw paired-end reads through alignment, gene quantification, differential expression, functional interpretation, and reporting. Sample identifiers are retained throughout the workflow so results can be traced back to the original sequencing files.
 
 ## Sample Naming
 
@@ -186,33 +183,23 @@ Each biological sample is represented by two paired-end FASTQ files:
 <sample>_R2.fastq.gz
 ```
 
-For example, the sample `NM_4` consists of:
+For example, sample `NM_4` consists of:
 
 ```text
 NM_4_R1.fastq.gz
 NM_4_R2.fastq.gz
 ```
 
-where:
+The shared prefix `NM_4` identifies the biological sample, while `R1` and `R2` represent the two paired-end reads.
 
-- `NM_4` is the biological sample identifier.
-- `R1` is read 1 of the paired-end sequencing data.
-- `R2` is read 2 of the paired-end sequencing data.
+The analysis contains **six samples with three biological replicates per group**:
 
-The two FASTQ files therefore represent the paired sequencing reads from the
-same biological sample.
-
-The six samples used in this analysis were:
-
-| Group | Biological context | Biological replicates |
+| Group | Biological context | Replicates |
 |---|---|---|
 | **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
 | **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
 
-There are **three biological replicates per group**.
-
-Throughout the workflow, the sample identifier is retained when files are
-generated. For example:
+Sample identifiers are retained throughout the analysis:
 
 ```text
 NM_4_R1.fastq.gz + NM_4_R2.fastq.gz
@@ -223,11 +210,10 @@ NM_4_Aligned.sortedByCoord.out.bam
                     ↓
               featureCounts
                     ↓
-          NM_4 count column
+              NM_4 counts
 ```
 
-This naming strategy allows each downstream result to be traced back to its
-original sequencing files.
+This allows downstream results to be traced back to the original sequencing files.
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
