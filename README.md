@@ -170,15 +170,14 @@ allowing within-group consistency and between-group expression differences to
 be evaluated.
 ```
 
-
-## Analysis
+# Analysis
 
 The workflow follows RNA-seq data from raw paired-end reads through alignment,
 gene quantification, differential expression, functional interpretation, and
 reporting. Sample identifiers are retained throughout the workflow so results
 can be traced back to the original sequencing files.
 
-### Sample Naming
+## Sample Naming
 
 Each biological sample is represented by two paired-end FASTQ files:
 
@@ -187,21 +186,48 @@ Each biological sample is represented by two paired-end FASTQ files:
 <sample>_R2.fastq.gz
 ```
 
-`R1` and `R2` contain reads from opposite ends of the same library fragments.
-The shared filename prefix identifies the sample.
-
-For example:
+For example, the sample `NM_4` consists of:
 
 ```text
 NM_4_R1.fastq.gz
 NM_4_R2.fastq.gz
-        ↓
-     NM_4
 ```
 
-These sample identifiers are retained through alignment and quantification and
-matched to the metadata defining the NM and MP46 experimental groups.
+where:
 
+- `NM_4` is the biological sample identifier.
+- `R1` is read 1 of the paired-end sequencing data.
+- `R2` is read 2 of the paired-end sequencing data.
+
+The two FASTQ files therefore represent the paired sequencing reads from the
+same biological sample.
+
+The six samples used in this analysis were:
+
+| Group | Biological context | Biological replicates |
+|---|---|---|
+| **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
+| **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
+
+There are **three biological replicates per group**.
+
+Throughout the workflow, the sample identifier is retained when files are
+generated. For example:
+
+```text
+NM_4_R1.fastq.gz + NM_4_R2.fastq.gz
+                    ↓
+                   STAR
+                    ↓
+NM_4_Aligned.sortedByCoord.out.bam
+                    ↓
+              featureCounts
+                    ↓
+          NM_4 count column
+```
+
+This naming strategy allows each downstream result to be traced back to its
+original sequencing files.
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
