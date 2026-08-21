@@ -172,48 +172,48 @@ be evaluated.
 ---
 # Analysis
 
-The workflow follows RNA-seq data from raw paired-end reads through alignment, gene quantification, differential expression, functional interpretation, and reporting. Sample identifiers are retained throughout the workflow so results can be traced back to the original sequencing files.
+The workflow processes paired-end RNA-seq data from sequencing QC through alignment, gene quantification, differential expression, functional enrichment, and reporting. Sample identifiers are retained throughout the analysis for traceability.
 
 ## Sample Naming
 
-Each biological sample is represented by two paired-end FASTQ files:
+Each biological sample has two paired-end FASTQ files:
 
 ```text
 <sample>_R1.fastq.gz
 <sample>_R2.fastq.gz
 ```
 
-For example, sample `NM_4` consists of:
+For example:
 
 ```text
 NM_4_R1.fastq.gz
 NM_4_R2.fastq.gz
 ```
 
-The shared prefix `NM_4` identifies the biological sample, while `R1` and `R2` represent the two paired-end reads.
+Here, `NM_4` is the sample identifier, while `R1` and `R2` are the paired sequencing reads.
 
-The analysis contains **six samples with three biological replicates per group**:
+The dataset contains **six samples with three biological replicates per group**:
 
-| Group | Biological context | Replicates |
+| Group | Biological context | Samples |
 |---|---|---|
 | **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
 | **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
 
-Sample identifiers are retained throughout the analysis:
+The sample identifier is preserved in downstream files:
 
 ```text
-NM_4_R1.fastq.gz + NM_4_R2.fastq.gz
-                    ↓
-                   STAR
-                    ↓
+NM_4_R1/R2.fastq.gz
+        ↓
+       STAR
+        ↓
 NM_4_Aligned.sortedByCoord.out.bam
-                    ↓
-              featureCounts
-                    ↓
-              NM_4 counts
+        ↓
+  featureCounts
+        ↓
+   NM_4 counts
 ```
 
-This allows downstream results to be traced back to the original sequencing files.
+This makes each downstream result traceable to its original sample.
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
