@@ -126,33 +126,6 @@ be evaluated.
 
 # Analysis
 
-The workflow processes paired-end RNA-seq data from sequencing QC through
-alignment, gene quantification, differential expression, functional
-enrichment, and reporting. Sample identifiers are retained throughout the
-analysis for traceability.
-
-## Sample Naming
-
-Each biological sample has two paired-end FASTQ files:
-
-```text
-<sample>_R1.fastq.gz
-<sample>_R2.fastq.gz
-```
-
-For example:
-
-```text
-NM_4_R1.fastq.gz
-NM_4_R2.fastq.gz
-```
-
-Here, `NM_4` is the sample identifier, while `R1` and `R2` represent the two
-paired-end reads.
-
-Sample identifiers are preserved in downstream files, allowing results to be
-traced back to the original sequencing samples.
-
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
