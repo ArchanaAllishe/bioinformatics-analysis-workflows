@@ -168,11 +168,15 @@ The primary comparison was therefore:
 The biological replicates provide independent measurements within each group,
 allowing within-group consistency and between-group expression differences to
 be evaluated.
-```
+
 ---
+
 # Analysis
 
-The workflow processes paired-end RNA-seq data from sequencing QC through alignment, gene quantification, differential expression, functional enrichment, and reporting. Sample identifiers are retained throughout the analysis for traceability.
+The workflow processes paired-end RNA-seq data from sequencing QC through
+alignment, gene quantification, differential expression, functional
+enrichment, and reporting. Sample identifiers are retained throughout the
+analysis for traceability.
 
 ## Sample Naming
 
@@ -190,30 +194,12 @@ NM_4_R1.fastq.gz
 NM_4_R2.fastq.gz
 ```
 
-Here, `NM_4` is the sample identifier, while `R1` and `R2` are the paired sequencing reads.
+Here, `NM_4` is the sample identifier, while `R1` and `R2` represent the two
+paired-end reads.
 
-The dataset contains **six samples with three biological replicates per group**:
+Sample identifiers are preserved in downstream files, allowing results to be
+traced back to the original sequencing samples.
 
-| Group | Biological context | Samples |
-|---|---|---|
-| **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
-| **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
-
-The sample identifier is preserved in downstream files:
-
-```text
-NM_4_R1/R2.fastq.gz
-        ↓
-       STAR
-        ↓
-NM_4_Aligned.sortedByCoord.out.bam
-        ↓
-  featureCounts
-        ↓
-   NM_4 counts
-```
-
-This makes each downstream result traceable to its original sample.
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
