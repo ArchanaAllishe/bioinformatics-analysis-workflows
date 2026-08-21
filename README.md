@@ -46,7 +46,7 @@ computational infrastructure needed to make an RNA-seq workflow reproducible.
 </p>
 
 ---
-### Computing Environment
+## Computing Environment
 
 The workflow can be run on a local Linux workstation or, when available, on
 an institutional High Performance Computing (HPC) system. An HPC cluster is typically accessed remotely
