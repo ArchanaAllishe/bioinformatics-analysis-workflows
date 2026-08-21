@@ -193,38 +193,52 @@ matched to the metadata defining the NM and MP46 experimental groups.
 
 ---
 
-### 1. Sequencing Quality Control — FastQC and MultiQC
+## 1. Sequencing Quality Control — FastQC and MultiQC
 
-Raw FASTQ files were assessed before alignment to identify sequencing-quality
-issues that could affect downstream analysis. **FastQC** evaluates metrics such
-as per-base quality, GC content, duplication, adapter content, and
-overrepresented sequences. **MultiQC 1.35** combines the individual FastQC
-reports for comparison across the complete dataset.
+Raw FASTQ files were assessed before alignment.
 
-FastQC examines each `R1` and `R2` file independently. In Nextflow, matching
-paired files are discovered from their shared sample prefix using
-`Channel.fromFilePairs()`.
+**FastQC** evaluates individual sequencing files for metrics including
+per-base sequence quality, GC content, duplication, adapter content, and
+overrepresented sequences.
+
+**MultiQC 1.35** combines the FastQC results into a single report so that QC
+patterns can be compared across all sequencing files.
+
+FastQC evaluates `R1` and `R2` independently:
 
 ```text
-NM_4_R1.fastq.gz ─┐
-                  ├── sample = NM_4
-NM_4_R2.fastq.gz ─┘
+NM_4_R1.fastq.gz → FastQC → NM_4_R1_fastqc.html
+NM_4_R2.fastq.gz → FastQC → NM_4_R2_fastqc.html
 ```
 
-**Standalone**
+Experimental-group assignment is not required for this step.
+
+### Manual execution
 
 ```bash
 fastqc /path/to/fastq/*.fastq.gz
-multiqc /path/to/fastqc/results
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — `FASTQC` and `MULTIQC`
+The FastQC outputs were summarized with:
+
+```bash
+multiqc . -o .
+```
+
+### Nextflow automation
+
+The `FASTQC` and `MULTIQC` processes in
+[`workflow/main.nf`](workflow/main.nf) automate the same analysis.
+
+Nextflow uses `Channel.fromFilePairs()` to associate `R1` and `R2` files by
+their shared sample identifier while FastQC continues to evaluate each FASTQ
+file individually.
 
 | Output | Purpose |
 |---|---|
 | `*_fastqc.html` | QC report for each FASTQ file |
 | `*_fastqc.zip` | Machine-readable FastQC results |
-| `multiqc_report.html` | Combined interactive QC report |
+| `multiqc_report.html` | Combined interactive sequencing-QC report |
 | `multiqc_data/` | Structured MultiQC results |
 
 <h2 align="center">
@@ -235,13 +249,13 @@ multiqc /path/to/fastqc/results
 
 ---
 
-### 2. Read Alignment — STAR
+## 2. Read Alignment — STAR
 
-FASTQ reads do not contain information about their genomic origin. **STAR**
-aligns the paired reads to the human reference genome and accounts for
-RNA-seq reads that span exon-exon splice junctions.
+FASTQ files contain sequencing reads but do not indicate where those reads
+originated in the genome.
 
-Files sharing the same sample prefix are aligned together:
+**STAR** aligns paired-end RNA-seq reads to the human reference genome and
+handles reads spanning exon-exon splice junctions.
 
 ```text
 NM_4_R1.fastq.gz + NM_4_R2.fastq.gz
@@ -251,222 +265,313 @@ NM_4_R1.fastq.gz + NM_4_R2.fastq.gz
 NM_4_Aligned.sortedByCoord.out.bam
 ```
 
-The resulting BAM file stores the genomic locations and alignment information
-for the reads and becomes the main input for downstream alignment-based
-analysis.
+The resulting **BAM** file stores genomic read alignments in a compact binary
+format.
 
-**Standalone:** [`scripts/alignment/run_star_all.sh`](scripts/alignment/run_star_all.sh)
+### Manual execution
+
+STAR alignment was performed with:
+
+[`scripts/alignment/run_star_all.sh`](scripts/alignment/run_star_all.sh)
 
 ```bash
 bash scripts/alignment/run_star_all.sh
 ```
 
-The downstream Nextflow workflow reuses these validated STAR BAM files rather
-than repeating alignment.
+The script identifies matching `R1` and `R2` files, derives the sample ID from
+their shared filename prefix, and generates sample-specific STAR outputs.
+
+### Nextflow automation
+
+STAR alignment is not repeated in the current downstream Nextflow workflow.
+The workflow **reuses the resulting validated BAM files**.
 
 | Output | Purpose |
 |---|---|
 | `*_Aligned.sortedByCoord.out.bam` | Coordinate-sorted read alignments |
-| `*Log.final.out` | Main STAR mapping statistics |
+| `*Log.final.out` | STAR alignment statistics |
 | `*SJ.out.tab` | Detected splice junctions |
 
 ---
 
-### 3. BAM Indexing — SAMtools
+## 3. BAM Indexing — SAMtools
 
-STAR BAM files can be large. **SAMtools** creates a `.bai` index that allows
-downstream programs to jump directly to specific genomic regions instead of
-reading the entire BAM file.
+BAM files can contain millions of alignments. Reading the complete file every
+time a genomic region is requested would be inefficient.
+
+**SAMtools** creates a BAM index (`.bai`) that allows software to retrieve
+specific genomic regions without scanning the complete BAM file.
 
 ```text
 sample.bam
     ↓
-SAMtools index
+samtools index
     ↓
 sample.bam.bai
 ```
 
-The BAM filename retains the sample identifier.
+The BAM contains the alignments; the BAI acts as a lookup index for those
+alignments.
 
-**Standalone**
+### Manual execution
 
 ```bash
 samtools index sample.bam
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — `SAMTOOLS_INDEX`
+### Nextflow automation
+
+The `SAMTOOLS_INDEX` process in
+[`workflow/main.nf`](workflow/main.nf) automatically indexes each BAM entering
+the workflow.
 
 | Output | Purpose |
 |---|---|
-| `*.bam.bai` | Index for efficient access to the corresponding BAM |
+| `*.bam.bai` | Index enabling efficient access to the corresponding BAM |
 
 ---
 
-### 4. Library Strandedness — RSeQC
+## 4. Library Strandedness — RSeQC
 
-RNA-seq libraries may be **unstranded, forward-stranded, or
-reverse-stranded**, depending on the library-preparation protocol.
-Strandedness describes whether read orientation retains information about the
-strand from which the original RNA transcript originated.
+RNA-seq library preparation determines whether read orientation preserves
+information about the strand from which the RNA originated.
 
-- **Unstranded:** read orientation does not reliably identify the transcript
+Libraries can be:
+
+- **Unstranded** — read orientation does not reliably identify the transcript
   strand.
-- **Forward-stranded:** the paired reads follow the forward orientation defined
-  by the library protocol.
-- **Reverse-stranded:** the paired reads follow the opposite orientation
-  convention.
+- **Forward-stranded** — read orientation follows the forward convention of
+  the library-preparation protocol.
+- **Reverse-stranded** — read orientation follows the opposite convention.
 
-For paired-end data, forward and reverse orientation depend on the relationship
-between `R1`, `R2`, and the annotated transcript rather than simply whether
-every read maps to the same or opposite strand as a gene.
+For paired-end RNA-seq, strandedness is determined from the relationship
+between `R1`, `R2`, and annotated transcript orientation. It is not simply
+whether every read maps to the same or opposite strand as a gene.
 
-This matters when genes overlap on opposite strands. Using the wrong
-strandedness during counting can cause reads to be assigned incorrectly or
-excluded.
+This matters because genes can overlap on opposite genomic strands. Using the
+wrong strandedness during quantification can incorrectly assign or discard
+reads.
 
-**RSeQC `infer_experiment.py`** compared the aligned reads with the reference
-gene annotation to determine the library orientation.
+**RSeQC `infer_experiment.py`** was used to infer the library orientation from
+the aligned reads.
 
 ```text
-BAM + gene annotation
-        ↓
-RSeQC infer_experiment.py
-        ↓
-reverse-stranded
-        ↓
-featureCounts -s 2
+BAM + reference gene annotation
+              ↓
+      infer_experiment.py
+              ↓
+      strandedness assessment
+              ↓
+      featureCounts setting
 ```
 
-**Standalone**
+### Manual execution
 
 ```bash
 infer_experiment.py \
     -r gencode.v48.bed \
-    -i sample.bam
+    -i sample.bam \
+    > sample_infer_experiment.txt
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) —
-`RSEQC_INFER_EXPERIMENT`
-
-The results supported **reverse-stranded** counting:
+The assessment supported **reverse-stranded** quantification, so featureCounts
+was run with:
 
 ```text
--s 0    unstranded
--s 1    stranded
--s 2    reversely stranded
+-s 2
 ```
+
+where:
+
+```text
+-s 0 → unstranded
+-s 1 → stranded
+-s 2 → reversely stranded
+```
+
+### Nextflow automation
+
+The `RSEQC_INFER_EXPERIMENT` process in
+[`workflow/main.nf`](workflow/main.nf) performs the same assessment on BAM
+files entering the workflow.
 
 | Output | Purpose |
 |---|---|
-| `*_infer_experiment.txt` | Per-sample strandedness assessment |
+| `*_infer_experiment.txt` | Evidence used to determine library strandedness |
 
 ---
 
-### 5. Gene Quantification — featureCounts
+## 5. Gene Quantification — featureCounts
 
-BAM files describe where reads align, but differential-expression analysis
-requires a count for each gene in each sample. **featureCounts** assigns
-aligned fragments to annotated exons and summarizes them by `gene_id`.
+BAM files describe read alignments, but differential-expression analysis
+requires a numerical count for each gene in each sample.
 
-Reverse-stranded paired-end counting was used based on the RSeQC assessment:
+**featureCounts** assigns aligned fragments to annotated exons and summarizes
+them at the gene level.
 
 ```text
--t exon             annotated exons
--g gene_id          summarize by gene
--p                  paired-end data
---countReadPairs    count fragments/read pairs
--s 2                reverse-stranded
+BAM files + GENCODE GTF
+          ↓
+     featureCounts
+          ↓
+   Gene × Sample
+     raw counts
 ```
 
-Each BAM file becomes a sample column in the resulting count table.
+Important settings were:
 
-**Standalone:** [`scripts/quantification/run_featurecounts.sh`](scripts/quantification/run_featurecounts.sh)
+```text
+-p                  paired-end data
+--countReadPairs    count fragments/read pairs
+-s 2                reverse-stranded library
+-t exon             count annotated exons
+-g gene_id          summarize at gene level
+```
+
+### Manual execution
+
+The original quantification was performed with:
+
+[`scripts/quantification/run_featurecounts.sh`](scripts/quantification/run_featurecounts.sh)
 
 ```bash
 bash scripts/quantification/run_featurecounts.sh
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — `FEATURECOUNTS`
+The equivalent core command is:
+
+```bash
+featureCounts \
+    -T 4 \
+    -p \
+    --countReadPairs \
+    -s 2 \
+    -t exon \
+    -g gene_id \
+    -a gencode.v48.primary_assembly.annotation.gtf \
+    -o gene_counts.txt \
+    *.bam
+```
+
+### Nextflow automation
+
+The `FEATURECOUNTS` process in
+[`workflow/main.nf`](workflow/main.nf) performs the same quantification.
+
+Each BAM contributes one sample column to the count matrix.
 
 | Output | Purpose |
 |---|---|
-| `gene_counts.txt` | Raw gene counts across samples |
+| `gene_counts.txt` | Raw gene-level counts for all samples |
 | `gene_counts.txt.summary` | Read-assignment statistics |
 
 ---
 
-### 6. Count-Matrix Preparation and Filtering
+## 6. Count-Matrix Preparation and Filtering
 
-The featureCounts table contains genomic annotation fields in addition to
-sample counts. These fields were removed and BAM-derived column names were
-cleaned to restore the original sample identifiers.
+featureCounts output contains genomic annotation fields in addition to sample
+counts. These fields were removed and BAM-derived column names were converted
+to concise sample identifiers.
 
-Low-expression genes were then removed because they provide little statistical
-information and increase unnecessary multiple testing.
+Genes with very low expression provide little information for statistical
+testing and increase the multiple-testing burden.
+
+Genes were retained when they had:
 
 ```text
-featureCounts table
+≥ 10 counts in at least 3 samples
+```
+
+```text
+featureCounts output
         ↓
 clean sample names
         ↓
-gene × sample matrix
+gene × sample raw-count matrix
         ↓
-low-count filtering
+low-expression filtering
         ↓
-filtered count matrix
+filtered raw counts
 ```
 
-Raw integer counts were retained for DESeq2; counts were **not log-transformed
-before statistical modeling**.
+### Manual execution
 
-**Standalone**
+Count-matrix cleaning:
 
 ```bash
 python3 scripts/downstream/clean_featurecounts.py \
-    gene_counts.txt gene_counts_matrix.tsv
-
-python3 scripts/downstream/filter_counts.py \
-    gene_counts_matrix.tsv gene_counts_filtered.tsv
+    gene_counts.txt \
+    gene_counts_matrix.tsv
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — count-cleaning and
-filtering processes
+Low-expression filtering:
+
+```bash
+python3 scripts/downstream/filter_counts.py \
+    gene_counts_matrix.tsv \
+    gene_counts_filtered.tsv
+```
+
+### Nextflow automation
+
+The corresponding processes in
+[`workflow/main.nf`](workflow/main.nf) execute these scripts and pass the
+resulting matrix directly to DESeq2.
 
 | Output | Purpose |
 |---|---|
-| `gene_counts_matrix.tsv` | Clean gene-by-sample count matrix |
-| `gene_counts_filtered.tsv` | Count matrix used for DESeq2 |
+| `gene_counts_matrix.tsv` | Clean gene-by-sample raw-count matrix |
+| `gene_counts_filtered.tsv` | Filtered raw counts used by DESeq2 |
+
+### Count-Matrix Summary
+
+| Metric | Result |
+|---|---:|
+| Genes before filtering | 78,894 |
+| Genes retained | **12,728** |
+| Genes removed | 66,166 |
+| Duplicate gene IDs | **0** |
+| Missing values | **0** |
+| Negative counts | **0** |
+
+Raw integer counts are supplied to DESeq2. They are **not manually normalized
+or log-transformed before DESeq2 modeling**.
 
 ---
 
-### 7. Differential Expression — DESeq2
+## 7. Differential Expression — DESeq2
 
-The filtered raw counts were analyzed with **DESeq2**. DESeq2 accounts for
-differences in sequencing depth and library composition, models RNA-seq counts
-using a negative-binomial framework, and tests for expression differences
-between the experimental groups.
+**DESeq2** models RNA-seq counts using a negative-binomial framework and
+accounts for differences in sequencing depth and library composition.
 
-Sample identifiers in the count matrix were matched to metadata defining
-**NM** and **MP46**.
-
-The comparison was:
+Sample names in the count matrix are matched to metadata defining the
+experimental groups.
 
 ```text
-MP46 vs NM
-
-positive log2FoldChange → higher in MP46
-negative log2FoldChange → higher in NM
+Design   : ~ Group
+Contrast : MP46 vs NM
 ```
 
-Significant genes were defined as:
+Fold-change direction is:
+
+```text
+log2FoldChange > 0 → higher in MP46
+log2FoldChange < 0 → higher in NM
+```
+
+The predefined significance criterion used consistently throughout the
+analysis is:
 
 ```text
 adjusted p-value < 0.05
 AND
-|log2FoldChange| ≥ log2(1.5)
+|log2FoldChange| ≥ 1
 ```
 
-**Standalone**
+`|log2FoldChange| ≥ 1` corresponds to at least a **2-fold expression
+difference**.
+
+### Manual execution
 
 ```bash
 Rscript scripts/differential-expression/run_deseq2.R \
@@ -475,152 +580,309 @@ Rscript scripts/differential-expression/run_deseq2.R \
     deseq2_results
 ```
 
-Gene annotations were subsequently added with:
+Gene identifiers were then annotated from GENCODE:
 
 ```bash
 python3 scripts/differential-expression/annotate_deseq2.py \
-    ...
+    gencode.v48.primary_assembly.annotation.gtf \
+    deseq2_results/deseq2_MP46_vs_NM.tsv \
+    deseq2_MP46_vs_NM_annotated.tsv
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — DESeq2 and annotation
-processes
+### Nextflow automation
+
+The `RUN_DESEQ2` and `ANNOTATE_DESEQ2` processes in
+[`workflow/main.nf`](workflow/main.nf) automate these steps and provide the
+resulting files to visualization, expression-QC, and enrichment processes.
+
+### Differential-Expression Summary
+
+| Criterion | Genes |
+|---|---:|
+| Genes tested | 12,728 |
+| padj < 0.05 | 8,501 |
+| **padj < 0.05 and \|log2FC\| ≥ 1** | **6,816** |
+| Higher in MP46 | **3,495** |
+| Higher in NM | **3,321** |
 
 | Output | Purpose |
 |---|---|
-| `deseq2_MP46_vs_NM.tsv` | Statistics for all tested genes |
-| `deseq2_MP46_vs_NM_significant.tsv` | Genes meeting significance criteria |
+| `deseq2_MP46_vs_NM.tsv` | DESeq2 statistics for all tested genes |
+| `deseq2_MP46_vs_NM_significant.tsv` | Genes meeting the DE criteria |
 | `deseq2_MP46_vs_NM_annotated.tsv` | DE results with gene annotation |
-| `vst_expression.tsv` | Variance-stabilized values for QC and visualization |
+| `vst_expression.tsv` | Variance-stabilized expression values for QC and visualization |
+
+<p align="center">
+  <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#differential-expression">
+    <strong>View Differential-Expression Results</strong>
+  </a>
+</p>
 
 ---
 
-### 8. Expression-Level Quality Control — PCA and Correlation
+## 8. Expression-Level Quality Control
 
-Differential-expression testing evaluates individual genes, while
-expression-level QC evaluates relationships among entire samples.
+Sample relationships were assessed using **PCA** and **Pearson correlation**
+on DESeq2 variance-stabilized expression values.
 
-**PCA** summarizes the largest sources of expression variation and helps
-identify group separation and potential outliers. **Pearson correlation**
-measures overall expression similarity between samples and helps assess
-consistency among biological replicates.
+These analyses evaluate the overall relationship among samples rather than
+testing individual genes.
 
-Both analyses use the DESeq2 variance-stabilized expression values rather than
-raw counts.
+### Principal Component Analysis
 
-**Standalone**
+PCA summarizes the major sources of variation across the complete expression
+dataset.
+
+```text
+PC1 = 88.79%
+PC2 =  3.73%
+
+PC1 + PC2 = 92.52%
+```
+
+PC1 clearly separated the NM and MP46 samples.
+
+### Sample Correlation
+
+Within-group correlations were high:
+
+```text
+NM    ≈ 0.96
+MP46  ≈ 0.96–0.98
+```
+
+Between-group correlations were lower:
+
+```text
+≈ 0.56–0.64
+```
+
+Together, PCA and correlation show consistent replicates within each group and
+substantial expression differences between NM and MP46.
+
+### Manual execution
+
+PCA:
 
 ```bash
 python3 scripts/differential-expression/plot_pca.py \
-    vst_expression.tsv samples.tsv pca_results
-
-python3 scripts/downstream/sample_correlation.py \
-    vst_expression.tsv sample_correlation.tsv
-
-python3 scripts/downstream/plot_correlation.py \
-    sample_correlation.tsv correlation_results
+    vst_expression.tsv \
+    samples.tsv \
+    pca_results
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — PCA and correlation
-processes
-
-| Output | Purpose |
-|---|---|
-| `PCA_MP46_vs_NM.png/.pdf` | Sample relationships in PCA space |
-| `PCA_coordinates.tsv` | PCA coordinates for each sample |
-| `sample_correlation.tsv` | Pairwise sample correlations |
-| `sample_correlation_heatmap.png/.pdf` | Visual comparison of sample similarity |
-
----
-
-### 9. Differential-Expression Visualization
-
-Three complementary plots summarize the differential-expression results.
-
-- **Volcano plot:** effect size versus statistical significance.
-- **MA plot:** fold change across the range of mean gene expression.
-- **DE heatmap:** expression patterns of the top differentially expressed genes
-  across samples.
-
-**Standalone**
+Sample correlation:
 
 ```bash
-python3 scripts/differential-expression/plot_volcano.py ...
-python3 scripts/differential-expression/plot_ma.py ...
-python3 scripts/differential-expression/plot_de_heatmap.py ...
+python3 scripts/downstream/sample_correlation.py \
+    vst_expression.tsv \
+    sample_correlation.tsv
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — visualization processes
+Correlation heatmap:
+
+```bash
+python3 scripts/downstream/plot_correlation.py \
+    sample_correlation.tsv \
+    correlation_results
+```
+
+### Nextflow automation
+
+The corresponding processes in
+[`workflow/main.nf`](workflow/main.nf) automatically receive the
+variance-stabilized expression matrix produced by DESeq2.
 
 | Output | Purpose |
 |---|---|
-| `volcano_MP46_vs_NM.png/.pdf` | Highlights significant expression changes |
-| `MA_MP46_vs_NM.png/.pdf` | Shows fold change relative to gene abundance |
-| `top30_DE_heatmap.png/.pdf` | Shows top DE-gene patterns across samples |
+| `PCA_MP46_vs_NM.png/.pdf` | PCA visualization |
+| `PCA_coordinates.tsv` | PCA coordinates for individual samples |
+| `sample_correlation.tsv` | Pairwise Pearson correlations |
+| `sample_correlation_heatmap.png/.pdf` | Visual sample-similarity assessment |
+
+<p align="center">
+  <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#expression-level-qc">
+    <strong>View Expression-Level QC</strong>
+  </a>
+</p>
 
 ---
 
-### 10. Functional Enrichment
+## 9. Differential-Expression Visualization
 
-Differential expression identifies individual genes, but biological responses
-often involve groups of genes participating in related processes.
+Three complementary visualizations were generated.
 
-Significant genes were separated by expression direction:
+**Volcano plot** shows effect size against statistical significance.
+
+**MA plot** shows expression change across the range of average gene
+expression.
+
+**Top-30 DE heatmap** shows expression patterns of the most statistically
+significant differentially expressed genes across individual samples.
+
+All DE classifications use the same criterion:
 
 ```text
-positive log2FoldChange → Higher in MP46
-negative log2FoldChange → Higher in NM
+padj < 0.05
+AND
+|log2FoldChange| ≥ 1
 ```
 
-**Gene Ontology Biological Process** and **Reactome** enrichment were used to
-identify biological functions and pathways represented more frequently than
-expected among these genes.
+### Manual execution
 
-**Standalone**
+Volcano plot:
 
 ```bash
-Rscript scripts/functional-enrichment/run_enrichment.R ...
-python3 scripts/functional-enrichment/plot_enrichment.py ...
+python3 scripts/differential-expression/plot_volcano.py \
+    deseq2_MP46_vs_NM_annotated.tsv \
+    volcano_results
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — enrichment processes
+MA plot:
+
+```bash
+python3 scripts/differential-expression/plot_ma.py \
+    deseq2_MP46_vs_NM_annotated.tsv \
+    ma_results
+```
+
+Top-30 DE heatmap:
+
+```bash
+python3 scripts/differential-expression/plot_de_heatmap.py \
+    deseq2_MP46_vs_NM_annotated.tsv \
+    vst_expression.tsv \
+    heatmap_results
+```
+
+### Nextflow automation
+
+The `PLOT_VOLCANO`, `PLOT_MA`, and `PLOT_DE_HEATMAP` processes in
+[`workflow/main.nf`](workflow/main.nf) automatically receive their required
+DESeq2 outputs.
 
 | Output | Purpose |
 |---|---|
-| `GO_BP_Higher_in_MP46.tsv` | GO processes enriched in genes higher in MP46 |
-| `GO_BP_Higher_in_NM.tsv` | GO processes enriched in genes higher in NM |
-| `Reactome_Higher_in_NM.tsv` | Reactome pathways enriched in genes higher in NM |
-| `*_summary.png` | Visual summaries of enrichment results |
+| `volcano_MP46_vs_NM.png/.pdf` | Effect size versus statistical significance |
+| `MA_MP46_vs_NM.png/.pdf` | Fold change across expression abundance |
+| `top30_DE_heatmap.png/.pdf` | Expression patterns of top DE genes |
 
 ---
 
-### 11. Workflow Automation — Nextflow
+## 10. Functional Enrichment
 
-After the individual analysis stages were established, **Nextflow** connected
-them into a reproducible workflow. The workflow reuses the validated STAR BAM
-files and manages the downstream dependencies automatically.
+Differential expression identifies individual genes, while functional
+enrichment asks whether groups of DE genes are associated with particular
+biological processes or pathways.
 
-**Docker** provides versioned software environments for workflow processes,
-reducing differences caused by local software installations.
+Significant genes were separated by direction using the **same DE threshold**
+used throughout the project:
+
+```text
+padj < 0.05 and log2FoldChange ≥  1 → Higher in MP46
+padj < 0.05 and log2FoldChange ≤ -1 → Higher in NM
+```
+
+This produced:
+
+```text
+Higher in MP46 → 3,495 genes
+Higher in NM   → 3,321 genes
+```
+
+The groups were independently analyzed using:
+
+- **Gene Ontology Biological Process**
+- **Reactome**
+
+Genes tested by DESeq2 with available gene symbols were used as the enrichment
+background rather than all annotated human genes.
+
+### Manual execution
+
+```bash
+Rscript scripts/functional-enrichment/run_enrichment.R \
+    deseq2_MP46_vs_NM_annotated.tsv \
+    enrichment_results
+```
+
+Summary figures:
+
+```bash
+python3 scripts/functional-enrichment/plot_enrichment.py \
+    enrichment_results \
+    enrichment_plots
+```
+
+### Nextflow automation
+
+The `FUNCTIONAL_ENRICHMENT` and `PLOT_ENRICHMENT` processes in
+[`workflow/main.nf`](workflow/main.nf) execute these analyses and pass the
+summary figures to the Quarto report.
+
+### Enrichment Summary
+
+| Gene Set | GO Biological Process | Reactome |
+|---|---:|---:|
+| Higher in MP46 | **31** | **0** |
+| Higher in NM | **236** | **46** |
+
+Genes higher in **MP46** were primarily associated with cell and nuclear
+division, microtubule organization, centrosome-associated processes, and
+organelle fission.
+
+Genes higher in **NM** showed broader enrichment for extracellular-matrix
+organization, cell adhesion, antigen processing and presentation,
+interferon-associated signaling, and extracellular-matrix remodeling.
+
+No Reactome pathway passed the predefined enrichment threshold for the
+MP46-higher gene set. The statistical threshold was not relaxed after
+observing this result.
+
+<p align="center">
+  <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/#functional-enrichment">
+    <strong>View Functional-Enrichment Results</strong>
+  </a>
+</p>
+
+---
+
+## 11. Workflow Automation — Nextflow
+
+After the individual analysis stages were validated, they were connected with
+**Nextflow** to provide reproducible process execution and automatic handoff
+between stages.
+
+The downstream workflow reuses the resulting STAR BAM files and manages:
 
 ```text
 FASTQ → FastQC → MultiQC
-                    ↓
-          validated STAR BAMs
-                    ↓
-      SAMtools → RSeQC → featureCounts
-                    ↓
-             count preparation
-                    ↓
-                  DESeq2
-              ┌─────┼─────┐
-             PCA   plots  enrichment
-              └─────┼─────┘
-                    ↓
-              Quarto report
+
+Validated STAR BAMs
+        ↓
+SAMtools indexing
+        ↓
+RSeQC
+        ↓
+featureCounts
+        ↓
+count preparation
+        ↓
+DESeq2
+   ┌────┼───────────┐
+   ↓    ↓           ↓
+  PCA  DE plots   enrichment
+   └────┼───────────┘
+        ↓
+  Quarto report
 ```
 
-**Workflow:** [`workflow/main.nf`](workflow/main.nf) and
-[`workflow/nextflow.config`](workflow/nextflow.config)
+Workflow files:
+
+- [`workflow/main.nf`](workflow/main.nf)
+- [`workflow/nextflow.config`](workflow/nextflow.config)
+
+### Execution
 
 ```bash
 nextflow run workflow/main.nf \
@@ -629,31 +891,49 @@ nextflow run workflow/main.nf \
 ```
 
 `-resume` allows successfully completed processes to be reused when their
-inputs and configuration have not changed.
+inputs and configuration have not changed, avoiding unnecessary
+recomputation.
 
 ---
 
-### 12. Interactive Reporting — Quarto
+## 12. Interactive Reporting — Quarto
 
-The final QC, differential-expression, visualization, and enrichment results
-were assembled into an interactive **Quarto** report. This provides a single
-entry point for reviewing the analysis without navigating individual scripts
-and result directories.
+RNA-seq analysis produces QC reports, count matrices, statistical tables,
+figures, and enrichment results.
 
-**Standalone**
+**Quarto** combines the principal results and interpretation into a single
+interactive HTML report that can be reviewed without navigating individual
+result directories.
+
+The report also links to the complete interactive MultiQC report for detailed
+sequencing-QC inspection.
+
+### Manual execution
 
 ```bash
 quarto render report
 ```
 
-**Nextflow:** [`workflow/main.nf`](workflow/main.nf) — `QUARTO_REPORT`
+### Nextflow automation
+
+The `QUARTO_REPORT` process in
+[`workflow/main.nf`](workflow/main.nf) collects the generated figures and
+MultiQC report, builds the report workspace, and renders the final Quarto
+site.
 
 | Output | Purpose |
 |---|---|
-| `index.html` | Main interactive analysis report |
+| `index.html` | Main interactive RNA-seq analysis report |
 | `multiqc_report.html` | Complete interactive sequencing-QC report |
-| `images/` | Figures displayed in the report |
-| `site_libs/` | Supporting resources for the Quarto website |
+| `images/` | Analysis figures used by the report |
+| `site_libs/` | Supporting Quarto website resources |
+
+<p align="center">
+  <a href="https://archanaallishe.github.io/bioinformatics-analysis-workflows/">
+    <strong>View Complete Interactive Analysis Report</strong>
+  </a>
+</p>
+
 ---
 
 # Technologies
