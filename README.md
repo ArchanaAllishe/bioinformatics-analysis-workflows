@@ -90,42 +90,35 @@ This project uses **paired-end RNA-seq data**.
 
 ---
 
-## RNA-Seq Dataset and Data Background
+# RNA-Seq Dataset and Data Background
 
-The analysis uses publicly available RNA-seq data from **GSE199679 /
-GSE198801**, a study comparing normal uveal melanocytes with uveal melanoma.
+This analysis uses publicly available RNA-seq data from **GSE199679 / GSE198801** to investigate gene-expression differences between normal uveal melanocytes and uveal melanoma.
 
-**Uveal melanoma** is a malignant tumor that develops from melanocytes in the
-uvea, the pigmented layer of the eye that includes the choroid, ciliary body,
-and iris.
+**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye that includes the choroid, ciliary body, and iris.
 
-Two groups were analyzed:
+The study includes two biological groups:
 
-- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes used as the
-  non-malignant reference group.
-- **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma,
-  representing the malignant group.
+- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant reference group.
+- **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma representing the malignant group.
 
-The analysis included **six paired-end RNA-seq samples**, with **three
-biological replicates per group**:
+A total of **six biological samples** were analyzed, with **three biological replicates per group**:
 
-| Group | Biological context | Replicates |
+| Group | Biological context | Samples |
 |---|---|---|
 | **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
 | **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
 
-The primary comparison was therefore:
+The primary comparison is therefore:
 
 > **MP46 uveal melanoma vs. normal melanocytes (NM)**
 
-The biological replicates provide independent measurements within each group,
-allowing within-group consistency and between-group expression differences to
-be evaluated.
+The RNA-seq data were generated using **paired-end sequencing**. RNA-seq can be either **single-end**, where each fragment is sequenced from one end, or **paired-end**, where the same fragment is sequenced from both ends. Because this dataset is paired-end, each biological sample has two corresponding FASTQ files (`R1` and `R2`).
+
+Therefore, the **six biological samples produce 12 FASTQ files**, which serve as the starting point for the computational RNA-seq workflow.
 
 ---
 
 # Analysis
-
 ---
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
