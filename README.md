@@ -14,30 +14,45 @@
 
 ---
 
-## Project Overview
+# Project Overview
 
-Bioinformatics analysis involves more than running a series of tools. Raw
-sequencing data need to be checked, processed, analyzed, interpreted, and
-presented in a way that can be reproduced and reviewed.
+This repository demonstrates a **reproducible end-to-end bulk RNA-seq analysis**, connecting biological data analysis with workflow automation, reproducible software environments, HPC computing, and interactive reporting.
 
-This repository brings those pieces together using **bulk RNA-seq as an
-end-to-end case study**.
+## RNA-Seq Case Study
 
-The workflow starts with raw paired-end FASTQ files and continues through
-sequencing quality control, read alignment, library strandedness assessment,
-gene quantification, count-matrix QC, expression-level QC, differential
-expression, functional enrichment, and biological interpretation.
+RNA-seq measures **gene expression** and enables comparisons between biological groups to identify differentially expressed genes and associated biological processes and pathways.
 
-The individual analysis stages were first developed and validated using
-**Python, R/Bioconductor, and command-line bioinformatics tools**. They were
-then connected with **Nextflow** to automate process dependencies and data flow.
-**Docker** provides controlled software environments, while **Linux and
-SLURM** demonstrate how the same workflow principles can be applied in an HPC
-setting. Final results are organized into a **Quarto HTML report** for
-interactive review and sharing.
+RNA is isolated from biological samples, converted to cDNA, prepared as a sequencing library, and sequenced to generate reads stored in **FASTQ files**. Sequencing may be **single-end** (one read per fragment) or **paired-end** (two reads, `R1` and `R2`, per fragment).
 
-Together, the project demonstrates both the biological analysis and the
-computational infrastructure needed to make an RNA-seq workflow reproducible.
+This case study uses publicly available **paired-end RNA-seq data from GSE199679 / GSE198801** to compare normal uveal melanocytes with uveal melanoma.
+
+**Uveal melanoma** is a cancer that develops from melanocytes in the uvea, the pigmented layer of the eye. Two biological groups were analyzed:
+
+- **NM (Normal Melanocytes)** — normal uveal/choroidal melanocytes representing the non-malignant reference group.
+- **MP46** — a patient-derived xenograft (PDX) model of uveal melanoma representing the malignant group.
+
+The dataset contains **six biological samples with three biological replicates per group**:
+
+| Group | Biological context | Samples |
+|---|---|---|
+| **NM** | Normal uveal melanocytes | NM_4, NM_5, NM_6 |
+| **MP46** | Uveal melanoma PDX model | MP46_1, MP46_2, MP46_3 |
+
+The primary comparison is:
+
+> **MP46 uveal melanoma vs. normal melanocytes (NM)**
+
+Because the dataset is paired-end, each biological sample has an `R1` and `R2` FASTQ file, giving **12 FASTQ files from six biological samples**. These files are the starting point for the computational analysis.
+
+## Analysis and Computing Framework
+
+The workflow progresses from **sequencing quality control → read alignment → library strandedness assessment → gene quantification → expression QC → differential expression → functional enrichment → biological interpretation**.
+
+Individual analysis stages were first developed and validated using **command-line bioinformatics tools, Python, and R/Bioconductor**. **Nextflow** connects the validated stages into an automated downstream workflow, while **Docker** provides controlled and reproducible software environments. The workflow reuses the resulting validated STAR BAM files rather than repeating alignment.
+
+The analysis can run on a **local Linux workstation** or, when available, an institutional **High Performance Computing (HPC)** system. HPC resources are typically accessed from a macOS, Windows, or Linux workstation using **SSH**, with computational jobs submitted through a scheduler such as **SLURM**. This project also includes an Ubuntu-based HPC environment demonstrating SSH access, shared storage, environment modules, and SLURM job submission.
+
+Final results are organized into an interactive **Quarto HTML report**, providing a single location for reviewing and sharing the major QC results, statistical analyses, figures, and biological findings.
 
 
 ---
