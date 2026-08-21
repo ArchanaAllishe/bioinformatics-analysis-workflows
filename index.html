@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-08-19">
 
-<title>RNA-Seq Analysis Report – Reproducible RNA-Seq Analysis</title>
+<title>Reproducible Bulk RNA-Seq Analysis – Reproducible RNA-Seq Analysis</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -151,42 +150,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#analysis-summary" id="toc-analysis-summary" class="nav-link active" data-scroll-target="#analysis-summary">Analysis Summary</a>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a>
   <ul class="collapse">
-  <li><a href="#results-at-a-glance" id="toc-results-at-a-glance" class="nav-link" data-scroll-target="#results-at-a-glance">Results at a Glance</a></li>
+  <li><a href="#analysis-workflow" id="toc-analysis-workflow" class="nav-link" data-scroll-target="#analysis-workflow">Analysis Workflow</a></li>
   </ul></li>
-  <li><a href="#methods-overview" id="toc-methods-overview" class="nav-link" data-scroll-target="#methods-overview">Methods Overview</a>
+  <li><a href="#sequencing-quality-control" id="toc-sequencing-quality-control" class="nav-link" data-scroll-target="#sequencing-quality-control">Sequencing Quality Control</a>
   <ul class="collapse">
-  <li><a href="#reference-genome" id="toc-reference-genome" class="nav-link" data-scroll-target="#reference-genome">Reference Genome</a></li>
+  <li><a href="#multiqc-summary" id="toc-multiqc-summary" class="nav-link" data-scroll-target="#multiqc-summary">MultiQC Summary</a></li>
+  <li><a href="#qc-observation" id="toc-qc-observation" class="nav-link" data-scroll-target="#qc-observation">QC Observation</a></li>
+  <li><a href="#qc-conclusion" id="toc-qc-conclusion" class="nav-link" data-scroll-target="#qc-conclusion">QC Conclusion</a></li>
+  <li><a href="#if-qc-is-not-as-expected" id="toc-if-qc-is-not-as-expected" class="nav-link" data-scroll-target="#if-qc-is-not-as-expected">If QC Is Not as Expected</a></li>
+  <li><a href="#full-multiqc-report" id="toc-full-multiqc-report" class="nav-link" data-scroll-target="#full-multiqc-report">Full MultiQC Report</a></li>
+  </ul></li>
   <li><a href="#read-alignment" id="toc-read-alignment" class="nav-link" data-scroll-target="#read-alignment">Read Alignment</a></li>
+  <li><a href="#bam-processing-and-library-strandedness" id="toc-bam-processing-and-library-strandedness" class="nav-link" data-scroll-target="#bam-processing-and-library-strandedness">BAM Processing and Library Strandedness</a></li>
   <li><a href="#gene-quantification" id="toc-gene-quantification" class="nav-link" data-scroll-target="#gene-quantification">Gene Quantification</a></li>
-  </ul></li>
-  <li><a href="#count-matrix-processing" id="toc-count-matrix-processing" class="nav-link" data-scroll-target="#count-matrix-processing">Count Matrix Processing</a></li>
-  <li><a href="#expression-level-qc" id="toc-expression-level-qc" class="nav-link" data-scroll-target="#expression-level-qc">Expression-Level QC</a>
+  <li><a href="#low-expression-filtering" id="toc-low-expression-filtering" class="nav-link" data-scroll-target="#low-expression-filtering">Low-Expression Filtering</a></li>
+  <li><a href="#expression-level-quality-control" id="toc-expression-level-quality-control" class="nav-link" data-scroll-target="#expression-level-quality-control">Expression-Level Quality Control</a>
   <ul class="collapse">
-  <li><a href="#normalization" id="toc-normalization" class="nav-link" data-scroll-target="#normalization">Normalization</a></li>
   <li><a href="#principal-component-analysis" id="toc-principal-component-analysis" class="nav-link" data-scroll-target="#principal-component-analysis">Principal Component Analysis</a></li>
-  <li><a href="#sample-correlation" id="toc-sample-correlation" class="nav-link" data-scroll-target="#sample-correlation">Sample Correlation</a></li>
+  <li><a href="#sample-to-sample-correlation" id="toc-sample-to-sample-correlation" class="nav-link" data-scroll-target="#sample-to-sample-correlation">Sample-to-Sample Correlation</a></li>
   </ul></li>
   <li><a href="#differential-expression" id="toc-differential-expression" class="nav-link" data-scroll-target="#differential-expression">Differential Expression</a>
   <ul class="collapse">
-  <li><a href="#differential-expression-summary" id="toc-differential-expression-summary" class="nav-link" data-scroll-target="#differential-expression-summary">Differential Expression Summary</a></li>
+  <li><a href="#differential-expression-summary" id="toc-differential-expression-summary" class="nav-link" data-scroll-target="#differential-expression-summary">Differential-Expression Summary</a></li>
   <li><a href="#volcano-plot" id="toc-volcano-plot" class="nav-link" data-scroll-target="#volcano-plot">Volcano Plot</a></li>
   <li><a href="#ma-plot" id="toc-ma-plot" class="nav-link" data-scroll-target="#ma-plot">MA Plot</a></li>
-  <li><a href="#top-differentially-expressed-genes" id="toc-top-differentially-expressed-genes" class="nav-link" data-scroll-target="#top-differentially-expressed-genes">Top Differentially Expressed Genes</a></li>
+  <li><a href="#differential-expression-heatmap" id="toc-differential-expression-heatmap" class="nav-link" data-scroll-target="#differential-expression-heatmap">Differential-Expression Heatmap</a></li>
   </ul></li>
   <li><a href="#functional-enrichment" id="toc-functional-enrichment" class="nav-link" data-scroll-target="#functional-enrichment">Functional Enrichment</a>
   <ul class="collapse">
   <li><a href="#enrichment-summary" id="toc-enrichment-summary" class="nav-link" data-scroll-target="#enrichment-summary">Enrichment Summary</a></li>
-  <li><a href="#genes-higher-in-mp46" id="toc-genes-higher-in-mp46" class="nav-link" data-scroll-target="#genes-higher-in-mp46">Genes Higher in MP46</a></li>
-  <li><a href="#genes-higher-in-nm" id="toc-genes-higher-in-nm" class="nav-link" data-scroll-target="#genes-higher-in-nm">Genes Higher in NM</a>
-  <ul class="collapse">
-  <li><a href="#reactome" id="toc-reactome" class="nav-link" data-scroll-target="#reactome">Reactome</a></li>
+  <li><a href="#biological-processes-higher-in-mp46" id="toc-biological-processes-higher-in-mp46" class="nav-link" data-scroll-target="#biological-processes-higher-in-mp46">Biological Processes Higher in MP46</a></li>
+  <li><a href="#biological-processes-higher-in-nm" id="toc-biological-processes-higher-in-nm" class="nav-link" data-scroll-target="#biological-processes-higher-in-nm">Biological Processes Higher in NM</a></li>
+  <li><a href="#reactome-pathways-higher-in-nm" id="toc-reactome-pathways-higher-in-nm" class="nav-link" data-scroll-target="#reactome-pathways-higher-in-nm">Reactome Pathways Higher in NM</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#overall-findings" id="toc-overall-findings" class="nav-link" data-scroll-target="#overall-findings">Overall Findings</a></li>
-  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  <li><a href="#integrated-interpretation" id="toc-integrated-interpretation" class="nav-link" data-scroll-target="#integrated-interpretation">Integrated Interpretation</a></li>
+  <li><a href="#reproducible-workflow" id="toc-reproducible-workflow" class="nav-link" data-scroll-target="#reproducible-workflow">Reproducible Workflow</a></li>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
 </nav>
@@ -199,8 +202,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">RNA-Seq Analysis Report</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
-<p class="subtitle lead">GSE199679 — MP46 vs NM</p>
+<div class="quarto-title-block"><div><h1 class="title">Reproducible Bulk RNA-Seq Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<p class="subtitle lead">GSE199679 — MP46 versus Normal Melanocytes</p>
 </div>
 
 
@@ -208,12 +211,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title-meta">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">August 19, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -223,10 +220,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="analysis-summary" class="level1">
-<h1>Analysis Summary</h1>
-<p>This report summarizes a reproducible bulk RNA-seq analysis comparing <strong>MP46</strong> and <strong>NM</strong> samples.</p>
-<p>The analysis included three biological samples per group:</p>
+<section id="project-overview" class="level1">
+<h1>Project Overview</h1>
+<p>RNA sequencing (RNA-seq) provides a genome-wide measurement of gene expression, allowing genes and biological pathways that differ between experimental conditions to be identified.</p>
+<p>This report presents an end-to-end bulk RNA-seq analysis using public data from <strong>GSE199679</strong>. The analysis progresses from raw paired-end sequencing reads through sequencing quality control, alignment, gene quantification, expression-level quality control, differential expression, functional enrichment, and biological interpretation.</p>
+<p>The comparison includes six biological samples:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -236,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td>NM</td>
+<td>Normal melanocytes (NM)</td>
 <td>NM_4, NM_5, NM_6</td>
 </tr>
 <tr class="even">
@@ -245,99 +243,209 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>The workflow included sequencing quality control, alignment, gene-level quantification, expression-level quality control, differential expression analysis, and functional enrichment.</p>
-<pre class="text"><code>FASTQ
-  ↓
-FastQC / MultiQC
-  ↓
+<p>The analytical steps were developed and validated individually and then connected using <strong>Nextflow</strong> for reproducible workflow execution. Docker provides controlled software environments, and the final results are presented here using Quarto.</p>
+<section id="analysis-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-workflow">Analysis Workflow</h2>
+<pre class="text"><code>Paired-end FASTQ
+       ↓
+FastQC + MultiQC
+       ↓
 STAR alignment
-  ↓
+       ↓
+SAMtools + RSeQC
+       ↓
 featureCounts
-  ↓
-Count QC and filtering
-  ↓
-Expression QC
-  ↓
+       ↓
+Count QC + filtering
+       ↓
 DESeq2
-  ↓
-Functional enrichment</code></pre>
-<section id="results-at-a-glance" class="level2">
-<h2 class="anchored" data-anchor-id="results-at-a-glance">Results at a Glance</h2>
+       ↓
+PCA + sample correlation
+       ↓
+Differential expression
+       ↓
+Gene annotation
+       ↓
+GO + Reactome enrichment
+       ↓
+Biological interpretation</code></pre>
+</section>
+</section>
+<section id="sequencing-quality-control" class="level1">
+<h1>Sequencing Quality Control</h1>
+<p>Raw paired-end FASTQ files were evaluated with <strong>FastQC</strong>, and the individual reports were combined using <strong>MultiQC 1.35</strong>.</p>
+<p>FastQC examines individual sequencing files for potential problems such as base-quality deterioration, unusual sequence composition, duplication, adapter contamination, and overrepresented sequences. MultiQC combines these results across all samples, making systematic and sample-specific patterns easier to identify before alignment.</p>
+<section id="multiqc-summary" class="level2">
+<h2 class="anchored" data-anchor-id="multiqc-summary">MultiQC Summary</h2>
+<p>The six RNA-seq samples produced <strong>12 FASTQ files</strong>, corresponding to R1 and R2 reads for each paired-end library. Each FASTQ file contained approximately <strong>5 million 101-bp reads</strong>.</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Analysis</th>
-<th>Key Result</th>
+<th>QC metric</th>
+<th>Observation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Samples</td>
-<td>3 NM + 3 MP46</td>
+<td>FASTQ files</td>
+<td>12</td>
 </tr>
 <tr class="even">
-<td>STAR alignment</td>
-<td>88.3–95.2% uniquely mapped</td>
+<td>Biological samples</td>
+<td>6</td>
 </tr>
 <tr class="odd">
-<td>Genes retained after filtering</td>
-<td>12,728</td>
+<td>Reads per FASTQ</td>
+<td>~5 million</td>
 </tr>
 <tr class="even">
-<td>PCA</td>
-<td>PC1 = 88.79%; clear NM/MP46 separation</td>
+<td>Read length</td>
+<td>101 bp</td>
 </tr>
 <tr class="odd">
-<td>Sample correlation</td>
-<td>Within-group ≈ 0.96–0.98</td>
+<td>Reads flagged as poor quality</td>
+<td>None</td>
 </tr>
 <tr class="even">
-<td>Differential expression</td>
-<td>6,816 significant genes</td>
+<td>Per-base sequence quality</td>
+<td>Passed</td>
 </tr>
 <tr class="odd">
-<td>Higher in MP46</td>
-<td>3,495 genes</td>
+<td>Per-tile sequence quality</td>
+<td>Passed</td>
 </tr>
 <tr class="even">
-<td>Higher in NM</td>
-<td>3,321 genes</td>
+<td>GC content</td>
+<td>~47–53%</td>
 </tr>
 <tr class="odd">
-<td>GO BP enrichment</td>
-<td>31 MP46 / 236 NM terms</td>
+<td>Duplicate reads</td>
+<td>~35–51%</td>
 </tr>
 <tr class="even">
-<td>Reactome enrichment</td>
-<td>0 MP46 / 46 NM pathways</td>
+<td>Per-base N content</td>
+<td>Passed</td>
+</tr>
+<tr class="odd">
+<td>Adapter content</td>
+<td>Passed</td>
+</tr>
+<tr class="even">
+<td>Overrepresented sequences</td>
+<td>Mostly passed; limited warnings observed</td>
+</tr>
+<tr class="odd">
+<td>Sequence-content / length modules</td>
+<td>Some warnings or failures observed</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Primary finding:</strong> NM and MP46 show strongly distinct transcriptomic profiles. Genes higher in MP46 are enriched primarily for cell-division and microtubule-associated processes, whereas genes higher in NM show broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing processes.</p>
+</section>
+<section id="qc-observation" class="level2">
+<h2 class="anchored" data-anchor-id="qc-observation">QC Observation</h2>
+<p>Overall sequencing quality was suitable for downstream analysis. Per-base sequence quality passed across the FASTQ files, no reads were reported as poor quality, and read length and sequencing depth were consistent across the dataset.</p>
+<p>GC content ranged from approximately <strong>47% to 53%</strong>. MP46 libraries tended toward the lower end of this range, whereas NM libraries tended toward the higher end. Because this pattern broadly followed the biological groups rather than appearing as an isolated sample-specific deviation, it was interpreted together with downstream expression-level QC rather than automatically considered evidence of contamination.</p>
+<p>Sequence duplication ranged from approximately <strong>35% to 51%</strong>. Moderate or high duplication can occur in RNA-seq because highly expressed transcripts are sampled repeatedly. PCR amplification or reduced library complexity can also increase duplication. Duplication was therefore considered together with alignment performance, gene counts, PCA, and sample-to-sample correlation rather than being used alone to exclude samples.</p>
+<p>Some sequence-content and sequence-length FastQC modules produced warnings or failures. These flags do not automatically indicate unusable RNA-seq data. Sequence-composition biases can arise from library preparation, transcript composition, or other protocol-specific effects and therefore require interpretation in the context of the complete dataset.</p>
+<p>Adapter content passed across the dataset. Low levels of Illumina adapter signal were detectable toward the ends of some reads, but these levels were not sufficient to trigger an adapter-content warning or failure. A small number of overrepresented sequences were also detected and were interpreted according to their abundance and possible origin rather than automatically removed.</p>
+</section>
+<section id="qc-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="qc-conclusion">QC Conclusion</h2>
+<p>The combined FastQC and MultiQC assessment supported proceeding to alignment <strong>without additional adapter or quality trimming</strong>.</p>
+<p>This decision was supported by consistently good per-base sequence quality, the absence of reads flagged as poor quality, passing adapter-content results, consistent sequencing depth, and the absence of a broad sample-specific sequencing-quality failure.</p>
+<p>FastQC warnings were retained and documented rather than automatically corrected because warnings can reflect expected characteristics of RNA-seq libraries. Their significance was subsequently evaluated using independent downstream QC measures including alignment performance, gene assignment, PCA, and sample-to-sample expression correlation.</p>
+</section>
+<section id="if-qc-is-not-as-expected" class="level2">
+<h2 class="anchored" data-anchor-id="if-qc-is-not-as-expected">If QC Is Not as Expected</h2>
+<p>Unexpected FastQC or MultiQC findings should be investigated before deciding to modify reads or exclude samples.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Unexpected finding</th>
+<th>Possible reasons</th>
+<th>Suggested follow-up</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Low per-base quality</strong></td>
+<td>Quality deterioration toward read ends, poor sequencing signal, sequencing-run or flow-cell problems</td>
+<td>Determine whether poor quality is localized or widespread; consider quality trimming if substantial</td>
+</tr>
+<tr class="even">
+<td><strong>Adapter contamination</strong></td>
+<td>Library inserts shorter than the sequencing read length, causing sequencing into adapters</td>
+<td>Trim adapters and rerun FastQC/MultiQC</td>
+</tr>
+<tr class="odd">
+<td><strong>Unexpected GC distribution</strong></td>
+<td>Biological composition, library-preparation bias, contamination, or unusual transcript abundance</td>
+<td>Compare biological replicates and groups; investigate isolated or unexplained deviations</td>
+</tr>
+<tr class="even">
+<td><strong>High duplication</strong></td>
+<td>Highly expressed transcripts, PCR amplification, low starting RNA, or low library complexity</td>
+<td>Interpret with expression and library-complexity results; do not remove RNA-seq reads solely because duplication is high</td>
+</tr>
+<tr class="odd">
+<td><strong>Overrepresented sequences</strong></td>
+<td>Highly expressed transcripts, rRNA, mitochondrial RNA, adapters, or contamination</td>
+<td>Identify the sequences and determine whether they represent expected biology or unwanted sequence</td>
+</tr>
+<tr class="even">
+<td><strong>High N content</strong></td>
+<td>Poor sequencing signal or uncertain base calling</td>
+<td>Determine whether ambiguous bases are localized or widespread; consider filtering if substantial</td>
+</tr>
+<tr class="odd">
+<td><strong>Strong R1/R2 difference</strong></td>
+<td>Cycle-specific effects, poorer sequencing quality in one mate, or mate-specific contamination</td>
+<td>Compare R1 and R2 modules and determine whether targeted preprocessing is justified</td>
+</tr>
+<tr class="even">
+<td><strong>One sample differs strongly</strong></td>
+<td>Library-preparation problem, sequencing failure, contamination, sample mix-up, batch effect, or genuine biological variation</td>
+<td>Review raw-read QC together with mapping rate, gene counts, PCA, and sample correlation</td>
+</tr>
+<tr class="odd">
+<td><strong>Many samples share the same problem</strong></td>
+<td>Library-preparation protocol, sequencing-run effect, systematic contamination, or protocol-specific bias</td>
+<td>Determine whether the pattern is expected; investigate systematic technical causes when unexplained</td>
+</tr>
+<tr class="even">
+<td><strong>High rRNA content</strong></td>
+<td>Incomplete rRNA depletion or inefficient poly(A) selection</td>
+<td>Assess rRNA-associated reads and determine whether usable sequencing depth is substantially affected</td>
+</tr>
+</tbody>
+</table>
+<p>Individual FastQC PASS/WARN/FAIL flags were therefore not treated as automatic sample acceptance or rejection criteria. QC metrics were considered collectively, and any trimming, filtering, or sample exclusion would require a documented technical or biological justification.</p>
+</section>
+<section id="full-multiqc-report" class="level2">
+<h2 class="anchored" data-anchor-id="full-multiqc-report">Full MultiQC Report</h2>
+<p>The complete interactive <strong>MultiQC 1.35</strong> report is retained for detailed inspection of individual samples and QC metrics.</p>
+<p><a href="multiqc_report.html">Open the interactive MultiQC report</a></p>
 </section>
 </section>
-<section id="methods-overview" class="level1">
-<h1>Methods Overview</h1>
-<section id="reference-genome" class="level2">
-<h2 class="anchored" data-anchor-id="reference-genome">Reference Genome</h2>
-<p>RNA-seq reads were aligned to the human <strong>GRCh38 primary assembly</strong> using <strong>STAR</strong>.</p>
-<p>Gene annotation was based on <strong>GENCODE v48</strong>.</p>
-<p>The same annotation release was used for:</p>
-<ul>
-<li>STAR genome indexing</li>
-<li>featureCounts gene quantification</li>
-<li>differential-expression gene annotation</li>
-</ul>
-</section>
-<section id="read-alignment" class="level2">
-<h2 class="anchored" data-anchor-id="read-alignment">Read Alignment</h2>
-<p>STAR alignment was performed in a Linux ARM64 Docker environment to provide a reproducible execution environment on Apple Silicon.</p>
-<p>Alignment rates were high overall.</p>
+<section id="read-alignment" class="level1">
+<h1>Read Alignment</h1>
+<p>Following raw-read QC, paired-end reads were aligned to the <strong>GRCh38 human reference genome</strong> using <strong>STAR</strong>.</p>
+<p>Alignment determines where sequencing reads originated in the genome. RNA-seq requires a splice-aware aligner because many reads span exon-exon junctions created during RNA splicing.</p>
+<p>STAR produced coordinate-sorted BAM files representing the genomic alignments for each sample.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Sample</th>
-<th style="text-align: right;">Unique Mapping</th>
+<th style="text-align: right;">Uniquely mapped reads</th>
 </tr>
 </thead>
 <tbody>
@@ -367,104 +475,97 @@ Functional enrichment</code></pre>
 </tr>
 </tbody>
 </table>
+<p>Unique mapping rates ranged from approximately <strong>88.3% to 95.2%</strong>, supporting successful alignment across all six samples.</p>
+<p>The automated Nextflow workflow <strong>reuses the resulting BAM files</strong> for downstream processing.</p>
 </section>
-<section id="gene-quantification" class="level2">
-<h2 class="anchored" data-anchor-id="gene-quantification">Gene Quantification</h2>
-<p>Gene-level counts were generated using <strong>featureCounts</strong>.</p>
-<p>The libraries were empirically determined to be reverse-stranded using RSeQC and were therefore quantified using:</p>
+<section id="bam-processing-and-library-strandedness" class="level1">
+<h1>BAM Processing and Library Strandedness</h1>
+<p>The coordinate-sorted BAM files were indexed using <strong>SAMtools</strong>, allowing downstream tools to access genomic regions efficiently.</p>
+<p>Library orientation was then assessed using <strong>RSeQC <code>infer_experiment.py</code></strong>.</p>
+<p>RNA-seq libraries may preserve information about the strand from which a transcript originated. Using the wrong strandedness setting during gene quantification can assign reads incorrectly and alter gene counts.</p>
+<p>The libraries were identified as <strong>reverse-stranded paired-end RNA-seq</strong>. featureCounts was therefore run using:</p>
 <pre class="text"><code>-s 2</code></pre>
-<p>Assignment rates ranged from approximately <strong>77% to 85%</strong>.</p>
 </section>
+<section id="gene-quantification" class="level1">
+<h1>Gene Quantification</h1>
+<p>Aligned fragments were assigned to genes using <strong>featureCounts</strong> with the GENCODE v48 gene annotation.</p>
+<p>Alignment determines where reads map, whereas gene quantification determines how many aligned fragments correspond to each annotated gene. The resulting raw integer counts provide the input required by DESeq2.</p>
+<p>The featureCounts output was processed with Python to remove unnecessary annotation columns, simplify sample names, maintain consistent sample order, and create an analysis-ready gene-by-sample count matrix.</p>
+<p>The initial matrix contained:</p>
+<pre class="text"><code>78,894 genes × 6 samples</code></pre>
 </section>
-<section id="count-matrix-processing" class="level1">
-<h1>Count Matrix Processing</h1>
-<p>The initial featureCounts matrix contained:</p>
-<pre class="text"><code>78,894 genes</code></pre>
-<p>Low-expression genes were filtered using the rule:</p>
-<blockquote class="blockquote">
-<p>Retain genes with at least 10 raw counts in at least 3 samples.</p>
-</blockquote>
-<p>After filtering:</p>
-<pre class="text"><code>12,728 genes retained</code></pre>
-<p>The filtered matrix contained:</p>
-<pre class="text"><code>Duplicate gene IDs: 0
-Missing values:     0
-Negative counts:    0</code></pre>
-</section>
-<section id="expression-level-qc" class="level1">
-<h1>Expression-Level QC</h1>
-<section id="normalization" class="level2">
-<h2 class="anchored" data-anchor-id="normalization">Normalization</h2>
-<p>Median-of-ratios normalization was used for exploratory expression QC.</p>
+<section id="low-expression-filtering" class="level1">
+<h1>Low-Expression Filtering</h1>
+<p>Genes with very little read support provide limited information for differential-expression testing and increase the number of statistical tests.</p>
+<p>Genes were retained when they had:</p>
+<pre class="text"><code>≥10 counts in at least 3 samples</code></pre>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Sample</th>
-<th style="text-align: right;">Size Factor</th>
+<th>Filtering stage</th>
+<th style="text-align: right;">Genes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>NM_4</td>
-<td style="text-align: right;">1.026</td>
+<td>Before filtering</td>
+<td style="text-align: right;">78,894</td>
 </tr>
 <tr class="even">
-<td>NM_5</td>
-<td style="text-align: right;">0.982</td>
+<td>Retained</td>
+<td style="text-align: right;"><strong>12,728</strong></td>
 </tr>
 <tr class="odd">
-<td>NM_6</td>
-<td style="text-align: right;">0.837</td>
-</tr>
-<tr class="even">
-<td>MP46_1</td>
-<td style="text-align: right;">1.023</td>
-</tr>
-<tr class="odd">
-<td>MP46_2</td>
-<td style="text-align: right;">1.089</td>
-</tr>
-<tr class="even">
-<td>MP46_3</td>
-<td style="text-align: right;">1.134</td>
+<td>Removed</td>
+<td style="text-align: right;">66,166</td>
 </tr>
 </tbody>
 </table>
-<p>Normalized counts were log2 transformed for PCA and sample-correlation analysis.</p>
-<p>Raw integer counts were retained separately for DESeq2.</p>
+<p>The remaining <strong>12,728 genes</strong> were used for differential-expression analysis.</p>
 </section>
+<section id="expression-level-quality-control" class="level1">
+<h1>Expression-Level Quality Control</h1>
+<p>Raw-read QC determines whether the sequencing reads are technically suitable for analysis. After gene quantification, expression-level QC provides another independent assessment of sample relationships and biological replicate consistency.</p>
+<p>DESeq2 <strong>variance-stabilizing transformation (VST)</strong> was used to generate expression values suitable for PCA and sample-correlation analysis.</p>
 <section id="principal-component-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="principal-component-analysis">Principal Component Analysis</h2>
+<p>Principal component analysis summarizes major sources of expression variation across thousands of genes.</p>
 <p><img src="images/pca_expression_qc.png" class="img-fluid" style="width:80.0%" alt="PCA showing separation between NM and MP46 samples"></p>
-<p>PC1 explained <strong>88.79%</strong> of total expression variance and clearly separated NM from MP46.</p>
-<p>PC2 explained an additional <strong>3.73%</strong>.</p>
-<p>Together, the first two principal components represented <strong>92.52%</strong> of expression variation.</p>
+<p>The first two principal components explained:</p>
+<pre class="text"><code>PC1 = 88.79%
+PC2 =  3.73%</code></pre>
+<p>PC1 clearly separated the NM and MP46 groups, while biological replicates clustered according to condition.</p>
+<p>This indicates that the largest source of expression variation in the dataset corresponds to the biological comparison.</p>
 </section>
-<section id="sample-correlation" class="level2">
-<h2 class="anchored" data-anchor-id="sample-correlation">Sample Correlation</h2>
+<section id="sample-to-sample-correlation" class="level2">
+<h2 class="anchored" data-anchor-id="sample-to-sample-correlation">Sample-to-Sample Correlation</h2>
+<p>Pearson correlation was calculated between samples using transformed expression values.</p>
 <p><img src="images/sample_correlation_heatmap.png" class="img-fluid" style="width:80.0%" alt="Sample-to-sample Pearson correlation heatmap"></p>
-<p>Within-group expression correlations were high:</p>
-<pre class="text"><code>NM:    approximately 0.96
-MP46:  approximately 0.96–0.98</code></pre>
-<p>Between-group correlations were substantially lower:</p>
+<p>Within-group correlations were high:</p>
+<pre class="text"><code>NM:       approximately 0.96
+MP46:     approximately 0.96–0.98</code></pre>
+<p>Correlations between the two groups were lower:</p>
 <pre class="text"><code>approximately 0.56–0.64</code></pre>
-<p>No obvious expression-level outlier was identified, and all six samples were retained.</p>
+<p>The agreement among biological replicates and the lower correlation between groups were consistent with the PCA results.</p>
+<p>Together, these independent expression-level QC analyses supported retaining all six samples for differential-expression testing.</p>
 </section>
 </section>
 <section id="differential-expression" class="level1">
 <h1>Differential Expression</h1>
-<p>Differential expression was performed with <strong>DESeq2</strong> using:</p>
-<pre class="text"><code>Design:   ~ Group
-Contrast: MP46 vs NM</code></pre>
-<p>Therefore:</p>
-<pre class="text"><code>log2FoldChange &gt; 0  → higher in MP46
-log2FoldChange &lt; 0  → higher in NM</code></pre>
+<p>Differential-expression analysis was performed with <strong>DESeq2</strong>.</p>
+<p>DESeq2 models RNA-seq counts using a negative-binomial statistical framework while accounting for sequencing-depth differences and biological variability among replicates.</p>
+<p>The model was:</p>
+<pre class="text"><code>Design:     ~ Group
+Contrast:   MP46 vs NM
+Reference:  NM</code></pre>
+<p>A positive log2 fold change therefore represents higher expression in MP46, whereas a negative value represents higher expression in NM.</p>
 <p>Significant differential expression was defined as:</p>
 <pre class="text"><code>adjusted p-value &lt; 0.05
 AND
-|log2FoldChange| &gt;= 1</code></pre>
+|log2FoldChange| ≥ log2(1.5)</code></pre>
+<p>The fold-change threshold corresponds to an expression difference of at least <strong>1.5-fold</strong> in either direction.</p>
 <section id="differential-expression-summary" class="level2">
-<h2 class="anchored" data-anchor-id="differential-expression-summary">Differential Expression Summary</h2>
+<h2 class="anchored" data-anchor-id="differential-expression-summary">Differential-Expression Summary</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -482,7 +583,7 @@ AND
 <td style="text-align: right;">8,501</td>
 </tr>
 <tr class="odd">
-<td>Significant DE genes</td>
+<td>Significant after padj + fold-change threshold</td>
 <td style="text-align: right;"><strong>6,816</strong></td>
 </tr>
 <tr class="even">
@@ -493,152 +594,223 @@ AND
 <td>Higher in NM</td>
 <td style="text-align: right;"><strong>3,321</strong></td>
 </tr>
-<tr class="even">
-<td>padj &lt; 0.05 and |log2FC| ≥ 2</td>
-<td style="text-align: right;">3,200</td>
-</tr>
 </tbody>
 </table>
+<p>GENCODE v48 annotations were added to the DESeq2 results to provide gene symbols and gene types for biological interpretation.</p>
 </section>
 <section id="volcano-plot" class="level2">
 <h2 class="anchored" data-anchor-id="volcano-plot">Volcano Plot</h2>
 <p><img src="images/volcano_MP46_vs_NM.png" class="img-fluid" style="width:85.0%" alt="Volcano plot of MP46 versus NM differential expression"></p>
-<p>The volcano plot demonstrates extensive differential expression in both directions.</p>
+<p>The volcano plot displays expression fold change against statistical significance, highlighting genes with both substantial and statistically supported differences between MP46 and NM.</p>
 </section>
 <section id="ma-plot" class="level2">
 <h2 class="anchored" data-anchor-id="ma-plot">MA Plot</h2>
 <p><img src="images/MA_MP46_vs_NM.png" class="img-fluid" style="width:85.0%" alt="MA plot for MP46 versus NM"></p>
-<p>The MA plot shows differential-expression effect sizes across the range of mean gene-expression abundance.</p>
+<p>The MA plot displays log2 fold change across the range of average gene expression, providing a complementary view of expression differences and their relationship to gene abundance.</p>
 </section>
-<section id="top-differentially-expressed-genes" class="level2">
-<h2 class="anchored" data-anchor-id="top-differentially-expressed-genes">Top Differentially Expressed Genes</h2>
+<section id="differential-expression-heatmap" class="level2">
+<h2 class="anchored" data-anchor-id="differential-expression-heatmap">Differential-Expression Heatmap</h2>
 <p><img src="images/top30_DE_heatmap.png" class="img-fluid" style="width:80.0%" alt="Heatmap of the top 30 differentially expressed genes"></p>
-<p>The top 30 genes ranked by adjusted p-value showed strong group-specific expression patterns.</p>
-<p>The three NM samples generally showed similar expression profiles, as did the three MP46 samples.</p>
+<p>The heatmap shows the expression patterns of the top differentially expressed genes across the six samples.</p>
+<p>The clustering pattern provides a sample-level view of the transcriptional differences identified by DESeq2.</p>
 </section>
 </section>
 <section id="functional-enrichment" class="level1">
 <h1>Functional Enrichment</h1>
-<p>Differentially expressed genes were divided by direction before functional enrichment:</p>
-<pre class="text"><code>Higher in MP46: 3,495 genes
-Higher in NM:   3,321 genes</code></pre>
-<p>GO Biological Process and Reactome enrichment were performed separately for the two gene sets.</p>
-<p>The enrichment background consisted of genes tested in the DESeq2 analysis.</p>
+<p>Differential-expression analysis identifies individual genes, but biological interpretation also requires understanding whether groups of genes participate in related biological functions or pathways.</p>
+<p>Significant genes were separated according to expression direction:</p>
+<pre class="text"><code>Higher in MP46
+Higher in NM</code></pre>
+<p>Functional enrichment was evaluated using:</p>
+<ul>
+<li><strong>Gene Ontology Biological Process (GO BP)</strong></li>
+<li><strong>Reactome pathways</strong></li>
+</ul>
+<p>All genes tested by DESeq2 were used as the enrichment background.</p>
 <section id="enrichment-summary" class="level2">
 <h2 class="anchored" data-anchor-id="enrichment-summary">Enrichment Summary</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Gene Set</th>
-<th style="text-align: right;">GO Biological Process</th>
+<th>Gene set</th>
+<th style="text-align: right;">GO BP</th>
 <th style="text-align: right;">Reactome</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Higher in MP46</td>
-<td style="text-align: right;">31</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;"><strong>31</strong></td>
+<td style="text-align: right;"><strong>0</strong></td>
 </tr>
 <tr class="even">
 <td>Higher in NM</td>
-<td style="text-align: right;">236</td>
-<td style="text-align: right;">46</td>
+<td style="text-align: right;"><strong>236</strong></td>
+<td style="text-align: right;"><strong>46</strong></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="genes-higher-in-mp46" class="level2">
-<h2 class="anchored" data-anchor-id="genes-higher-in-mp46">Genes Higher in MP46</h2>
+<section id="biological-processes-higher-in-mp46" class="level2">
+<h2 class="anchored" data-anchor-id="biological-processes-higher-in-mp46">Biological Processes Higher in MP46</h2>
 <p><img src="images/GO_BP_Higher_in_MP46_summary.png" class="img-fluid" style="width:90.0%" alt="GO Biological Process enrichment for genes higher in MP46"></p>
-<p>Prominent enriched themes included:</p>
-<ul>
-<li>nuclear and cell division</li>
-<li>microtubule organization</li>
-<li>centrosome-associated processes</li>
-<li>organelle fission</li>
-<li>developmental and patterning processes</li>
-</ul>
-<p>No Reactome pathways passed the specified significance threshold for the MP46-higher gene set.</p>
+<p>Genes with higher expression in MP46 were primarily associated with biological processes involving <strong>cell division, microtubule organization, centrosome-associated processes, and organelle fission</strong>.</p>
 </section>
-<section id="genes-higher-in-nm" class="level2">
-<h2 class="anchored" data-anchor-id="genes-higher-in-nm">Genes Higher in NM</h2>
+<section id="biological-processes-higher-in-nm" class="level2">
+<h2 class="anchored" data-anchor-id="biological-processes-higher-in-nm">Biological Processes Higher in NM</h2>
 <p><img src="images/GO_BP_Higher_in_NM_summary.png" class="img-fluid" style="width:90.0%" alt="GO Biological Process enrichment for genes higher in NM"></p>
-<p>GO enrichment included:</p>
-<ul>
-<li>cell-cell adhesion</li>
-<li>antigen processing and presentation</li>
-<li>extracellular matrix organization</li>
-<li>cellular signaling and interaction processes</li>
-</ul>
-<section id="reactome" class="level3">
-<h3 class="anchored" data-anchor-id="reactome">Reactome</h3>
+<p>Genes with higher expression in NM showed broader enrichment involving <strong>extracellular matrix organization, cell adhesion, antigen processing, and immune-related signaling</strong>.</p>
+</section>
+<section id="reactome-pathways-higher-in-nm" class="level2">
+<h2 class="anchored" data-anchor-id="reactome-pathways-higher-in-nm">Reactome Pathways Higher in NM</h2>
 <p><img src="images/Reactome_Higher_in_NM_summary.png" class="img-fluid" style="width:90.0%" alt="Reactome pathway enrichment for genes higher in NM"></p>
-<p>Prominent Reactome themes included:</p>
-<ul>
-<li>extracellular matrix organization</li>
-<li>IGF transport and IGF-binding proteins</li>
-<li>interferon-gamma signaling</li>
-<li>platelet activation and degranulation</li>
-<li>hemostasis</li>
-<li>extracellular matrix degradation</li>
-<li>ER-phagosome pathway</li>
-<li>ECM proteoglycans</li>
-</ul>
+<p>Reactome analysis identified <strong>46 significantly enriched pathways</strong> among genes with higher expression in NM.</p>
+<p>No Reactome pathway passed the predefined significance threshold for genes higher in MP46. The original threshold was retained rather than relaxed to force pathway discovery.</p>
 </section>
 </section>
+<section id="integrated-interpretation" class="level1">
+<h1>Integrated Interpretation</h1>
+<p>The individual analysis stages provide complementary evidence about the dataset.</p>
+<p>Raw-read QC indicated that the sequencing data were suitable for alignment without additional trimming. STAR subsequently produced high unique mapping rates across all samples.</p>
+<p>Expression-level QC provided an independent check after gene quantification. PCA showed clear separation between NM and MP46, while sample correlation showed strong agreement among biological replicates.</p>
+<p>DESeq2 identified <strong>6,816 genes</strong> meeting the predefined statistical and fold-change thresholds, with 3,495 showing higher expression in MP46 and 3,321 showing higher expression in NM.</p>
+<p>Functional enrichment then translated these gene-level differences into broader biological patterns. Genes higher in MP46 were associated primarily with cell-division-related processes, whereas genes higher in NM showed enrichment for extracellular matrix, adhesion, antigen-processing, and immune-related functions.</p>
+<p>Together, the raw-read QC, alignment results, expression-level QC, differential-expression analysis, and functional enrichment provide a consistent view of substantial transcriptional differences between the two groups.</p>
+<p>These results describe associations within this dataset and do not by themselves establish causal biological mechanisms.</p>
 </section>
-<section id="overall-findings" class="level1">
-<h1>Overall Findings</h1>
-<p>The independent analysis stages produced a consistent expression-level pattern.</p>
-<pre class="text"><code>PCA
-  ↓
-Strong separation of NM and MP46
-
-Sample correlation
-  ↓
-High within-group reproducibility
-
-DESeq2
-  ↓
-6,816 significant DE genes
-
-Functional enrichment
-  ↓
-Distinct direction-specific biological signatures</code></pre>
-<p>Genes higher in MP46 were enriched primarily for cell-division and microtubule-associated processes.</p>
-<p>Genes higher in NM showed broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing pathways.</p>
-<p>These enrichment results describe expression-associated biological signatures and should be interpreted in the context of the original experimental design.</p>
+<section id="reproducible-workflow" class="level1">
+<h1>Reproducible Workflow</h1>
+<p>The analysis was first developed and validated as individual Python, R, and command-line steps and then connected using <strong>Nextflow DSL2</strong>.</p>
+<p>RNA-seq workflows contain many dependent processes and intermediate files. Nextflow manages these dependencies automatically, tracks process inputs and outputs, caches completed work, and allows interrupted or previously completed analyses to continue using <code>-resume</code>.</p>
+<p>The current Nextflow implementation <strong>reuses the resulting STAR BAM files</strong> and automates the downstream analysis.</p>
+<p><strong>Docker</strong> provides controlled software environments for workflow processes, reducing dependency on software installed directly on the host computer.</p>
+<p>The project also demonstrates <strong>Linux and SLURM</strong> research-computing concepts, including shared project storage, Environment Modules, resource requests, job submission, and job monitoring.</p>
+<p>These components serve complementary roles:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Git / GitHub</td>
+<td>Version-controlled code and documentation</td>
+</tr>
+<tr class="even">
+<td>Docker</td>
+<td>Reproducible software environments</td>
+</tr>
+<tr class="odd">
+<td>Nextflow</td>
+<td>Automated workflow execution</td>
+</tr>
+<tr class="even">
+<td>Linux / SLURM</td>
+<td>Research-computing environment</td>
+</tr>
+<tr class="odd">
+<td>Quarto</td>
+<td>Reproducible and shareable reporting</td>
+</tr>
+</tbody>
+</table>
+<p>Together, they connect the biological analysis with the computational practices needed to make the workflow reproducible and reviewable.</p>
 </section>
-<section id="reproducibility" class="level1">
-<h1>Reproducibility</h1>
-<p>The analysis was implemented using:</p>
-<ul>
-<li>FastQC</li>
-<li>MultiQC</li>
-<li>STAR</li>
-<li>SAMtools</li>
-<li>RSeQC</li>
-<li>featureCounts</li>
-<li>Python</li>
-<li>R / DESeq2</li>
-<li>clusterProfiler</li>
-<li>ReactomePA</li>
-<li>Docker</li>
-<li>Quarto</li>
-</ul>
-<p>Validated scripts are maintained in the project repository under:</p>
-<pre class="text"><code>scripts/</code></pre>
-<p>Detailed technical documentation is available under:</p>
-<pre class="text"><code>docs/</code></pre>
-<p>Large FASTQ, BAM, reference, index, and intermediate count files are maintained outside the GitHub repository.</p>
+<section id="software" class="level1">
+<h1>Software</h1>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Analysis component</th>
+<th>Software</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw-read QC</td>
+<td>FastQC</td>
+</tr>
+<tr class="even">
+<td>QC aggregation</td>
+<td>MultiQC 1.35</td>
+</tr>
+<tr class="odd">
+<td>Alignment</td>
+<td>STAR</td>
+</tr>
+<tr class="even">
+<td>BAM processing</td>
+<td>SAMtools</td>
+</tr>
+<tr class="odd">
+<td>Strandedness assessment</td>
+<td>RSeQC</td>
+</tr>
+<tr class="even">
+<td>Gene quantification</td>
+<td>featureCounts</td>
+</tr>
+<tr class="odd">
+<td>Count processing and visualization</td>
+<td>Python</td>
+</tr>
+<tr class="even">
+<td>Differential expression</td>
+<td>DESeq2</td>
+</tr>
+<tr class="odd">
+<td>Functional enrichment</td>
+<td>clusterProfiler / ReactomePA</td>
+</tr>
+<tr class="even">
+<td>Gene annotation</td>
+<td>GENCODE v48</td>
+</tr>
+<tr class="odd">
+<td>Workflow automation</td>
+<td>Nextflow DSL2</td>
+</tr>
+<tr class="even">
+<td>Containerization</td>
+<td>Docker</td>
+</tr>
+<tr class="odd">
+<td>Research computing</td>
+<td>Linux / SLURM</td>
+</tr>
+<tr class="even">
+<td>Reporting</td>
+<td>Quarto</td>
+</tr>
+<tr class="odd">
+<td>Version control</td>
+<td>Git / GitHub</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>The RNA-seq workflow successfully progressed from raw paired-end sequencing reads through alignment, quantification, expression QC, differential expression, and functional enrichment.</p>
-<p>Expression-level QC showed strong replicate consistency and clear separation between NM and MP46.</p>
-<p>Differential-expression analysis identified extensive transcriptional differences between the groups, and direction-specific enrichment analysis revealed distinct functional signatures.</p>
-<p>This report provides a concise collaborator-facing summary, while the repository contains the scripts and technical documentation required to reproduce the analysis.</p>
+<p>This project demonstrates an end-to-end bulk RNA-seq analysis progressing from raw paired-end sequencing reads to biological interpretation.</p>
+<p>Raw-read QC was interpreted rather than treated as a simple PASS/FAIL decision. MultiQC supported proceeding without unnecessary trimming, and subsequent alignment, PCA, and sample-correlation analyses provided independent checks of data and sample quality.</p>
+<p>Differential-expression analysis identified substantial transcriptional differences between MP46 and NM, while functional enrichment provided biological context for those changes.</p>
+<p>Nextflow automation, Docker environments, version-controlled analysis code, Linux/SLURM computing practices, and Quarto reporting bring these individual steps together into a reproducible and reviewable bioinformatics workflow.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ol type="1">
+<li>Gentien D, et al.&nbsp;<em>Cell Reports</em>. 2023. GSE199679 / GSE198801.</li>
+<li>Andrews S. FastQC: A Quality Control Tool for High Throughput Sequence Data.</li>
+<li>Ewels P, et al.&nbsp;MultiQC: summarize analysis results for multiple tools and samples in a single report. <em>Bioinformatics</em>. 2016.</li>
+<li>Dobin A, et al.&nbsp;STAR: ultrafast universal RNA-seq aligner. <em>Bioinformatics</em>. 2013.</li>
+<li>Wang L, et al.&nbsp;RSeQC: quality control of RNA-seq experiments. <em>Bioinformatics</em>. 2012.</li>
+<li>Liao Y, Smyth GK, Shi W. featureCounts: an efficient general-purpose program for assigning sequence reads to genomic features. <em>Bioinformatics</em>. 2014.</li>
+<li>Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. <em>Genome Biology</em>. 2014.</li>
+<li>Yu G, et al.&nbsp;clusterProfiler: an R package for comparing biological themes among gene clusters. <em>OMICS</em>. 2012.</li>
+<li>Milacic M, et al.&nbsp;Reactome Pathway Knowledgebase. <em>Nucleic Acids Research</em>. 2024.</li>
+</ol>
 
 
 <!-- -->
@@ -770,7 +942,7 @@ Distinct direction-specific biological signatures</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ArchanaAllishe\.github\.io\/reproducible-rnaseq-pipeline\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1097,394 +1269,559 @@ Distinct direction-specific biological signatures</code></pre>
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "RNA-Seq Analysis Report"</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "GSE199679 — MP46 vs NM"</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> last-modified</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis Summary</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>This report summarizes a reproducible bulk RNA-seq analysis comparing</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>**MP46** and **NM** samples.</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>The analysis included three biological samples per group:</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Group <span class="pp">|</span> Samples <span class="pp">|</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM <span class="pp">|</span> NM_4, NM_5, NM_6 <span class="pp">|</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46 <span class="pp">|</span> MP46_1, MP46_2, MP46_3 <span class="pp">|</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>The workflow included sequencing quality control, alignment,</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>gene-level quantification, expression-level quality control,</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>differential expression analysis, and functional enrichment.</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="in">FASTQ</span></span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="in">FastQC / MultiQC</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="in">STAR alignment</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="in">featureCounts</span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="in">Count QC and filtering</span></span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="in">Expression QC</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="in">DESeq2</span></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">Functional enrichment</span></span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Results at a Glance</span></span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Analysis <span class="pp">|</span> Key Result <span class="pp">|</span></span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Samples <span class="pp">|</span> 3 NM + 3 MP46 <span class="pp">|</span></span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> STAR alignment <span class="pp">|</span> 88.3–95.2% uniquely mapped <span class="pp">|</span></span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Genes retained after filtering <span class="pp">|</span> 12,728 <span class="pp">|</span></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PCA <span class="pp">|</span> PC1 = 88.79%; clear NM/MP46 separation <span class="pp">|</span></span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sample correlation <span class="pp">|</span> Within-group ≈ 0.96–0.98 <span class="pp">|</span></span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Differential expression <span class="pp">|</span> 6,816 significant genes <span class="pp">|</span></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in MP46 <span class="pp">|</span> 3,495 genes <span class="pp">|</span></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in NM <span class="pp">|</span> 3,321 genes <span class="pp">|</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GO BP enrichment <span class="pp">|</span> 31 MP46 / 236 NM terms <span class="pp">|</span></span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Reactome enrichment <span class="pp">|</span> 0 MP46 / 46 NM pathways <span class="pp">|</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>**Primary finding:** NM and MP46 show strongly distinct transcriptomic</span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>profiles. Genes higher in MP46 are enriched primarily for cell-division</span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>and microtubule-associated processes, whereas genes higher in NM show</span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>broader enrichment involving extracellular-matrix, cell-adhesion,</span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>immune-associated, and antigen-processing processes.</span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="fu"># Methods Overview</span></span>
-<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reference Genome</span></span>
-<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>RNA-seq reads were aligned to the human **GRCh38 primary assembly**</span>
-<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>using **STAR**.</span>
-<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>Gene annotation was based on **GENCODE v48**.</span>
-<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>The same annotation release was used for:</span>
-<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>STAR genome indexing</span>
-<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>featureCounts gene quantification</span>
-<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>differential-expression gene annotation</span>
-<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="fu">## Read Alignment</span></span>
-<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>STAR alignment was performed in a Linux ARM64 Docker environment to</span>
-<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>provide a reproducible execution environment on Apple Silicon.</span>
-<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>Alignment rates were high overall.</span>
-<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sample <span class="pp">|</span> Unique Mapping <span class="pp">|</span></span>
-<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
-<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_4 <span class="pp">|</span> 95.20% <span class="pp">|</span></span>
-<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_5 <span class="pp">|</span> 95.16% <span class="pp">|</span></span>
-<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_6 <span class="pp">|</span> 95.11% <span class="pp">|</span></span>
-<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_1 <span class="pp">|</span> 88.29% <span class="pp">|</span></span>
-<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_2 <span class="pp">|</span> 94.31% <span class="pp">|</span></span>
-<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_3 <span class="pp">|</span> 89.23% <span class="pp">|</span></span>
-<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## Gene Quantification</span></span>
-<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>Gene-level counts were generated using **featureCounts**.</span>
-<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>The libraries were empirically determined to be reverse-stranded using</span>
-<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>RSeQC and were therefore quantified using:</span>
-<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="in">-s 2</span></span>
-<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>Assignment rates ranged from approximately **77% to 85%**.</span>
-<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a><span class="fu"># Count Matrix Processing</span></span>
-<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>The initial featureCounts matrix contained:</span>
-<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="in">78,894 genes</span></span>
-<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>Low-expression genes were filtered using the rule:</span>
-<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Retain genes with at least 10 raw counts in at least 3 samples.</span></span>
-<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>After filtering:</span>
-<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="in">12,728 genes retained</span></span>
-<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>The filtered matrix contained:</span>
-<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a><span class="in">Duplicate gene IDs: 0</span></span>
-<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="in">Missing values:     0</span></span>
-<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="in">Negative counts:    0</span></span>
-<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="fu"># Expression-Level QC</span></span>
-<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="fu">## Normalization</span></span>
-<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>Median-of-ratios normalization was used for exploratory expression QC.</span>
-<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sample <span class="pp">|</span> Size Factor <span class="pp">|</span></span>
-<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
-<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_4 <span class="pp">|</span> 1.026 <span class="pp">|</span></span>
-<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_5 <span class="pp">|</span> 0.982 <span class="pp">|</span></span>
-<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_6 <span class="pp">|</span> 0.837 <span class="pp">|</span></span>
-<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_1 <span class="pp">|</span> 1.023 <span class="pp">|</span></span>
-<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_2 <span class="pp">|</span> 1.089 <span class="pp">|</span></span>
-<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_3 <span class="pp">|</span> 1.134 <span class="pp">|</span></span>
-<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>Normalized counts were log2 transformed for PCA and sample-correlation</span>
-<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>analysis.</span>
-<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>Raw integer counts were retained separately for DESeq2.</span>
-<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Principal Component Analysis</span></span>
-<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/pca_expression_qc.png)</span>{fig-alt="PCA showing separation between NM and MP46 samples" width=80%}</span>
-<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a>PC1 explained **88.79%** of total expression variance and clearly</span>
-<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a>separated NM from MP46.</span>
-<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a>PC2 explained an additional **3.73%**.</span>
-<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>Together, the first two principal components represented **92.52%**</span>
-<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>of expression variation.</span>
-<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sample Correlation</span></span>
-<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sample_correlation_heatmap.png)</span>{fig-alt="Sample-to-sample Pearson correlation heatmap" width=80%}</span>
-<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>Within-group expression correlations were high:</span>
-<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a><span class="in">NM:    approximately 0.96</span></span>
-<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a><span class="in">MP46:  approximately 0.96–0.98</span></span>
-<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>Between-group correlations were substantially lower:</span>
-<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="in">approximately 0.56–0.64</span></span>
-<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>No obvious expression-level outlier was identified, and all six samples</span>
-<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>were retained.</span>
-<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a><span class="fu"># Differential Expression</span></span>
-<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>Differential expression was performed with **DESeq2** using:</span>
-<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a><span class="in">Design:   ~ Group</span></span>
-<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a><span class="in">Contrast: MP46 vs NM</span></span>
-<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>Therefore:</span>
-<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="in">log2FoldChange &gt; 0  → higher in MP46</span></span>
-<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a><span class="in">log2FoldChange &lt; 0  → higher in NM</span></span>
-<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>Significant differential expression was defined as:</span>
-<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="in">adjusted p-value &lt; 0.05</span></span>
-<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="in">AND</span></span>
-<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a><span class="in">|log2FoldChange| &gt;= 1</span></span>
-<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a><span class="fu">## Differential Expression Summary</span></span>
-<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Result <span class="pp">|</span> Genes <span class="pp">|</span></span>
-<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
-<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Genes tested <span class="pp">|</span> 12,728 <span class="pp">|</span></span>
-<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> padj &lt; 0.05 <span class="pp">|</span> 8,501 <span class="pp">|</span></span>
-<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Significant DE genes <span class="pp">|</span> **6,816** <span class="pp">|</span></span>
-<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in MP46 <span class="pp">|</span> **3,495** <span class="pp">|</span></span>
-<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in NM <span class="pp">|</span> **3,321** <span class="pp">|</span></span>
-<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> padj &lt; 0.05 and <span class="sc">\|</span>log2FC<span class="sc">\|</span> ≥ 2 <span class="pp">|</span> 3,200 <span class="pp">|</span></span>
-<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="fu">## Volcano Plot</span></span>
-<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/volcano_MP46_vs_NM.png)</span>{fig-alt="Volcano plot of MP46 versus NM differential expression" width=85%}</span>
-<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a>The volcano plot demonstrates extensive differential expression in both</span>
-<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a>directions.</span>
-<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="fu">## MA Plot</span></span>
-<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/MA_MP46_vs_NM.png)</span>{fig-alt="MA plot for MP46 versus NM" width=85%}</span>
-<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a>The MA plot shows differential-expression effect sizes across the range</span>
-<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a>of mean gene-expression abundance.</span>
-<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="fu">## Top Differentially Expressed Genes</span></span>
-<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/top30_DE_heatmap.png)</span>{fig-alt="Heatmap of the top 30 differentially expressed genes" width=80%}</span>
-<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a>The top 30 genes ranked by adjusted p-value showed strong</span>
-<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a>group-specific expression patterns.</span>
-<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a>The three NM samples generally showed similar expression profiles, as</span>
-<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>did the three MP46 samples.</span>
-<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="fu"># Functional Enrichment</span></span>
-<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a>Differentially expressed genes were divided by direction before</span>
-<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a>functional enrichment:</span>
-<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="in">Higher in MP46: 3,495 genes</span></span>
-<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a><span class="in">Higher in NM:   3,321 genes</span></span>
-<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>GO Biological Process and Reactome enrichment were performed separately</span>
-<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a>for the two gene sets.</span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a>The enrichment background consisted of genes tested in the DESeq2</span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>analysis.</span>
-<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="fu">## Enrichment Summary</span></span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gene Set <span class="pp">|</span> GO Biological Process <span class="pp">|</span> Reactome <span class="pp">|</span></span>
-<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|---:|</span></span>
-<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in MP46 <span class="pp">|</span> 31 <span class="pp">|</span> 0 <span class="pp">|</span></span>
-<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in NM <span class="pp">|</span> 236 <span class="pp">|</span> 46 <span class="pp">|</span></span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a><span class="fu">## Genes Higher in MP46</span></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/GO_BP_Higher_in_MP46_summary.png)</span>{fig-alt="GO Biological Process enrichment for genes higher in MP46" width=90%}</span>
-<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a>Prominent enriched themes included:</span>
-<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>nuclear and cell division</span>
-<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>microtubule organization</span>
-<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>centrosome-associated processes</span>
-<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>organelle fission</span>
-<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>developmental and patterning processes</span>
-<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a>No Reactome pathways passed the specified significance threshold for</span>
-<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>the MP46-higher gene set.</span>
-<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a><span class="fu">## Genes Higher in NM</span></span>
-<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/GO_BP_Higher_in_NM_summary.png)</span>{fig-alt="GO Biological Process enrichment for genes higher in NM" width=90%}</span>
-<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a>GO enrichment included:</span>
-<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>cell-cell adhesion</span>
-<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>antigen processing and presentation</span>
-<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>extracellular matrix organization</span>
-<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>cellular signaling and interaction processes</span>
-<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="fu">### Reactome</span></span>
-<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Reactome_Higher_in_NM_summary.png)</span>{fig-alt="Reactome pathway enrichment for genes higher in NM" width=90%}</span>
-<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a>Prominent Reactome themes included:</span>
-<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>extracellular matrix organization</span>
-<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>IGF transport and IGF-binding proteins</span>
-<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>interferon-gamma signaling</span>
-<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>platelet activation and degranulation</span>
-<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>hemostasis</span>
-<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>extracellular matrix degradation</span>
-<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>ER-phagosome pathway</span>
-<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>ECM proteoglycans</span>
-<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a><span class="fu"># Overall Findings</span></span>
-<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a>The independent analysis stages produced a consistent expression-level</span>
-<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>pattern.</span>
-<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a><span class="in">PCA</span></span>
-<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a><span class="in">Strong separation of NM and MP46</span></span>
-<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a><span class="in">Sample correlation</span></span>
-<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a><span class="in">High within-group reproducibility</span></span>
-<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a><span class="in">DESeq2</span></span>
-<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a><span class="in">6,816 significant DE genes</span></span>
-<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a><span class="in">Functional enrichment</span></span>
-<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a><span class="in">  ↓</span></span>
-<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a><span class="in">Distinct direction-specific biological signatures</span></span>
-<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a>Genes higher in MP46 were enriched primarily for cell-division and</span>
-<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a>microtubule-associated processes.</span>
-<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a>Genes higher in NM showed broader enrichment involving</span>
-<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>extracellular-matrix, cell-adhesion, immune-associated, and</span>
-<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a>antigen-processing pathways.</span>
-<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a>These enrichment results describe expression-associated biological</span>
-<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a>signatures and should be interpreted in the context of the original</span>
-<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a>experimental design.</span>
-<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reproducibility</span></span>
-<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a>The analysis was implemented using:</span>
-<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>FastQC</span>
-<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>MultiQC</span>
-<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>STAR</span>
-<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>SAMtools</span>
-<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>RSeQC</span>
-<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>featureCounts</span>
-<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Python</span>
-<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>R / DESeq2</span>
-<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>clusterProfiler</span>
-<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>ReactomePA</span>
-<span id="cb15-355"><a href="#cb15-355" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Docker</span>
-<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Quarto</span>
-<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a>Validated scripts are maintained in the project repository under:</span>
-<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-361"><a href="#cb15-361" aria-hidden="true" tabindex="-1"></a><span class="in">scripts/</span></span>
-<span id="cb15-362"><a href="#cb15-362" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a>Detailed technical documentation is available under:</span>
-<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
-<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a><span class="in">docs/</span></span>
-<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a>Large FASTQ, BAM, reference, index, and intermediate count files are</span>
-<span id="cb15-371"><a href="#cb15-371" aria-hidden="true" tabindex="-1"></a>maintained outside the GitHub repository.</span>
-<span id="cb15-372"><a href="#cb15-372" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-373"><a href="#cb15-373" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
-<span id="cb15-374"><a href="#cb15-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-375"><a href="#cb15-375" aria-hidden="true" tabindex="-1"></a>The RNA-seq workflow successfully progressed from raw paired-end</span>
-<span id="cb15-376"><a href="#cb15-376" aria-hidden="true" tabindex="-1"></a>sequencing reads through alignment, quantification, expression QC,</span>
-<span id="cb15-377"><a href="#cb15-377" aria-hidden="true" tabindex="-1"></a>differential expression, and functional enrichment.</span>
-<span id="cb15-378"><a href="#cb15-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-379"><a href="#cb15-379" aria-hidden="true" tabindex="-1"></a>Expression-level QC showed strong replicate consistency and clear</span>
-<span id="cb15-380"><a href="#cb15-380" aria-hidden="true" tabindex="-1"></a>separation between NM and MP46.</span>
-<span id="cb15-381"><a href="#cb15-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-382"><a href="#cb15-382" aria-hidden="true" tabindex="-1"></a>Differential-expression analysis identified extensive transcriptional</span>
-<span id="cb15-383"><a href="#cb15-383" aria-hidden="true" tabindex="-1"></a>differences between the groups, and direction-specific enrichment</span>
-<span id="cb15-384"><a href="#cb15-384" aria-hidden="true" tabindex="-1"></a>analysis revealed distinct functional signatures.</span>
-<span id="cb15-385"><a href="#cb15-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-386"><a href="#cb15-386" aria-hidden="true" tabindex="-1"></a>This report provides a concise collaborator-facing summary, while the</span>
-<span id="cb15-387"><a href="#cb15-387" aria-hidden="true" tabindex="-1"></a>repository contains the scripts and technical documentation required to</span>
-<span id="cb15-388"><a href="#cb15-388" aria-hidden="true" tabindex="-1"></a>reproduce the analysis.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Reproducible Bulk RNA-Seq Analysis"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "GSE199679 — MP46 versus Normal Melanocytes"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># Project Overview</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>RNA sequencing (RNA-seq) provides a genome-wide measurement of gene</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>expression, allowing genes and biological pathways that differ between</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>experimental conditions to be identified.</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>This report presents an end-to-end bulk RNA-seq analysis using public data</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>from **GSE199679**. The analysis progresses from raw paired-end sequencing</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>reads through sequencing quality control, alignment, gene quantification,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>expression-level quality control, differential expression, functional</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>enrichment, and biological interpretation.</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>The comparison includes six biological samples:</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Group <span class="pp">|</span> Samples <span class="pp">|</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Normal melanocytes (NM) <span class="pp">|</span> NM_4, NM_5, NM_6 <span class="pp">|</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46 <span class="pp">|</span> MP46_1, MP46_2, MP46_3 <span class="pp">|</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>The analytical steps were developed and validated individually and then</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>connected using **Nextflow** for reproducible workflow execution. Docker</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>provides controlled software environments, and the final results are presented</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>here using Quarto.</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## Analysis Workflow</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="in">Paired-end FASTQ</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="in">FastQC + MultiQC</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="in">STAR alignment</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="in">SAMtools + RSeQC</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="in">featureCounts</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="in">Count QC + filtering</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="in">DESeq2</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a><span class="in">PCA + sample correlation</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="in">Differential expression</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="in">Gene annotation</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="in">GO + Reactome enrichment</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="in">       ↓</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="in">Biological interpretation</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="fu"># Sequencing Quality Control</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>Raw paired-end FASTQ files were evaluated with **FastQC**, and the individual</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>reports were combined using **MultiQC 1.35**.</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>FastQC examines individual sequencing files for potential problems such as</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>base-quality deterioration, unusual sequence composition, duplication,</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>adapter contamination, and overrepresented sequences. MultiQC combines these</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>results across all samples, making systematic and sample-specific patterns</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>easier to identify before alignment.</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## MultiQC Summary</span></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>The six RNA-seq samples produced **12 FASTQ files**, corresponding to R1 and R2</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>reads for each paired-end library. Each FASTQ file contained approximately</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>**5 million 101-bp reads**.</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> QC metric <span class="pp">|</span> Observation <span class="pp">|</span></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> FASTQ files <span class="pp">|</span> 12 <span class="pp">|</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Biological samples <span class="pp">|</span> 6 <span class="pp">|</span></span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Reads per FASTQ <span class="pp">|</span> ~5 million <span class="pp">|</span></span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Read length <span class="pp">|</span> 101 bp <span class="pp">|</span></span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Reads flagged as poor quality <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Per-base sequence quality <span class="pp">|</span> Passed <span class="pp">|</span></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Per-tile sequence quality <span class="pp">|</span> Passed <span class="pp">|</span></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GC content <span class="pp">|</span> ~47–53% <span class="pp">|</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Duplicate reads <span class="pp">|</span> ~35–51% <span class="pp">|</span></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Per-base N content <span class="pp">|</span> Passed <span class="pp">|</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Adapter content <span class="pp">|</span> Passed <span class="pp">|</span></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Overrepresented sequences <span class="pp">|</span> Mostly passed; limited warnings observed <span class="pp">|</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sequence-content / length modules <span class="pp">|</span> Some warnings or failures observed <span class="pp">|</span></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## QC Observation</span></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>Overall sequencing quality was suitable for downstream analysis. Per-base</span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>sequence quality passed across the FASTQ files, no reads were reported as poor</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>quality, and read length and sequencing depth were consistent across the</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>dataset.</span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>GC content ranged from approximately **47% to 53%**. MP46 libraries tended</span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>toward the lower end of this range, whereas NM libraries tended toward the</span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>higher end. Because this pattern broadly followed the biological groups rather</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>than appearing as an isolated sample-specific deviation, it was interpreted</span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>together with downstream expression-level QC rather than automatically</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>considered evidence of contamination.</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>Sequence duplication ranged from approximately **35% to 51%**. Moderate or</span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>high duplication can occur in RNA-seq because highly expressed transcripts are</span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>sampled repeatedly. PCR amplification or reduced library complexity can also</span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>increase duplication. Duplication was therefore considered together with</span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>alignment performance, gene counts, PCA, and sample-to-sample correlation</span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a>rather than being used alone to exclude samples.</span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a>Some sequence-content and sequence-length FastQC modules produced warnings or</span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>failures. These flags do not automatically indicate unusable RNA-seq data.</span>
+<span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a>Sequence-composition biases can arise from library preparation, transcript</span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>composition, or other protocol-specific effects and therefore require</span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a>interpretation in the context of the complete dataset.</span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a>Adapter content passed across the dataset. Low levels of Illumina adapter</span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a>signal were detectable toward the ends of some reads, but these levels were</span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a>not sufficient to trigger an adapter-content warning or failure. A small</span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a>number of overrepresented sequences were also detected and were interpreted</span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a>according to their abundance and possible origin rather than automatically</span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a>removed.</span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## QC Conclusion</span></span>
+<span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a>The combined FastQC and MultiQC assessment supported proceeding to alignment</span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a>**without additional adapter or quality trimming**.</span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a>This decision was supported by consistently good per-base sequence quality,</span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a>the absence of reads flagged as poor quality, passing adapter-content results,</span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a>consistent sequencing depth, and the absence of a broad sample-specific</span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a>sequencing-quality failure.</span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a>FastQC warnings were retained and documented rather than automatically</span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>corrected because warnings can reflect expected characteristics of RNA-seq</span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a>libraries. Their significance was subsequently evaluated using independent</span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a>downstream QC measures including alignment performance, gene assignment, PCA,</span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>and sample-to-sample expression correlation.</span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## If QC Is Not as Expected</span></span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>Unexpected FastQC or MultiQC findings should be investigated before deciding</span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>to modify reads or exclude samples.</span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Unexpected finding <span class="pp">|</span> Possible reasons <span class="pp">|</span> Suggested follow-up <span class="pp">|</span></span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Low per-base quality** <span class="pp">|</span> Quality deterioration toward read ends, poor sequencing signal, sequencing-run or flow-cell problems <span class="pp">|</span> Determine whether poor quality is localized or widespread; consider quality trimming if substantial <span class="pp">|</span></span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Adapter contamination** <span class="pp">|</span> Library inserts shorter than the sequencing read length, causing sequencing into adapters <span class="pp">|</span> Trim adapters and rerun FastQC/MultiQC <span class="pp">|</span></span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Unexpected GC distribution** <span class="pp">|</span> Biological composition, library-preparation bias, contamination, or unusual transcript abundance <span class="pp">|</span> Compare biological replicates and groups; investigate isolated or unexplained deviations <span class="pp">|</span></span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **High duplication** <span class="pp">|</span> Highly expressed transcripts, PCR amplification, low starting RNA, or low library complexity <span class="pp">|</span> Interpret with expression and library-complexity results; do not remove RNA-seq reads solely because duplication is high <span class="pp">|</span></span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Overrepresented sequences** <span class="pp">|</span> Highly expressed transcripts, rRNA, mitochondrial RNA, adapters, or contamination <span class="pp">|</span> Identify the sequences and determine whether they represent expected biology or unwanted sequence <span class="pp">|</span></span>
+<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **High N content** <span class="pp">|</span> Poor sequencing signal or uncertain base calling <span class="pp">|</span> Determine whether ambiguous bases are localized or widespread; consider filtering if substantial <span class="pp">|</span></span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Strong R1/R2 difference** <span class="pp">|</span> Cycle-specific effects, poorer sequencing quality in one mate, or mate-specific contamination <span class="pp">|</span> Compare R1 and R2 modules and determine whether targeted preprocessing is justified <span class="pp">|</span></span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **One sample differs strongly** <span class="pp">|</span> Library-preparation problem, sequencing failure, contamination, sample mix-up, batch effect, or genuine biological variation <span class="pp">|</span> Review raw-read QC together with mapping rate, gene counts, PCA, and sample correlation <span class="pp">|</span></span>
+<span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Many samples share the same problem** <span class="pp">|</span> Library-preparation protocol, sequencing-run effect, systematic contamination, or protocol-specific bias <span class="pp">|</span> Determine whether the pattern is expected; investigate systematic technical causes when unexplained <span class="pp">|</span></span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **High rRNA content** <span class="pp">|</span> Incomplete rRNA depletion or inefficient poly(A) selection <span class="pp">|</span> Assess rRNA-associated reads and determine whether usable sequencing depth is substantially affected <span class="pp">|</span></span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>Individual FastQC PASS/WARN/FAIL flags were therefore not treated as automatic</span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a>sample acceptance or rejection criteria. QC metrics were considered</span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a>collectively, and any trimming, filtering, or sample exclusion would require a</span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>documented technical or biological justification.</span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a><span class="fu">## Full MultiQC Report</span></span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a>The complete interactive **MultiQC 1.35** report is retained for detailed</span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a>inspection of individual samples and QC metrics.</span>
+<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Open the interactive MultiQC report</span><span class="co">](multiqc_report.html)</span></span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a><span class="fu"># Read Alignment</span></span>
+<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a>Following raw-read QC, paired-end reads were aligned to the **GRCh38 human</span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a>reference genome** using **STAR**.</span>
+<span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a>Alignment determines where sequencing reads originated in the genome. RNA-seq</span>
+<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a>requires a splice-aware aligner because many reads span exon-exon junctions</span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a>created during RNA splicing.</span>
+<span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>STAR produced coordinate-sorted BAM files representing the genomic alignments</span>
+<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a>for each sample.</span>
+<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sample <span class="pp">|</span> Uniquely mapped reads <span class="pp">|</span></span>
+<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
+<span id="cb11-192"><a href="#cb11-192" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_4 <span class="pp">|</span> 95.20% <span class="pp">|</span></span>
+<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_5 <span class="pp">|</span> 95.16% <span class="pp">|</span></span>
+<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> NM_6 <span class="pp">|</span> 95.11% <span class="pp">|</span></span>
+<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_1 <span class="pp">|</span> 88.29% <span class="pp">|</span></span>
+<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_2 <span class="pp">|</span> 94.31% <span class="pp">|</span></span>
+<span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> MP46_3 <span class="pp">|</span> 89.23% <span class="pp">|</span></span>
+<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a>Unique mapping rates ranged from approximately **88.3% to 95.2%**, supporting</span>
+<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a>successful alignment across all six samples.</span>
+<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a>The automated Nextflow workflow **reuses the resulting BAM files** for</span>
+<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a>downstream processing.</span>
+<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a><span class="fu"># BAM Processing and Library Strandedness</span></span>
+<span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a>The coordinate-sorted BAM files were indexed using **SAMtools**, allowing</span>
+<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a>downstream tools to access genomic regions efficiently.</span>
+<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a>Library orientation was then assessed using **RSeQC</span>
+<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a><span class="in">`infer_experiment.py`</span>**.</span>
+<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a>RNA-seq libraries may preserve information about the strand from which a</span>
+<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a>transcript originated. Using the wrong strandedness setting during gene</span>
+<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a>quantification can assign reads incorrectly and alter gene counts.</span>
+<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>The libraries were identified as **reverse-stranded paired-end RNA-seq**.</span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a>featureCounts was therefore run using:</span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a><span class="in">-s 2</span></span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gene Quantification</span></span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a>Aligned fragments were assigned to genes using **featureCounts** with the</span>
+<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a>GENCODE v48 gene annotation.</span>
+<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a>Alignment determines where reads map, whereas gene quantification determines</span>
+<span id="cb11-230"><a href="#cb11-230" aria-hidden="true" tabindex="-1"></a>how many aligned fragments correspond to each annotated gene. The resulting</span>
+<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a>raw integer counts provide the input required by DESeq2.</span>
+<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a>The featureCounts output was processed with Python to remove unnecessary</span>
+<span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a>annotation columns, simplify sample names, maintain consistent sample order,</span>
+<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>and create an analysis-ready gene-by-sample count matrix.</span>
+<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a>The initial matrix contained:</span>
+<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a><span class="in">78,894 genes × 6 samples</span></span>
+<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a><span class="fu"># Low-Expression Filtering</span></span>
+<span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a>Genes with very little read support provide limited information for</span>
+<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a>differential-expression testing and increase the number of statistical tests.</span>
+<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a>Genes were retained when they had:</span>
+<span id="cb11-249"><a href="#cb11-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a><span class="in">≥10 counts in at least 3 samples</span></span>
+<span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-253"><a href="#cb11-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-254"><a href="#cb11-254" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Filtering stage <span class="pp">|</span> Genes <span class="pp">|</span></span>
+<span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
+<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Before filtering <span class="pp">|</span> 78,894 <span class="pp">|</span></span>
+<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Retained <span class="pp">|</span> **12,728** <span class="pp">|</span></span>
+<span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Removed <span class="pp">|</span> 66,166 <span class="pp">|</span></span>
+<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a>The remaining **12,728 genes** were used for differential-expression analysis.</span>
+<span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="fu"># Expression-Level Quality Control</span></span>
+<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>Raw-read QC determines whether the sequencing reads are technically suitable</span>
+<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a>for analysis. After gene quantification, expression-level QC provides another</span>
+<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a>independent assessment of sample relationships and biological replicate</span>
+<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a>consistency.</span>
+<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a>DESeq2 **variance-stabilizing transformation (VST)** was used to generate</span>
+<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a>expression values suitable for PCA and sample-correlation analysis.</span>
+<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a><span class="fu">## Principal Component Analysis</span></span>
+<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a>Principal component analysis summarizes major sources of expression variation</span>
+<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>across thousands of genes.</span>
+<span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/pca_expression_qc.png)</span>{fig-alt="PCA showing separation between NM and MP46 samples" width=80%}</span>
+<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a>The first two principal components explained:</span>
+<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a><span class="in">PC1 = 88.79%</span></span>
+<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a><span class="in">PC2 =  3.73%</span></span>
+<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a>PC1 clearly separated the NM and MP46 groups, while biological replicates</span>
+<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a>clustered according to condition.</span>
+<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a>This indicates that the largest source of expression variation in the dataset</span>
+<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a>corresponds to the biological comparison.</span>
+<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sample-to-Sample Correlation</span></span>
+<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a>Pearson correlation was calculated between samples using transformed</span>
+<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a>expression values.</span>
+<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sample_correlation_heatmap.png)</span>{fig-alt="Sample-to-sample Pearson correlation heatmap" width=80%}</span>
+<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a>Within-group correlations were high:</span>
+<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a><span class="in">NM:       approximately 0.96</span></span>
+<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a><span class="in">MP46:     approximately 0.96–0.98</span></span>
+<span id="cb11-304"><a href="#cb11-304" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-305"><a href="#cb11-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a>Correlations between the two groups were lower:</span>
+<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a><span class="in">approximately 0.56–0.64</span></span>
+<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a>The agreement among biological replicates and the lower correlation between</span>
+<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a>groups were consistent with the PCA results.</span>
+<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a>Together, these independent expression-level QC analyses supported retaining</span>
+<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a>all six samples for differential-expression testing.</span>
+<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a><span class="fu"># Differential Expression</span></span>
+<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a>Differential-expression analysis was performed with **DESeq2**.</span>
+<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a>DESeq2 models RNA-seq counts using a negative-binomial statistical framework</span>
+<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a>while accounting for sequencing-depth differences and biological variability</span>
+<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a>among replicates.</span>
+<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a>The model was:</span>
+<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-329"><a href="#cb11-329" aria-hidden="true" tabindex="-1"></a><span class="in">Design:     ~ Group</span></span>
+<span id="cb11-330"><a href="#cb11-330" aria-hidden="true" tabindex="-1"></a><span class="in">Contrast:   MP46 vs NM</span></span>
+<span id="cb11-331"><a href="#cb11-331" aria-hidden="true" tabindex="-1"></a><span class="in">Reference:  NM</span></span>
+<span id="cb11-332"><a href="#cb11-332" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-333"><a href="#cb11-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a>A positive log2 fold change therefore represents higher expression in MP46,</span>
+<span id="cb11-335"><a href="#cb11-335" aria-hidden="true" tabindex="-1"></a>whereas a negative value represents higher expression in NM.</span>
+<span id="cb11-336"><a href="#cb11-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-337"><a href="#cb11-337" aria-hidden="true" tabindex="-1"></a>Significant differential expression was defined as:</span>
+<span id="cb11-338"><a href="#cb11-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-339"><a href="#cb11-339" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-340"><a href="#cb11-340" aria-hidden="true" tabindex="-1"></a><span class="in">adjusted p-value &lt; 0.05</span></span>
+<span id="cb11-341"><a href="#cb11-341" aria-hidden="true" tabindex="-1"></a><span class="in">AND</span></span>
+<span id="cb11-342"><a href="#cb11-342" aria-hidden="true" tabindex="-1"></a><span class="in">|log2FoldChange| ≥ log2(1.5)</span></span>
+<span id="cb11-343"><a href="#cb11-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-344"><a href="#cb11-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-345"><a href="#cb11-345" aria-hidden="true" tabindex="-1"></a>The fold-change threshold corresponds to an expression difference of at least</span>
+<span id="cb11-346"><a href="#cb11-346" aria-hidden="true" tabindex="-1"></a>**1.5-fold** in either direction.</span>
+<span id="cb11-347"><a href="#cb11-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-348"><a href="#cb11-348" aria-hidden="true" tabindex="-1"></a><span class="fu">## Differential-Expression Summary</span></span>
+<span id="cb11-349"><a href="#cb11-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-350"><a href="#cb11-350" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Result <span class="pp">|</span> Genes <span class="pp">|</span></span>
+<span id="cb11-351"><a href="#cb11-351" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|</span></span>
+<span id="cb11-352"><a href="#cb11-352" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Genes tested <span class="pp">|</span> 12,728 <span class="pp">|</span></span>
+<span id="cb11-353"><a href="#cb11-353" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> padj &lt; 0.05 <span class="pp">|</span> 8,501 <span class="pp">|</span></span>
+<span id="cb11-354"><a href="#cb11-354" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Significant after padj + fold-change threshold <span class="pp">|</span> **6,816** <span class="pp">|</span></span>
+<span id="cb11-355"><a href="#cb11-355" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in MP46 <span class="pp">|</span> **3,495** <span class="pp">|</span></span>
+<span id="cb11-356"><a href="#cb11-356" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in NM <span class="pp">|</span> **3,321** <span class="pp">|</span></span>
+<span id="cb11-357"><a href="#cb11-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-358"><a href="#cb11-358" aria-hidden="true" tabindex="-1"></a>GENCODE v48 annotations were added to the DESeq2 results to provide gene</span>
+<span id="cb11-359"><a href="#cb11-359" aria-hidden="true" tabindex="-1"></a>symbols and gene types for biological interpretation.</span>
+<span id="cb11-360"><a href="#cb11-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-361"><a href="#cb11-361" aria-hidden="true" tabindex="-1"></a><span class="fu">## Volcano Plot</span></span>
+<span id="cb11-362"><a href="#cb11-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-363"><a href="#cb11-363" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/volcano_MP46_vs_NM.png)</span>{fig-alt="Volcano plot of MP46 versus NM differential expression" width=85%}</span>
+<span id="cb11-364"><a href="#cb11-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-365"><a href="#cb11-365" aria-hidden="true" tabindex="-1"></a>The volcano plot displays expression fold change against statistical</span>
+<span id="cb11-366"><a href="#cb11-366" aria-hidden="true" tabindex="-1"></a>significance, highlighting genes with both substantial and statistically</span>
+<span id="cb11-367"><a href="#cb11-367" aria-hidden="true" tabindex="-1"></a>supported differences between MP46 and NM.</span>
+<span id="cb11-368"><a href="#cb11-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-369"><a href="#cb11-369" aria-hidden="true" tabindex="-1"></a><span class="fu">## MA Plot</span></span>
+<span id="cb11-370"><a href="#cb11-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-371"><a href="#cb11-371" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/MA_MP46_vs_NM.png)</span>{fig-alt="MA plot for MP46 versus NM" width=85%}</span>
+<span id="cb11-372"><a href="#cb11-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-373"><a href="#cb11-373" aria-hidden="true" tabindex="-1"></a>The MA plot displays log2 fold change across the range of average gene</span>
+<span id="cb11-374"><a href="#cb11-374" aria-hidden="true" tabindex="-1"></a>expression, providing a complementary view of expression differences and their</span>
+<span id="cb11-375"><a href="#cb11-375" aria-hidden="true" tabindex="-1"></a>relationship to gene abundance.</span>
+<span id="cb11-376"><a href="#cb11-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-377"><a href="#cb11-377" aria-hidden="true" tabindex="-1"></a><span class="fu">## Differential-Expression Heatmap</span></span>
+<span id="cb11-378"><a href="#cb11-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-379"><a href="#cb11-379" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/top30_DE_heatmap.png)</span>{fig-alt="Heatmap of the top 30 differentially expressed genes" width=80%}</span>
+<span id="cb11-380"><a href="#cb11-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-381"><a href="#cb11-381" aria-hidden="true" tabindex="-1"></a>The heatmap shows the expression patterns of the top differentially expressed</span>
+<span id="cb11-382"><a href="#cb11-382" aria-hidden="true" tabindex="-1"></a>genes across the six samples.</span>
+<span id="cb11-383"><a href="#cb11-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-384"><a href="#cb11-384" aria-hidden="true" tabindex="-1"></a>The clustering pattern provides a sample-level view of the transcriptional</span>
+<span id="cb11-385"><a href="#cb11-385" aria-hidden="true" tabindex="-1"></a>differences identified by DESeq2.</span>
+<span id="cb11-386"><a href="#cb11-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-387"><a href="#cb11-387" aria-hidden="true" tabindex="-1"></a><span class="fu"># Functional Enrichment</span></span>
+<span id="cb11-388"><a href="#cb11-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-389"><a href="#cb11-389" aria-hidden="true" tabindex="-1"></a>Differential-expression analysis identifies individual genes, but biological</span>
+<span id="cb11-390"><a href="#cb11-390" aria-hidden="true" tabindex="-1"></a>interpretation also requires understanding whether groups of genes participate</span>
+<span id="cb11-391"><a href="#cb11-391" aria-hidden="true" tabindex="-1"></a>in related biological functions or pathways.</span>
+<span id="cb11-392"><a href="#cb11-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-393"><a href="#cb11-393" aria-hidden="true" tabindex="-1"></a>Significant genes were separated according to expression direction:</span>
+<span id="cb11-394"><a href="#cb11-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-395"><a href="#cb11-395" aria-hidden="true" tabindex="-1"></a><span class="in">```text</span></span>
+<span id="cb11-396"><a href="#cb11-396" aria-hidden="true" tabindex="-1"></a><span class="in">Higher in MP46</span></span>
+<span id="cb11-397"><a href="#cb11-397" aria-hidden="true" tabindex="-1"></a><span class="in">Higher in NM</span></span>
+<span id="cb11-398"><a href="#cb11-398" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-399"><a href="#cb11-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-400"><a href="#cb11-400" aria-hidden="true" tabindex="-1"></a>Functional enrichment was evaluated using:</span>
+<span id="cb11-401"><a href="#cb11-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-402"><a href="#cb11-402" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Gene Ontology Biological Process (GO BP)**</span>
+<span id="cb11-403"><a href="#cb11-403" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reactome pathways**</span>
+<span id="cb11-404"><a href="#cb11-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-405"><a href="#cb11-405" aria-hidden="true" tabindex="-1"></a>All genes tested by DESeq2 were used as the enrichment background.</span>
+<span id="cb11-406"><a href="#cb11-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-407"><a href="#cb11-407" aria-hidden="true" tabindex="-1"></a><span class="fu">## Enrichment Summary</span></span>
+<span id="cb11-408"><a href="#cb11-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-409"><a href="#cb11-409" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gene set <span class="pp">|</span> GO BP <span class="pp">|</span> Reactome <span class="pp">|</span></span>
+<span id="cb11-410"><a href="#cb11-410" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|---:|</span></span>
+<span id="cb11-411"><a href="#cb11-411" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in MP46 <span class="pp">|</span> **31** | **0** <span class="pp">|</span></span>
+<span id="cb11-412"><a href="#cb11-412" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Higher in NM <span class="pp">|</span> **236** | **46** <span class="pp">|</span></span>
+<span id="cb11-413"><a href="#cb11-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-414"><a href="#cb11-414" aria-hidden="true" tabindex="-1"></a><span class="fu">## Biological Processes Higher in MP46</span></span>
+<span id="cb11-415"><a href="#cb11-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-416"><a href="#cb11-416" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/GO_BP_Higher_in_MP46_summary.png)</span>{fig-alt="GO Biological Process enrichment for genes higher in MP46" width=90%}</span>
+<span id="cb11-417"><a href="#cb11-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-418"><a href="#cb11-418" aria-hidden="true" tabindex="-1"></a>Genes with higher expression in MP46 were primarily associated with biological</span>
+<span id="cb11-419"><a href="#cb11-419" aria-hidden="true" tabindex="-1"></a>processes involving **cell division, microtubule organization,</span>
+<span id="cb11-420"><a href="#cb11-420" aria-hidden="true" tabindex="-1"></a>centrosome-associated processes, and organelle fission**.</span>
+<span id="cb11-421"><a href="#cb11-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-422"><a href="#cb11-422" aria-hidden="true" tabindex="-1"></a><span class="fu">## Biological Processes Higher in NM</span></span>
+<span id="cb11-423"><a href="#cb11-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-424"><a href="#cb11-424" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/GO_BP_Higher_in_NM_summary.png)</span>{fig-alt="GO Biological Process enrichment for genes higher in NM" width=90%}</span>
+<span id="cb11-425"><a href="#cb11-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-426"><a href="#cb11-426" aria-hidden="true" tabindex="-1"></a>Genes with higher expression in NM showed broader enrichment involving</span>
+<span id="cb11-427"><a href="#cb11-427" aria-hidden="true" tabindex="-1"></a>**extracellular matrix organization, cell adhesion, antigen processing, and</span>
+<span id="cb11-428"><a href="#cb11-428" aria-hidden="true" tabindex="-1"></a>immune-related signaling**.</span>
+<span id="cb11-429"><a href="#cb11-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-430"><a href="#cb11-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reactome Pathways Higher in NM</span></span>
+<span id="cb11-431"><a href="#cb11-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-432"><a href="#cb11-432" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Reactome_Higher_in_NM_summary.png)</span>{fig-alt="Reactome pathway enrichment for genes higher in NM" width=90%}</span>
+<span id="cb11-433"><a href="#cb11-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-434"><a href="#cb11-434" aria-hidden="true" tabindex="-1"></a>Reactome analysis identified **46 significantly enriched pathways** among genes</span>
+<span id="cb11-435"><a href="#cb11-435" aria-hidden="true" tabindex="-1"></a>with higher expression in NM.</span>
+<span id="cb11-436"><a href="#cb11-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-437"><a href="#cb11-437" aria-hidden="true" tabindex="-1"></a>No Reactome pathway passed the predefined significance threshold for genes</span>
+<span id="cb11-438"><a href="#cb11-438" aria-hidden="true" tabindex="-1"></a>higher in MP46. The original threshold was retained rather than relaxed to</span>
+<span id="cb11-439"><a href="#cb11-439" aria-hidden="true" tabindex="-1"></a>force pathway discovery.</span>
+<span id="cb11-440"><a href="#cb11-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-441"><a href="#cb11-441" aria-hidden="true" tabindex="-1"></a><span class="fu"># Integrated Interpretation</span></span>
+<span id="cb11-442"><a href="#cb11-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-443"><a href="#cb11-443" aria-hidden="true" tabindex="-1"></a>The individual analysis stages provide complementary evidence about the</span>
+<span id="cb11-444"><a href="#cb11-444" aria-hidden="true" tabindex="-1"></a>dataset.</span>
+<span id="cb11-445"><a href="#cb11-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-446"><a href="#cb11-446" aria-hidden="true" tabindex="-1"></a>Raw-read QC indicated that the sequencing data were suitable for alignment</span>
+<span id="cb11-447"><a href="#cb11-447" aria-hidden="true" tabindex="-1"></a>without additional trimming. STAR subsequently produced high unique mapping</span>
+<span id="cb11-448"><a href="#cb11-448" aria-hidden="true" tabindex="-1"></a>rates across all samples.</span>
+<span id="cb11-449"><a href="#cb11-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-450"><a href="#cb11-450" aria-hidden="true" tabindex="-1"></a>Expression-level QC provided an independent check after gene quantification.</span>
+<span id="cb11-451"><a href="#cb11-451" aria-hidden="true" tabindex="-1"></a>PCA showed clear separation between NM and MP46, while sample correlation</span>
+<span id="cb11-452"><a href="#cb11-452" aria-hidden="true" tabindex="-1"></a>showed strong agreement among biological replicates.</span>
+<span id="cb11-453"><a href="#cb11-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-454"><a href="#cb11-454" aria-hidden="true" tabindex="-1"></a>DESeq2 identified **6,816 genes** meeting the predefined statistical and</span>
+<span id="cb11-455"><a href="#cb11-455" aria-hidden="true" tabindex="-1"></a>fold-change thresholds, with 3,495 showing higher expression in MP46 and 3,321</span>
+<span id="cb11-456"><a href="#cb11-456" aria-hidden="true" tabindex="-1"></a>showing higher expression in NM.</span>
+<span id="cb11-457"><a href="#cb11-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-458"><a href="#cb11-458" aria-hidden="true" tabindex="-1"></a>Functional enrichment then translated these gene-level differences into</span>
+<span id="cb11-459"><a href="#cb11-459" aria-hidden="true" tabindex="-1"></a>broader biological patterns. Genes higher in MP46 were associated primarily</span>
+<span id="cb11-460"><a href="#cb11-460" aria-hidden="true" tabindex="-1"></a>with cell-division-related processes, whereas genes higher in NM showed</span>
+<span id="cb11-461"><a href="#cb11-461" aria-hidden="true" tabindex="-1"></a>enrichment for extracellular matrix, adhesion, antigen-processing, and</span>
+<span id="cb11-462"><a href="#cb11-462" aria-hidden="true" tabindex="-1"></a>immune-related functions.</span>
+<span id="cb11-463"><a href="#cb11-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-464"><a href="#cb11-464" aria-hidden="true" tabindex="-1"></a>Together, the raw-read QC, alignment results, expression-level QC,</span>
+<span id="cb11-465"><a href="#cb11-465" aria-hidden="true" tabindex="-1"></a>differential-expression analysis, and functional enrichment provide a</span>
+<span id="cb11-466"><a href="#cb11-466" aria-hidden="true" tabindex="-1"></a>consistent view of substantial transcriptional differences between the two</span>
+<span id="cb11-467"><a href="#cb11-467" aria-hidden="true" tabindex="-1"></a>groups.</span>
+<span id="cb11-468"><a href="#cb11-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-469"><a href="#cb11-469" aria-hidden="true" tabindex="-1"></a>These results describe associations within this dataset and do not by</span>
+<span id="cb11-470"><a href="#cb11-470" aria-hidden="true" tabindex="-1"></a>themselves establish causal biological mechanisms.</span>
+<span id="cb11-471"><a href="#cb11-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-472"><a href="#cb11-472" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reproducible Workflow</span></span>
+<span id="cb11-473"><a href="#cb11-473" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-474"><a href="#cb11-474" aria-hidden="true" tabindex="-1"></a>The analysis was first developed and validated as individual Python, R, and</span>
+<span id="cb11-475"><a href="#cb11-475" aria-hidden="true" tabindex="-1"></a>command-line steps and then connected using **Nextflow DSL2**.</span>
+<span id="cb11-476"><a href="#cb11-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-477"><a href="#cb11-477" aria-hidden="true" tabindex="-1"></a>RNA-seq workflows contain many dependent processes and intermediate files.</span>
+<span id="cb11-478"><a href="#cb11-478" aria-hidden="true" tabindex="-1"></a>Nextflow manages these dependencies automatically, tracks process inputs and</span>
+<span id="cb11-479"><a href="#cb11-479" aria-hidden="true" tabindex="-1"></a>outputs, caches completed work, and allows interrupted or previously completed</span>
+<span id="cb11-480"><a href="#cb11-480" aria-hidden="true" tabindex="-1"></a>analyses to continue using <span class="in">`-resume`</span>.</span>
+<span id="cb11-481"><a href="#cb11-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-482"><a href="#cb11-482" aria-hidden="true" tabindex="-1"></a>The current Nextflow implementation **reuses the resulting STAR BAM files** and</span>
+<span id="cb11-483"><a href="#cb11-483" aria-hidden="true" tabindex="-1"></a>automates the downstream analysis.</span>
+<span id="cb11-484"><a href="#cb11-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-485"><a href="#cb11-485" aria-hidden="true" tabindex="-1"></a>**Docker** provides controlled software environments for workflow processes,</span>
+<span id="cb11-486"><a href="#cb11-486" aria-hidden="true" tabindex="-1"></a>reducing dependency on software installed directly on the host computer.</span>
+<span id="cb11-487"><a href="#cb11-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-488"><a href="#cb11-488" aria-hidden="true" tabindex="-1"></a>The project also demonstrates **Linux and SLURM** research-computing concepts,</span>
+<span id="cb11-489"><a href="#cb11-489" aria-hidden="true" tabindex="-1"></a>including shared project storage, Environment Modules, resource requests, job</span>
+<span id="cb11-490"><a href="#cb11-490" aria-hidden="true" tabindex="-1"></a>submission, and job monitoring.</span>
+<span id="cb11-491"><a href="#cb11-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-492"><a href="#cb11-492" aria-hidden="true" tabindex="-1"></a>These components serve complementary roles:</span>
+<span id="cb11-493"><a href="#cb11-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-494"><a href="#cb11-494" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Component <span class="pp">|</span> Role <span class="pp">|</span></span>
+<span id="cb11-495"><a href="#cb11-495" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb11-496"><a href="#cb11-496" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Git / GitHub <span class="pp">|</span> Version-controlled code and documentation <span class="pp">|</span></span>
+<span id="cb11-497"><a href="#cb11-497" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Docker <span class="pp">|</span> Reproducible software environments <span class="pp">|</span></span>
+<span id="cb11-498"><a href="#cb11-498" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nextflow <span class="pp">|</span> Automated workflow execution <span class="pp">|</span></span>
+<span id="cb11-499"><a href="#cb11-499" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Linux / SLURM <span class="pp">|</span> Research-computing environment <span class="pp">|</span></span>
+<span id="cb11-500"><a href="#cb11-500" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Quarto <span class="pp">|</span> Reproducible and shareable reporting <span class="pp">|</span></span>
+<span id="cb11-501"><a href="#cb11-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-502"><a href="#cb11-502" aria-hidden="true" tabindex="-1"></a>Together, they connect the biological analysis with the computational</span>
+<span id="cb11-503"><a href="#cb11-503" aria-hidden="true" tabindex="-1"></a>practices needed to make the workflow reproducible and reviewable.</span>
+<span id="cb11-504"><a href="#cb11-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-505"><a href="#cb11-505" aria-hidden="true" tabindex="-1"></a><span class="fu"># Software</span></span>
+<span id="cb11-506"><a href="#cb11-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-507"><a href="#cb11-507" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Analysis component <span class="pp">|</span> Software <span class="pp">|</span></span>
+<span id="cb11-508"><a href="#cb11-508" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb11-509"><a href="#cb11-509" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Raw-read QC <span class="pp">|</span> FastQC <span class="pp">|</span></span>
+<span id="cb11-510"><a href="#cb11-510" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> QC aggregation <span class="pp">|</span> MultiQC 1.35 <span class="pp">|</span></span>
+<span id="cb11-511"><a href="#cb11-511" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Alignment <span class="pp">|</span> STAR <span class="pp">|</span></span>
+<span id="cb11-512"><a href="#cb11-512" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> BAM processing <span class="pp">|</span> SAMtools <span class="pp">|</span></span>
+<span id="cb11-513"><a href="#cb11-513" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Strandedness assessment <span class="pp">|</span> RSeQC <span class="pp">|</span></span>
+<span id="cb11-514"><a href="#cb11-514" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gene quantification <span class="pp">|</span> featureCounts <span class="pp">|</span></span>
+<span id="cb11-515"><a href="#cb11-515" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Count processing and visualization <span class="pp">|</span> Python <span class="pp">|</span></span>
+<span id="cb11-516"><a href="#cb11-516" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Differential expression <span class="pp">|</span> DESeq2 <span class="pp">|</span></span>
+<span id="cb11-517"><a href="#cb11-517" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Functional enrichment <span class="pp">|</span> clusterProfiler / ReactomePA <span class="pp">|</span></span>
+<span id="cb11-518"><a href="#cb11-518" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Gene annotation <span class="pp">|</span> GENCODE v48 <span class="pp">|</span></span>
+<span id="cb11-519"><a href="#cb11-519" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Workflow automation <span class="pp">|</span> Nextflow DSL2 <span class="pp">|</span></span>
+<span id="cb11-520"><a href="#cb11-520" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Containerization <span class="pp">|</span> Docker <span class="pp">|</span></span>
+<span id="cb11-521"><a href="#cb11-521" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Research computing <span class="pp">|</span> Linux / SLURM <span class="pp">|</span></span>
+<span id="cb11-522"><a href="#cb11-522" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Reporting <span class="pp">|</span> Quarto <span class="pp">|</span></span>
+<span id="cb11-523"><a href="#cb11-523" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Version control <span class="pp">|</span> Git / GitHub <span class="pp">|</span></span>
+<span id="cb11-524"><a href="#cb11-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
+<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a>This project demonstrates an end-to-end bulk RNA-seq analysis progressing from</span>
+<span id="cb11-528"><a href="#cb11-528" aria-hidden="true" tabindex="-1"></a>raw paired-end sequencing reads to biological interpretation.</span>
+<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a>Raw-read QC was interpreted rather than treated as a simple PASS/FAIL</span>
+<span id="cb11-531"><a href="#cb11-531" aria-hidden="true" tabindex="-1"></a>decision. MultiQC supported proceeding without unnecessary trimming, and</span>
+<span id="cb11-532"><a href="#cb11-532" aria-hidden="true" tabindex="-1"></a>subsequent alignment, PCA, and sample-correlation analyses provided independent</span>
+<span id="cb11-533"><a href="#cb11-533" aria-hidden="true" tabindex="-1"></a>checks of data and sample quality.</span>
+<span id="cb11-534"><a href="#cb11-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-535"><a href="#cb11-535" aria-hidden="true" tabindex="-1"></a>Differential-expression analysis identified substantial transcriptional</span>
+<span id="cb11-536"><a href="#cb11-536" aria-hidden="true" tabindex="-1"></a>differences between MP46 and NM, while functional enrichment provided</span>
+<span id="cb11-537"><a href="#cb11-537" aria-hidden="true" tabindex="-1"></a>biological context for those changes.</span>
+<span id="cb11-538"><a href="#cb11-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-539"><a href="#cb11-539" aria-hidden="true" tabindex="-1"></a>Nextflow automation, Docker environments, version-controlled analysis code,</span>
+<span id="cb11-540"><a href="#cb11-540" aria-hidden="true" tabindex="-1"></a>Linux/SLURM computing practices, and Quarto reporting bring these individual</span>
+<span id="cb11-541"><a href="#cb11-541" aria-hidden="true" tabindex="-1"></a>steps together into a reproducible and reviewable bioinformatics workflow.</span>
+<span id="cb11-542"><a href="#cb11-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-543"><a href="#cb11-543" aria-hidden="true" tabindex="-1"></a><span class="fu"># References</span></span>
+<span id="cb11-544"><a href="#cb11-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-545"><a href="#cb11-545" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Gentien D, et al. *Cell Reports*. 2023. GSE199679 / GSE198801.</span>
+<span id="cb11-546"><a href="#cb11-546" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Andrews S. FastQC: A Quality Control Tool for High Throughput Sequence Data.</span>
+<span id="cb11-547"><a href="#cb11-547" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Ewels P, et al. MultiQC: summarize analysis results for multiple tools and samples in a single report. *Bioinformatics*. 2016.</span>
+<span id="cb11-548"><a href="#cb11-548" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Dobin A, et al. STAR: ultrafast universal RNA-seq aligner. *Bioinformatics*. 2013.</span>
+<span id="cb11-549"><a href="#cb11-549" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Wang L, et al. RSeQC: quality control of RNA-seq experiments. *Bioinformatics*. 2012.</span>
+<span id="cb11-550"><a href="#cb11-550" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>Liao Y, Smyth GK, Shi W. featureCounts: an efficient general-purpose program for assigning sequence reads to genomic features. *Bioinformatics*. 2014.</span>
+<span id="cb11-551"><a href="#cb11-551" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. *Genome Biology*. 2014.</span>
+<span id="cb11-552"><a href="#cb11-552" aria-hidden="true" tabindex="-1"></a><span class="ss">8. </span>Yu G, et al. clusterProfiler: an R package for comparing biological themes among gene clusters. *OMICS*. 2012.</span>
+<span id="cb11-553"><a href="#cb11-553" aria-hidden="true" tabindex="-1"></a><span class="ss">9. </span>Milacic M, et al. Reactome Pathway Knowledgebase. *Nucleic Acids Research*. 2024.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

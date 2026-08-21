@@ -2,106 +2,120 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "RNA-Seq Analysis Report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "",
-    "text": "This report summarizes a reproducible bulk RNA-seq analysis comparing MP46 and NM samples.\nThe analysis included three biological samples per group:\n\n\n\nGroup\nSamples\n\n\n\n\nNM\nNM_4, NM_5, NM_6\n\n\nMP46\nMP46_1, MP46_2, MP46_3\n\n\n\nThe workflow included sequencing quality control, alignment, gene-level quantification, expression-level quality control, differential expression analysis, and functional enrichment.\nFASTQ\n  ↓\nFastQC / MultiQC\n  ↓\nSTAR alignment\n  ↓\nfeatureCounts\n  ↓\nCount QC and filtering\n  ↓\nExpression QC\n  ↓\nDESeq2\n  ↓\nFunctional enrichment\n\n\n\n\n\nAnalysis\nKey Result\n\n\n\n\nSamples\n3 NM + 3 MP46\n\n\nSTAR alignment\n88.3–95.2% uniquely mapped\n\n\nGenes retained after filtering\n12,728\n\n\nPCA\nPC1 = 88.79%; clear NM/MP46 separation\n\n\nSample correlation\nWithin-group ≈ 0.96–0.98\n\n\nDifferential expression\n6,816 significant genes\n\n\nHigher in MP46\n3,495 genes\n\n\nHigher in NM\n3,321 genes\n\n\nGO BP enrichment\n31 MP46 / 236 NM terms\n\n\nReactome enrichment\n0 MP46 / 46 NM pathways\n\n\n\nPrimary finding: NM and MP46 show strongly distinct transcriptomic profiles. Genes higher in MP46 are enriched primarily for cell-division and microtubule-associated processes, whereas genes higher in NM show broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing processes."
+    "text": "RNA sequencing (RNA-seq) provides a genome-wide measurement of gene expression, allowing genes and biological pathways that differ between experimental conditions to be identified.\nThis report presents an end-to-end bulk RNA-seq analysis using public data from GSE199679. The analysis progresses from raw paired-end sequencing reads through sequencing quality control, alignment, gene quantification, expression-level quality control, differential expression, functional enrichment, and biological interpretation.\nThe comparison includes six biological samples:\n\n\n\nGroup\nSamples\n\n\n\n\nNormal melanocytes (NM)\nNM_4, NM_5, NM_6\n\n\nMP46\nMP46_1, MP46_2, MP46_3\n\n\n\nThe analytical steps were developed and validated individually and then connected using Nextflow for reproducible workflow execution. Docker provides controlled software environments, and the final results are presented here using Quarto.\n\n\nPaired-end FASTQ\n       ↓\nFastQC + MultiQC\n       ↓\nSTAR alignment\n       ↓\nSAMtools + RSeQC\n       ↓\nfeatureCounts\n       ↓\nCount QC + filtering\n       ↓\nDESeq2\n       ↓\nPCA + sample correlation\n       ↓\nDifferential expression\n       ↓\nGene annotation\n       ↓\nGO + Reactome enrichment\n       ↓\nBiological interpretation"
   },
   {
-    "objectID": "index.html#results-at-a-glance",
-    "href": "index.html#results-at-a-glance",
-    "title": "RNA-Seq Analysis Report",
+    "objectID": "index.html#analysis-workflow",
+    "href": "index.html#analysis-workflow",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "",
-    "text": "Analysis\nKey Result\n\n\n\n\nSamples\n3 NM + 3 MP46\n\n\nSTAR alignment\n88.3–95.2% uniquely mapped\n\n\nGenes retained after filtering\n12,728\n\n\nPCA\nPC1 = 88.79%; clear NM/MP46 separation\n\n\nSample correlation\nWithin-group ≈ 0.96–0.98\n\n\nDifferential expression\n6,816 significant genes\n\n\nHigher in MP46\n3,495 genes\n\n\nHigher in NM\n3,321 genes\n\n\nGO BP enrichment\n31 MP46 / 236 NM terms\n\n\nReactome enrichment\n0 MP46 / 46 NM pathways\n\n\n\nPrimary finding: NM and MP46 show strongly distinct transcriptomic profiles. Genes higher in MP46 are enriched primarily for cell-division and microtubule-associated processes, whereas genes higher in NM show broader enrichment involving extracellular-matrix, cell-adhesion, immune-associated, and antigen-processing processes."
+    "text": "Paired-end FASTQ\n       ↓\nFastQC + MultiQC\n       ↓\nSTAR alignment\n       ↓\nSAMtools + RSeQC\n       ↓\nfeatureCounts\n       ↓\nCount QC + filtering\n       ↓\nDESeq2\n       ↓\nPCA + sample correlation\n       ↓\nDifferential expression\n       ↓\nGene annotation\n       ↓\nGO + Reactome enrichment\n       ↓\nBiological interpretation"
   },
   {
-    "objectID": "index.html#reference-genome",
-    "href": "index.html#reference-genome",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Reference Genome",
-    "text": "Reference Genome\nRNA-seq reads were aligned to the human GRCh38 primary assembly using STAR.\nGene annotation was based on GENCODE v48.\nThe same annotation release was used for:\n\nSTAR genome indexing\nfeatureCounts gene quantification\ndifferential-expression gene annotation"
+    "objectID": "index.html#multiqc-summary",
+    "href": "index.html#multiqc-summary",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "MultiQC Summary",
+    "text": "MultiQC Summary\nThe six RNA-seq samples produced 12 FASTQ files, corresponding to R1 and R2 reads for each paired-end library. Each FASTQ file contained approximately 5 million 101-bp reads.\n\n\n\n\n\n\n\nQC metric\nObservation\n\n\n\n\nFASTQ files\n12\n\n\nBiological samples\n6\n\n\nReads per FASTQ\n~5 million\n\n\nRead length\n101 bp\n\n\nReads flagged as poor quality\nNone\n\n\nPer-base sequence quality\nPassed\n\n\nPer-tile sequence quality\nPassed\n\n\nGC content\n~47–53%\n\n\nDuplicate reads\n~35–51%\n\n\nPer-base N content\nPassed\n\n\nAdapter content\nPassed\n\n\nOverrepresented sequences\nMostly passed; limited warnings observed\n\n\nSequence-content / length modules\nSome warnings or failures observed"
   },
   {
-    "objectID": "index.html#read-alignment",
-    "href": "index.html#read-alignment",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Read Alignment",
-    "text": "Read Alignment\nSTAR alignment was performed in a Linux ARM64 Docker environment to provide a reproducible execution environment on Apple Silicon.\nAlignment rates were high overall.\n\n\n\nSample\nUnique Mapping\n\n\n\n\nNM_4\n95.20%\n\n\nNM_5\n95.16%\n\n\nNM_6\n95.11%\n\n\nMP46_1\n88.29%\n\n\nMP46_2\n94.31%\n\n\nMP46_3\n89.23%"
+    "objectID": "index.html#qc-observation",
+    "href": "index.html#qc-observation",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "QC Observation",
+    "text": "QC Observation\nOverall sequencing quality was suitable for downstream analysis. Per-base sequence quality passed across the FASTQ files, no reads were reported as poor quality, and read length and sequencing depth were consistent across the dataset.\nGC content ranged from approximately 47% to 53%. MP46 libraries tended toward the lower end of this range, whereas NM libraries tended toward the higher end. Because this pattern broadly followed the biological groups rather than appearing as an isolated sample-specific deviation, it was interpreted together with downstream expression-level QC rather than automatically considered evidence of contamination.\nSequence duplication ranged from approximately 35% to 51%. Moderate or high duplication can occur in RNA-seq because highly expressed transcripts are sampled repeatedly. PCR amplification or reduced library complexity can also increase duplication. Duplication was therefore considered together with alignment performance, gene counts, PCA, and sample-to-sample correlation rather than being used alone to exclude samples.\nSome sequence-content and sequence-length FastQC modules produced warnings or failures. These flags do not automatically indicate unusable RNA-seq data. Sequence-composition biases can arise from library preparation, transcript composition, or other protocol-specific effects and therefore require interpretation in the context of the complete dataset.\nAdapter content passed across the dataset. Low levels of Illumina adapter signal were detectable toward the ends of some reads, but these levels were not sufficient to trigger an adapter-content warning or failure. A small number of overrepresented sequences were also detected and were interpreted according to their abundance and possible origin rather than automatically removed."
   },
   {
-    "objectID": "index.html#gene-quantification",
-    "href": "index.html#gene-quantification",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Gene Quantification",
-    "text": "Gene Quantification\nGene-level counts were generated using featureCounts.\nThe libraries were empirically determined to be reverse-stranded using RSeQC and were therefore quantified using:\n-s 2\nAssignment rates ranged from approximately 77% to 85%."
+    "objectID": "index.html#qc-conclusion",
+    "href": "index.html#qc-conclusion",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "QC Conclusion",
+    "text": "QC Conclusion\nThe combined FastQC and MultiQC assessment supported proceeding to alignment without additional adapter or quality trimming.\nThis decision was supported by consistently good per-base sequence quality, the absence of reads flagged as poor quality, passing adapter-content results, consistent sequencing depth, and the absence of a broad sample-specific sequencing-quality failure.\nFastQC warnings were retained and documented rather than automatically corrected because warnings can reflect expected characteristics of RNA-seq libraries. Their significance was subsequently evaluated using independent downstream QC measures including alignment performance, gene assignment, PCA, and sample-to-sample expression correlation."
   },
   {
-    "objectID": "index.html#normalization",
-    "href": "index.html#normalization",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Normalization",
-    "text": "Normalization\nMedian-of-ratios normalization was used for exploratory expression QC.\n\n\n\nSample\nSize Factor\n\n\n\n\nNM_4\n1.026\n\n\nNM_5\n0.982\n\n\nNM_6\n0.837\n\n\nMP46_1\n1.023\n\n\nMP46_2\n1.089\n\n\nMP46_3\n1.134\n\n\n\nNormalized counts were log2 transformed for PCA and sample-correlation analysis.\nRaw integer counts were retained separately for DESeq2."
+    "objectID": "index.html#if-qc-is-not-as-expected",
+    "href": "index.html#if-qc-is-not-as-expected",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "If QC Is Not as Expected",
+    "text": "If QC Is Not as Expected\nUnexpected FastQC or MultiQC findings should be investigated before deciding to modify reads or exclude samples.\n\n\n\n\n\n\n\n\nUnexpected finding\nPossible reasons\nSuggested follow-up\n\n\n\n\nLow per-base quality\nQuality deterioration toward read ends, poor sequencing signal, sequencing-run or flow-cell problems\nDetermine whether poor quality is localized or widespread; consider quality trimming if substantial\n\n\nAdapter contamination\nLibrary inserts shorter than the sequencing read length, causing sequencing into adapters\nTrim adapters and rerun FastQC/MultiQC\n\n\nUnexpected GC distribution\nBiological composition, library-preparation bias, contamination, or unusual transcript abundance\nCompare biological replicates and groups; investigate isolated or unexplained deviations\n\n\nHigh duplication\nHighly expressed transcripts, PCR amplification, low starting RNA, or low library complexity\nInterpret with expression and library-complexity results; do not remove RNA-seq reads solely because duplication is high\n\n\nOverrepresented sequences\nHighly expressed transcripts, rRNA, mitochondrial RNA, adapters, or contamination\nIdentify the sequences and determine whether they represent expected biology or unwanted sequence\n\n\nHigh N content\nPoor sequencing signal or uncertain base calling\nDetermine whether ambiguous bases are localized or widespread; consider filtering if substantial\n\n\nStrong R1/R2 difference\nCycle-specific effects, poorer sequencing quality in one mate, or mate-specific contamination\nCompare R1 and R2 modules and determine whether targeted preprocessing is justified\n\n\nOne sample differs strongly\nLibrary-preparation problem, sequencing failure, contamination, sample mix-up, batch effect, or genuine biological variation\nReview raw-read QC together with mapping rate, gene counts, PCA, and sample correlation\n\n\nMany samples share the same problem\nLibrary-preparation protocol, sequencing-run effect, systematic contamination, or protocol-specific bias\nDetermine whether the pattern is expected; investigate systematic technical causes when unexplained\n\n\nHigh rRNA content\nIncomplete rRNA depletion or inefficient poly(A) selection\nAssess rRNA-associated reads and determine whether usable sequencing depth is substantially affected\n\n\n\nIndividual FastQC PASS/WARN/FAIL flags were therefore not treated as automatic sample acceptance or rejection criteria. QC metrics were considered collectively, and any trimming, filtering, or sample exclusion would require a documented technical or biological justification."
+  },
+  {
+    "objectID": "index.html#full-multiqc-report",
+    "href": "index.html#full-multiqc-report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Full MultiQC Report",
+    "text": "Full MultiQC Report\nThe complete interactive MultiQC 1.35 report is retained for detailed inspection of individual samples and QC metrics.\nOpen the interactive MultiQC report"
   },
   {
     "objectID": "index.html#principal-component-analysis",
     "href": "index.html#principal-component-analysis",
-    "title": "RNA-Seq Analysis Report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "Principal Component Analysis",
-    "text": "Principal Component Analysis\n\nPC1 explained 88.79% of total expression variance and clearly separated NM from MP46.\nPC2 explained an additional 3.73%.\nTogether, the first two principal components represented 92.52% of expression variation."
+    "text": "Principal Component Analysis\nPrincipal component analysis summarizes major sources of expression variation across thousands of genes.\n\nThe first two principal components explained:\nPC1 = 88.79%\nPC2 =  3.73%\nPC1 clearly separated the NM and MP46 groups, while biological replicates clustered according to condition.\nThis indicates that the largest source of expression variation in the dataset corresponds to the biological comparison."
   },
   {
-    "objectID": "index.html#sample-correlation",
-    "href": "index.html#sample-correlation",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Sample Correlation",
-    "text": "Sample Correlation\n\nWithin-group expression correlations were high:\nNM:    approximately 0.96\nMP46:  approximately 0.96–0.98\nBetween-group correlations were substantially lower:\napproximately 0.56–0.64\nNo obvious expression-level outlier was identified, and all six samples were retained."
+    "objectID": "index.html#sample-to-sample-correlation",
+    "href": "index.html#sample-to-sample-correlation",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Sample-to-Sample Correlation",
+    "text": "Sample-to-Sample Correlation\nPearson correlation was calculated between samples using transformed expression values.\n\nWithin-group correlations were high:\nNM:       approximately 0.96\nMP46:     approximately 0.96–0.98\nCorrelations between the two groups were lower:\napproximately 0.56–0.64\nThe agreement among biological replicates and the lower correlation between groups were consistent with the PCA results.\nTogether, these independent expression-level QC analyses supported retaining all six samples for differential-expression testing."
   },
   {
     "objectID": "index.html#differential-expression-summary",
     "href": "index.html#differential-expression-summary",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Differential Expression Summary",
-    "text": "Differential Expression Summary\n\n\n\nResult\nGenes\n\n\n\n\nGenes tested\n12,728\n\n\npadj &lt; 0.05\n8,501\n\n\nSignificant DE genes\n6,816\n\n\nHigher in MP46\n3,495\n\n\nHigher in NM\n3,321\n\n\npadj &lt; 0.05 and |log2FC| ≥ 2\n3,200"
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Differential-Expression Summary",
+    "text": "Differential-Expression Summary\n\n\n\nResult\nGenes\n\n\n\n\nGenes tested\n12,728\n\n\npadj &lt; 0.05\n8,501\n\n\nSignificant after padj + fold-change threshold\n6,816\n\n\nHigher in MP46\n3,495\n\n\nHigher in NM\n3,321\n\n\n\nGENCODE v48 annotations were added to the DESeq2 results to provide gene symbols and gene types for biological interpretation."
   },
   {
     "objectID": "index.html#volcano-plot",
     "href": "index.html#volcano-plot",
-    "title": "RNA-Seq Analysis Report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "Volcano Plot",
-    "text": "Volcano Plot\n\nThe volcano plot demonstrates extensive differential expression in both directions."
+    "text": "Volcano Plot\n\nThe volcano plot displays expression fold change against statistical significance, highlighting genes with both substantial and statistically supported differences between MP46 and NM."
   },
   {
     "objectID": "index.html#ma-plot",
     "href": "index.html#ma-plot",
-    "title": "RNA-Seq Analysis Report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "MA Plot",
-    "text": "MA Plot\n\nThe MA plot shows differential-expression effect sizes across the range of mean gene-expression abundance."
+    "text": "MA Plot\n\nThe MA plot displays log2 fold change across the range of average gene expression, providing a complementary view of expression differences and their relationship to gene abundance."
   },
   {
-    "objectID": "index.html#top-differentially-expressed-genes",
-    "href": "index.html#top-differentially-expressed-genes",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Top Differentially Expressed Genes",
-    "text": "Top Differentially Expressed Genes\n\nThe top 30 genes ranked by adjusted p-value showed strong group-specific expression patterns.\nThe three NM samples generally showed similar expression profiles, as did the three MP46 samples."
+    "objectID": "index.html#differential-expression-heatmap",
+    "href": "index.html#differential-expression-heatmap",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Differential-Expression Heatmap",
+    "text": "Differential-Expression Heatmap\n\nThe heatmap shows the expression patterns of the top differentially expressed genes across the six samples.\nThe clustering pattern provides a sample-level view of the transcriptional differences identified by DESeq2."
   },
   {
     "objectID": "index.html#enrichment-summary",
     "href": "index.html#enrichment-summary",
-    "title": "RNA-Seq Analysis Report",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
     "section": "Enrichment Summary",
-    "text": "Enrichment Summary\n\n\n\nGene Set\nGO Biological Process\nReactome\n\n\n\n\nHigher in MP46\n31\n0\n\n\nHigher in NM\n236\n46"
+    "text": "Enrichment Summary\n\n\n\nGene set\nGO BP\nReactome\n\n\n\n\nHigher in MP46\n31\n0\n\n\nHigher in NM\n236\n46"
   },
   {
-    "objectID": "index.html#genes-higher-in-mp46",
-    "href": "index.html#genes-higher-in-mp46",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Genes Higher in MP46",
-    "text": "Genes Higher in MP46\n\nProminent enriched themes included:\n\nnuclear and cell division\nmicrotubule organization\ncentrosome-associated processes\norganelle fission\ndevelopmental and patterning processes\n\nNo Reactome pathways passed the specified significance threshold for the MP46-higher gene set."
+    "objectID": "index.html#biological-processes-higher-in-mp46",
+    "href": "index.html#biological-processes-higher-in-mp46",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Biological Processes Higher in MP46",
+    "text": "Biological Processes Higher in MP46\n\nGenes with higher expression in MP46 were primarily associated with biological processes involving cell division, microtubule organization, centrosome-associated processes, and organelle fission."
   },
   {
-    "objectID": "index.html#genes-higher-in-nm",
-    "href": "index.html#genes-higher-in-nm",
-    "title": "RNA-Seq Analysis Report",
-    "section": "Genes Higher in NM",
-    "text": "Genes Higher in NM\n\nGO enrichment included:\n\ncell-cell adhesion\nantigen processing and presentation\nextracellular matrix organization\ncellular signaling and interaction processes\n\n\nReactome\n\nProminent Reactome themes included:\n\nextracellular matrix organization\nIGF transport and IGF-binding proteins\ninterferon-gamma signaling\nplatelet activation and degranulation\nhemostasis\nextracellular matrix degradation\nER-phagosome pathway\nECM proteoglycans"
+    "objectID": "index.html#biological-processes-higher-in-nm",
+    "href": "index.html#biological-processes-higher-in-nm",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Biological Processes Higher in NM",
+    "text": "Biological Processes Higher in NM\n\nGenes with higher expression in NM showed broader enrichment involving extracellular matrix organization, cell adhesion, antigen processing, and immune-related signaling."
+  },
+  {
+    "objectID": "index.html#reactome-pathways-higher-in-nm",
+    "href": "index.html#reactome-pathways-higher-in-nm",
+    "title": "Reproducible Bulk RNA-Seq Analysis",
+    "section": "Reactome Pathways Higher in NM",
+    "text": "Reactome Pathways Higher in NM\n\nReactome analysis identified 46 significantly enriched pathways among genes with higher expression in NM.\nNo Reactome pathway passed the predefined significance threshold for genes higher in MP46. The original threshold was retained rather than relaxed to force pathway discovery."
   }
 ]
