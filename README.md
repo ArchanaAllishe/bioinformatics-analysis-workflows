@@ -60,6 +60,52 @@ submission. Docker provides reproducible software environments, while Nextflow
 coordinates the analysis steps and reuses the resulting BAM files for the
 automated downstream workflow.
 
+---
+## Requirements and Reproducibility
+
+The analysis combines standard bioinformatics tools with workflow automation
+and containerization. Individual analysis steps can be run manually, while the
+automated workflow uses **Nextflow and Docker** to provide a more reproducible
+execution environment.
+
+| Tool | Purpose |
+|---|---|
+| FastQC | Raw-read quality assessment |
+| MultiQC 1.35 | Combined sequencing QC report |
+| STAR | RNA-seq read alignment |
+| SAMtools | BAM processing and indexing |
+| RSeQC | Library strandedness assessment |
+| featureCounts | Gene-level quantification |
+| R / DESeq2 | Differential-expression analysis |
+| Python | Data processing and visualization |
+| Nextflow | Workflow automation |
+| Docker | Reproducible software environments |
+| Quarto | Interactive results reporting |
+| Git | Version control |
+| SLURM | HPC job scheduling when available |
+
+For the automated workflow, install **Nextflow**, **Docker**, and **Quarto**.
+Bioinformatics software used by the workflow is provided through versioned
+containers, reducing the need to install each tool separately.
+
+```bash
+nextflow -version
+docker --version
+quarto --version
+```
+
+The workflow can then be run with:
+
+```bash
+nextflow run workflow/main.nf \
+    -c workflow/nextflow.config \
+    -resume
+```
+
+On an institutional HPC system, software may instead be provided through
+environment modules or container technologies supported by the cluster.
+Detailed Linux, HPC, environment-module, and SLURM setup is documented in
+[`docs/`](docs/).
 
 ---
 # RNA-Seq Case Study
