@@ -61,53 +61,6 @@ coordinates the analysis steps and reuses the resulting BAM files for the
 automated downstream workflow.
 
 ---
-## Requirements and Reproducibility
-
-The analysis combines standard bioinformatics tools with workflow automation
-and containerization. Individual analysis steps can be run manually, while the
-automated workflow uses **Nextflow and Docker** to provide a more reproducible
-execution environment.
-
-| Tool | Purpose |
-|---|---|
-| FastQC | Raw-read quality assessment |
-| MultiQC 1.35 | Combined sequencing QC report |
-| STAR | RNA-seq read alignment |
-| SAMtools | BAM processing and indexing |
-| RSeQC | Library strandedness assessment |
-| featureCounts | Gene-level quantification |
-| R / DESeq2 | Differential-expression analysis |
-| Python | Data processing and visualization |
-| Nextflow | Workflow automation |
-| Docker | Reproducible software environments |
-| Quarto | Interactive results reporting |
-| Git | Version control |
-| SLURM | HPC job scheduling when available |
-
-For the automated workflow, install **Nextflow**, **Docker**, and **Quarto**.
-Bioinformatics software used by the workflow is provided through versioned
-containers, reducing the need to install each tool separately.
-
-```bash
-nextflow -version
-docker --version
-quarto --version
-```
-
-The workflow can then be run with:
-
-```bash
-nextflow run workflow/main.nf \
-    -c workflow/nextflow.config \
-    -resume
-```
-
-On an institutional HPC system, software may instead be provided through
-environment modules or container technologies supported by the cluster.
-Detailed Linux, HPC, environment-module, and SLURM setup is documented in
-[`docs/`](docs/).
-
----
 # RNA-Seq Case Study
 
 ## From RNA to Sequencing Reads
@@ -204,23 +157,36 @@ traced back to the original sequencing samples.
 
 ## 1. Sequencing Quality Control — FastQC and MultiQC
 
-Raw FASTQ files were assessed before alignment.
+The computational RNA-seq workflow begins when sequencing data are received as
+**FASTQ files**, which contain the sequencing reads and their corresponding
+base-quality scores.
 
-**FastQC** evaluates individual sequencing files for metrics including
-per-base sequence quality, GC content, duplication, adapter content, and
-overrepresented sequences.
+For this paired-end dataset, each biological sample is represented by two FASTQ
+files (`R1` and `R2`). Before alignment or gene quantification, the raw
+sequencing data were assessed to identify potential quality issues that could
+affect downstream analysis.
 
-**MultiQC 1.35** combines the FastQC results into a single report so that QC
-patterns can be compared across all sequencing files.
+**FastQC** evaluates each FASTQ file independently for metrics including
+per-base sequence quality, GC content, sequence duplication, adapter content,
+and overrepresented sequences.
 
-FastQC evaluates `R1` and `R2` independently:
+**MultiQC** combines the individual FastQC results into a single report,
+making it easier to compare sequencing quality across all samples and identify
+consistent or sample-specific QC issues.
 
 ```text
-NM_4_R1.fastq.gz → FastQC → NM_4_R1_fastqc.html
-NM_4_R2.fastq.gz → FastQC → NM_4_R2_fastqc.html
+Paired-end FASTQ files
+        ↓
+      FastQC
+        ↓
+Individual QC reports
+        ↓
+      MultiQC
+        ↓
+Combined QC assessment
+        ↓
+Decision: proceed to alignment or investigate potential QC issues
 ```
-
-Experimental-group assignment is not required for this step.
 
 ### Manual execution
 
